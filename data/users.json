@@ -1,0 +1,20 @@
+[
+  {
+    "username": "dung",
+    "password": "123",
+    "status": "active",
+    "score": 0
+  },
+  {
+    "username": "hoang",
+    "password": "456",
+    "status": "active",
+    "score": 0
+  },
+  {
+    "username": "admin",
+    "password": "admin_pass",
+    "status": "blocked",
+    "score": 0
+  }
+]

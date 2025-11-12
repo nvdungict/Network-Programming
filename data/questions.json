@@ -28,5 +28,275 @@
       "C": "3"
     },
     "correct_answer": "B"
+  },
+  {
+    "id": "q004",
+    "question_text": "HTML dung de lam gi?",
+    "options": {
+      "A": "Ngon ngu lap trinh server",
+      "B": "Cau truc trang web",
+      "C": "Phong to hinh anh"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q005",
+    "question_text": "Ngon ngu lap trinh Python thuoc loai nao?",
+    "options": {
+      "A": "Low-level",
+      "B": "High-level",
+      "C": "Assembly"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q006",
+    "question_text": "RAM la viet tat cua chu gi?",
+    "options": {
+      "A": "Random Access Memory",
+      "B": "Read Access Memory",
+      "C": "Rapid Application Module"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q007",
+    "question_text": "JavaScript duoc su dung cho dau?",
+    "options": {
+      "A": "Frontend web",
+      "B": "Database",
+      "C": "He dieu hanh"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q008",
+    "question_text": "So pi xap xi bang bao nhieu?",
+    "options": {
+      "A": "3.14",
+      "B": "2.17",
+      "C": "1.62"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q009",
+    "question_text": "Bien cua dat ban dau la gi?",
+    "options": {
+      "A": "Ocean",
+      "B": "Earth",
+      "C": "Sea"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q010",
+    "question_text": "Ngon ngu SQL dung de lam gi?",
+    "options": {
+      "A": "Lap trinh web",
+      "B": "Quan ly co so du lieu",
+      "C": "Ve do thi"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q011",
+    "question_text": "Thu vien STL cua C++ bao gom gi?",
+    "options": {
+      "A": "Cac container va algorithm",
+      "B": "Giao dien do hoa",
+      "C": "Quản lý bộ nhớ"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q012",
+    "question_text": "Dung luong 1GB bang bao nhieu MB?",
+    "options": {
+      "A": "1000 MB",
+      "B": "1024 MB",
+      "C": "2048 MB"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q013",
+    "question_text": "Bieu tuong '@' trong email co y nghia gi?",
+    "options": {
+      "A": "Ngăn cach ten va domain",
+      "B": "Kí hiệu số",
+      "C": "Kí hiệu địa chỉ IP"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q014",
+    "question_text": "Quoc gia nao co dan so lon nhat the gioi?",
+    "options": {
+      "A": "An Do",
+      "B": "Trung Quoc",
+      "C": "My"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q015",
+    "question_text": "2 * 6 = ?",
+    "options": {
+      "A": "12",
+      "B": "16",
+      "C": "10"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q016",
+    "question_text": "Nha van nao viet 'Harry Potter'?",
+    "options": {
+      "A": "J.K. Rowling",
+      "B": "George Martin",
+      "C": "Tolkien"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q017",
+    "question_text": "Ngon ngu nao la backend web?",
+    "options": {
+      "A": "Python",
+      "B": "HTML",
+      "C": "CSS"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q018",
+    "question_text": "Ngon ngu C++ duoc phat trien boi ai?",
+    "options": {
+      "A": "Bjarne Stroustrup",
+      "B": "Dennis Ritchie",
+      "C": "James Gosling"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q019",
+    "question_text": "Lap trinh thu vien React dung cho dau?",
+    "options": {
+      "A": "Frontend web",
+      "B": "Database",
+      "C": "Server"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q020",
+    "question_text": "Bien cua nuoc mat la gi?",
+    "options": {
+      "A": "River",
+      "B": "Lake",
+      "C": "Tear"
+    },
+    "correct_answer": "C"
+  },
+  {
+    "id": "q021",
+    "question_text": "2^3 bang bao nhieu?",
+    "options": {
+      "A": "6",
+      "B": "8",
+      "C": "9"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q022",
+    "question_text": "Viet tat USB la gi?",
+    "options": {
+      "A": "Universal Serial Bus",
+      "B": "Universal System Bus",
+      "C": "Unique Serial Bus"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q023",
+    "question_text": "Dia diem nao duoc goi la 'thanh pho tinh nghiem' cua Viet Nam?",
+    "options": {
+      "A": "Hue",
+      "B": "Da Nang",
+      "C": "Ha Noi"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q024",
+    "question_text": "Toan tu '+' trong C++ dung de lam gi?",
+    "options": {
+      "A": "Cong",
+      "B": "Tru",
+      "C": "Nhan"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q025",
+    "question_text": "Bien cua bien dat lon nhat trong he mat troi la gi?",
+    "options": {
+      "A": "Mercury",
+      "B": "Jupiter",
+      "C": "Saturn"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q026",
+    "question_text": "Ai la nguoi sang lap Apple?",
+    "options": {
+      "A": "Steve Jobs",
+      "B": "Bill Gates",
+      "C": "Mark Zuckerberg"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q027",
+    "question_text": "Chuong trinh nao dung de ve do thi?",
+    "options": {
+      "A": "Photoshop",
+      "B": "Excel",
+      "C": "Paint"
+    },
+    "correct_answer": "C"
+  },
+  {
+    "id": "q028",
+    "question_text": "Ngon ngu nao phu hop cho khoa hoc du lieu?",
+    "options": {
+      "A": "Python",
+      "B": "HTML",
+      "C": "CSS"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q029",
+    "question_text": "Thuoc tinh 'id' trong HTML dung de lam gi?",
+    "options": {
+      "A": "Xac dinh duy nhat 1 phan tu",
+      "B": "Lap trinh server",
+      "C": "Dinh dang chu"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q030",
+    "question_text": "2 + 3 * 4 = ?",
+    "options": {
+      "A": "20",
+      "B": "14",
+      "C": "10"
+    },
+    "correct_answer": "A"
   }
 ]

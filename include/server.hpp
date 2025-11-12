@@ -3,9 +3,8 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "json.hpp"
+#include <mutex> // Cần cho thread-safe
 #include <nlohmann/json.hpp>
-
 
 using json = nlohmann::json;
 
@@ -26,21 +25,39 @@ public:
 
 private:
     /**
-     * @brief Tải câu hỏi từ file JSON.
-     */
-    void loadQuestions(const std::string& filename);
-
-    /**
-     * @brief Lấy 1 câu hỏi ngẫu nhiên.
-     */
-    Question getRandomQuestion();
-    
-    /**
-     * @brief Logic xử lý 1 client (gửi câu hỏi, nhận trả lời).
+     * @brief Logic xử lý 1 client (Bao gồm Đăng nhập VÀ Chơi game).
      */
     void handleClient(int client_socket);
 
+    // --- PHẦN XỬ LÝ CÂU HỎI ---
+    void loadQuestions(const std::string& filename);
+    Question getRandomQuestion();
+
+    // --- PHẦN XỬ LÝ USER ---
+    /**
+     * @brief Tải file data/users.json vào bộ nhớ.
+     */
+    void loadUsers(const std::string& filename);
+
+    /**
+     * @brief Lưu lại vector loaded_users vào file (khi khóa tài khoản/cập nhật điểm).
+     * @return true nếu lưu thành công.
+     */
+    bool saveUsers(const std::string& filename);
+
+    /**
+     * @brief Logic chính: Kiểm tra thông tin đăng nhập, xử lý 3 lần sai.
+     * @param user_db_index [out] Sẽ lưu index của user trong vector nếu login thành công.
+     * @return true nếu đăng nhập thành công.
+     */
+    bool checkLogin(const std::string& user, const std::string& pass, int& attempts, std::string& fail_reason, int& user_db_index);
+
+    // --- BIẾN THÀNH VIÊN ---
     int server_fd;
     int port;
     std::vector<Question> questions;
+
+    // --- BIẾN THÀNH VIÊN MỚI ---
+    std::vector<json> loaded_users; // Lưu CSDL user (tải từ users.json)
+    std::mutex g_users_mutex;         // Khóa để bảo vệ file/vector user
 };
