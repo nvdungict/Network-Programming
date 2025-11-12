@@ -1,0 +1,32 @@
+[
+  {
+    "id": "q001",
+    "question_text": "CPU la viet tat cua chu gi?",
+    "options": {
+      "A": "Central Processing Unit",
+      "B": "Central Pretty Unit",
+      "C": "Core Processing Unit"
+    },
+    "correct_answer": "A"
+  },
+  {
+    "id": "q002",
+    "question_text": "Thu do cua Viet Nam la gi?",
+    "options": {
+      "A": "TP. Ho Chi Minh",
+      "B": "Ha Noi",
+      "C": "Da Nang"
+    },
+    "correct_answer": "B"
+  },
+  {
+    "id": "q003",
+    "question_text": "1 + 1 = ?",
+    "options": {
+      "A": "1",
+      "B": "2",
+      "C": "3"
+    },
+    "correct_answer": "B"
+  }
+]
