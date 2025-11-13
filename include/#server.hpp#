@@ -3,9 +3,8 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <mutex> // Cần cho std::mutex
+#include <mutex> // THÊM MỚI: Cần cho thread-safe
 #include <nlohmann/json.hpp>
-#include <set>   // <-- SỬA LỖI 1: Thêm thư viện <set>
 
 using json = nlohmann::json;
 
@@ -30,27 +29,37 @@ private:
      */
     void handleClient(int client_socket);
 
-    // --- PHẦN XỬ LÝ CÂU HỎI ---
+    // --- PHẦN XỬ LÝ CÂU HỎI (CŨ) ---
     void loadQuestions(const std::string& filename);
     Question getRandomQuestion();
 
-    // --- PHẦN XỬ LÝ USER ---
+    // --- PHẦN XỬ LÝ USER (THÊM MỚI) ---
+    /**
+     * @brief Tải file data/users.json vào bộ nhớ.
+     */
     void loadUsers(const std::string& filename);
+
+    /**
+     * @brief Lưu lại vector loaded_users vào file (khi khóa tài khoản).
+     * @return true nếu lưu thành công.
+     */
     bool saveUsers(const std::string& filename);
+
+    /**
+     * @brief Logic chính: Kiểm tra thông tin đăng nhập, xử lý 3 lần sai.
+     * @param attempts Biến (của thread) đếm số lần sai.
+     * @param fail_reason Thông báo lý do thất bại.
+     * @return true nếu đăng nhập thành công.
+     */
+
     bool checkLogin(const std::string& user, const std::string& pass, int& attempts, std::string& fail_reason, int& user_db_index);
 
     // --- BIẾN THÀNH VIÊN ---
-    
-    // SỬA CẢNH BÁO -Wreorder: Đổi thứ tự port và server_fd
-    // để khớp với hàm khởi tạo Server::Server
+    int server_fd;
     int port;
-    int server_fd; 
-    
     std::vector<Question> questions;
-    std::vector<json> loaded_users; 
-    std::mutex g_users_mutex;         
 
     // --- BIẾN THÀNH VIÊN MỚI ---
-    std::set<std::string> active_sessions; 
-    std::mutex g_session_mutex; // <-- SỬA LỖI 2: Thêm dấu ;
+    std::vector<json> loaded_users; // Lưu CSDL user (tải từ users.json)
+    std::mutex g_users_mutex;         // Khóa để bảo vệ file/vector user
 };

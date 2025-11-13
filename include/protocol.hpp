@@ -1,26 +1,29 @@
 #pragma once
 
 #include <string>
-#include "json.hpp" // Giả sử đã có file này trong include/
-#include <nlohmann/json.hpp>
-
+#include <nlohmann/json.hpp> 
 
 // Dùng nlohmann::json cho tiện
 using json = nlohmann::json;
 
 namespace protocol {
     /**
-     * @brief Gửi một thông điệp JSON đã được đóng gói (Length Prefixing).
-     * @param socket File descriptor của socket.
-     * @param j Đối tượng JSON cần gửi.
-     * @return true nếu gửi thành công, false nếu thất bại.
+     * @brief Gửi một thông điệp JSON (Thêm 4-byte độ dài ở đầu).
      */
     bool sendMessage(int socket, const json& j);
 
     /**
-     * @brief Nhận và giải gói một thông điệp JSON.
-     * @param socket File descriptor của socket.
-     * @return Một đối tượng JSON. Sẽ là .empty() nếu có lỗi hoặc mất kết nối.
+     * @brief Nhận một thông điệp JSON (Đọc 4-byte độ dài trước).
      */
     json receiveMessage(int socket);
+
+    // --- CÁC HÀNH ĐỘNG CỦA GAME ---
+    const std::string C2S_SUBMIT_ANSWER = "C2S_SUBMIT_ANSWER";
+    const std::string S2C_NEW_QUESTION = "S2C_NEW_QUESTION";
+    const std::string S2C_ANSWER_RESULT = "S2C_ANSWER_RESULT";
+
+    // --- CÁC HÀNH ĐỘNG MỚI CHO ĐĂNG NHẬP ---
+    const std::string C2S_LOGIN_REQUEST = "C2S_LOGIN_REQUEST";
+    const std::string S2C_LOGIN_SUCCESS = "S2C_LOGIN_SUCCESS";
+    const std::string S2C_LOGIN_FAILURE = "S2C_LOGIN_FAILURE";
 }
