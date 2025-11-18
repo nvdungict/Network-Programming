@@ -5,9 +5,14 @@
 // Đặt cổng mặc định
 #define PORT 8081 
 
-int main() {
+int main(int argc, char* argv[]) {
+    int port = PORT;
+    if (argc > 1) {
+        port = std::atoi(argv[1]);
+    }
+
     // Khởi tạo Server
-    Server gameServer(PORT);
+    Server gameServer(port);
 
     // Bắt đầu (tải data, bind, listen)
     if (!gameServer.start()) {

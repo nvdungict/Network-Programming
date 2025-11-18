@@ -1,37 +1,49 @@
-# Compiler
+# Makefile cho dự án Game Lobby
+
+# Trình biên dịch
 CXX = g++
-# Cờ biên dịch: C++17, bật tất cả cảnh báo, và thêm thư mục 'include'
-CXXFLAGS = -std=c++17 -Wall -Wextra -I./include
-# Cờ Linker: thêm thư viện pthread (cần cho ncurses, hoặc thread sau này)
+
+# Cờ biên dịch: C++17, hiện mọi cảnh báo, thêm thư mục 'include' + Homebrew include
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./include -I/opt/homebrew/include
+
+# Cờ Linker: thêm thư viện pthread (cần cho std::thread)
 LDFLAGS = -lpthread
 
+# -- Thư mục --
+BIN_DIR = bin
+SRC_DIR = src
+CLIENT_DIR = client
+
 # -- Server --
-# Các file nguồn của Server
-SERVER_SOURCES = src/main.cpp src/server.cpp src/protocol.cpp
-# Tên file target (file chạy) của Server
-SERVER_TARGET = bin/server
+SERVER_SOURCES = \
+	$(SRC_DIR)/main.cpp \
+	$(SRC_DIR)/server.cpp \
+	$(SRC_DIR)/protocol.cpp \
+	$(SRC_DIR)/UserManager.cpp \
+	$(SRC_DIR)/RoomManager.cpp \
+	$(SRC_DIR)/Room.cpp \
+	$(SRC_DIR)/GameManager.cpp
+
+SERVER_TARGET = $(BIN_DIR)/server
 
 # -- Client --
-# Các file nguồn của Client (dùng chung protocol.cpp)
-CLIENT_SOURCES = client/client.cpp src/protocol.cpp
-# Tên file target (file chạy) của Client
-CLIENT_TARGET = bin/client
+CLIENT_SOURCES = $(CLIENT_DIR)/client.cpp $(SRC_DIR)/protocol.cpp
+CLIENT_TARGET = $(BIN_DIR)/client
 
-# Tạo thư mục 'bin' nếu chưa có
-D_BIN = bin
-$(shell mkdir -p $(D_BIN))
+# Build cả Server và Client
+all: directories $(SERVER_TARGET) $(CLIENT_TARGET)
 
-# Target mặc định: build cả hai
-all: $(SERVER_TARGET) $(CLIENT_TARGET)
+directories:
+	@mkdir -p $(BIN_DIR)
 
-# Quy tắc build Server
 $(SERVER_TARGET): $(SERVER_SOURCES)
-	$(CXX) $(CXXFLAGS) -o $@ $(SERVER_SOURCES) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	@echo "Đã biên dịch Server: $@"
 
-# Quy tắc build Client
 $(CLIENT_TARGET): $(CLIENT_SOURCES)
-	$(CXX) $(CXXFLAGS) -o $@ $(CLIENT_SOURCES) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	@echo "Đã biên dịch Client: $@"
 
-# Quy tắc dọn dẹp
 clean:
-	rm -f bin/server bin/client
+	@rm -f $(BIN_DIR)/server $(BIN_DIR)/client
+	@echo "Đã dọn dẹp thư mục $(BIN_DIR)"

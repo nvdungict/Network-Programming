@@ -6,15 +6,33 @@
     "username": "dung"
   },
   {
-    "password": "456",
-    "score": 0,
+    "password": "123",
+    "score": 1,
     "status": "active",
     "username": "hoang"
+  },
+  {
+    "password": "123",
+    "score": 0,
+    "status": "active",
+    "username": "quang"
+  },
+  {
+    "password": "123",
+    "score": 0,
+    "status": "active",
+    "username": "yen"
   },
   {
     "password": "admin_pass",
     "score": 0,
     "status": "blocked",
     "username": "admin"
+  },
+  {
+    "password": "123",
+    "score": 0,
+    "status": "active",
+    "username": "quan"
   }
 ]

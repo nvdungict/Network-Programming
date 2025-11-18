@@ -1,56 +1,48 @@
 #pragma once
-
-#include <vector>
 #include <string>
 #include <map>
-#include <mutex> // Cần cho std::mutex
+#include <mutex>
 #include <nlohmann/json.hpp>
-#include <set>   // <-- SỬA LỖI 1: Thêm thư viện <set>
+// --- SỬA LỖI: Thêm 2 include bị thiếu ---
+#include "UserManager.hpp"
+#include "RoomManager.hpp" 
+// --- Hết sửa ---
 
 using json = nlohmann::json;
 
-// Struct đơn giản để chứa câu hỏi
-struct Question {
-    std::string id;
-    std::string text;
-    std::map<std::string, std::string> options;
-    std::string correct_answer;
-};
-
 class Server {
+private:
+    // --- SỬA LỖI: Sửa thứ tự để fix -Wreorder ---
+    int m_port;
+    int m_server_fd;
+    // --- Hết sửa ---
+
+    // Các "Manager" sẽ xử lý logic chính
+    UserManager m_user_manager;
+    RoomManager m_room_manager;
+
+    // Quản lý Session (Socket <-> User)
+    std::map<int, std::string> m_socket_to_user;
+    std::map<std::string, int> m_user_to_socket;
+    std::mutex m_session_mutex; // Mutex bảo vệ 2 map session
+
+    // Hàm thread chính cho mỗi client
+    void handleClient(int client_socket);
+
 public:
     Server(int port);
     ~Server();
     bool start();
-    void run(); // Vòng lặp chính để accept client
+    void run();
 
-private:
-    /**
-     * @brief Logic xử lý 1 client (Bao gồm Đăng nhập VÀ Chơi game).
-     */
-    void handleClient(int client_socket);
-
-    // --- PHẦN XỬ LÝ CÂU HỎI ---
-    void loadQuestions(const std::string& filename);
-    Question getRandomQuestion();
-
-    // --- PHẦN XỬ LÝ USER ---
-    void loadUsers(const std::string& filename);
-    bool saveUsers(const std::string& filename);
-    bool checkLogin(const std::string& user, const std::string& pass, int& attempts, std::string& fail_reason, int& user_db_index);
-
-    // --- BIẾN THÀNH VIÊN ---
+    // --- CÁC HÀM TIỆN ÍCH (Public) ---
+    void sendMessageToSocket(int client_sock, const json& msg);
+    int getSocketForUser(const std::string& username);
+    std::string getUserForSocket(int client_sock);
     
-    // SỬA CẢNH BÁO -Wreorder: Đổi thứ tự port và server_fd
-    // để khớp với hàm khởi tạo Server::Server
-    int port;
-    int server_fd; 
+    void registerSession(int client_sock, const std::string& username);
+    void removeSession(int client_sock);
     
-    std::vector<Question> questions;
-    std::vector<json> loaded_users; 
-    std::mutex g_users_mutex;         
-
-    // --- BIẾN THÀNH VIÊN MỚI ---
-    std::set<std::string> active_sessions; 
-    std::mutex g_session_mutex; // <-- SỬA LỖI 2: Thêm dấu ;
+    UserManager& getUserManager() { return m_user_manager; }
+    RoomManager& getRoomManager() { return m_room_manager; }
 };
