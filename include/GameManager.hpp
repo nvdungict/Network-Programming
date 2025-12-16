@@ -3,12 +3,10 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <nlohmann/json.hpp>
+#include "protocol.hpp" // Để dùng AnswerPacket
 
-using json = nlohmann::json;
 class Room; 
 
-// (struct Question giữ nguyên)
 struct Question {
     std::string id;
     std::string text;
@@ -24,28 +22,27 @@ private:
     std::map<int, std::string> m_player_names; 
     Question m_current_question;
     
-    // --- SỬA LOGIC ---
-    std::map<int, std::string> m_player_answers; // (Giữ nguyên) Map: socket -> câu trả lời
-    std::set<int> m_active_players; // <-- THÊM MỚI: Theo dõi ai còn đang chơi
-    // --- Hết sửa ---
+    std::map<int, std::string> m_player_answers; 
+    std::set<int> m_active_players; 
 
     void sendNextQuestion_UNLOCKED();
     void endGame_UNLOCKED(const std::string& reason);
-    json getScoresAsJson_UNLOCKED();
     
-    // --- THÊM MỚI: Hàm xử lý khi đủ câu trả lời ---
     void processRoundResults_UNLOCKED();
 
 public:
     GameManager(Room* room, const std::vector<Question>& questions_pool);
     ~GameManager();
 
-    // (Các hàm public giữ nguyên)
     void startGame_UNLOCKED();
     void resetGame_UNLOCKED(); 
-    void handleSubmitAnswer_UNLOCKED(int client_sock, const json& payload);
+    
+    // Tham số Struct
+    void handleSubmitAnswer_UNLOCKED(int client_sock, const protocol::AnswerPacket* pkt);
+    
     void handleSurrender_UNLOCKED(int client_sock, bool silent = false);
     void addPlayer_UNLOCKED(int player_sock, const std::string& username);
     void removePlayer_UNLOCKED(int player_sock);
-    json getScoresAsJson_UNLOCKED_Public(); 
+    
+    int getScore(int sock); // Helper mới
 };

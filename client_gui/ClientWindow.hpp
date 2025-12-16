@@ -1,0 +1,109 @@
+#pragma once
+#include <gtkmm.h>
+#include <cairomm/context.h>
+#include <gtkmm/overlay.h>      // MỚI: Để xếp chồng layer (Nền + Form)
+#include <gtkmm/cssprovider.h>  // MỚI: Để load CSS style
+#include <string>
+#include "NetworkClient.hpp"
+
+// --- Widget trạng thái kết nối (Hình tròn xanh/đỏ) ---
+class StatusCircle : public Gtk::DrawingArea {
+public:
+    bool connected = false;
+    StatusCircle() { set_size_request(20, 20); }
+    
+    void set_connected(bool s) { 
+        connected = s; 
+        if(is_visible() && get_mapped()) queue_draw(); 
+    }
+protected:
+    bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
+};
+
+// --- Cửa sổ chính ---
+class ClientWindow : public Gtk::Window {
+public:
+    ClientWindow(const std::string& ip, int port);
+    virtual ~ClientWindow();
+
+private:
+    // --- MODULE MẠNG ---
+    NetworkClient m_client;
+    Glib::Dispatcher m_dispatcher;
+
+    // --- CẤU TRÚC GIAO DIỆN ---
+    Gtk::Stack m_stack; 
+
+    // ==========================================
+    // 1. Màn hình Login (Đã nâng cấp UI/UX)
+    // ==========================================
+    Gtk::Overlay m_login_overlay;      // Container chính (Layering)
+    Gtk::DrawingArea m_login_bg_area;  // Layer dưới: Vẽ nền Gradient & Logo
+    Gtk::Box m_box_login_form;         // Layer trên: Chứa các ô nhập liệu (Form)
+    
+    // Các widget nhập liệu
+    Gtk::Entry m_entry_user, m_entry_pass;
+    Gtk::Label m_lbl_login_msg;
+    StatusCircle m_status_circle;
+
+    // Các nút bấm chính & phụ
+    Gtk::Button m_btn_login;
+    Gtk::Button m_btn_register;     // Nút text link
+    Gtk::Button m_btn_forgot_pass;  // Nút text link (Mới)
+
+    // Phần Social Login (Mới)
+    Gtk::Label m_lbl_social_text;
+    Gtk::Box m_box_social;
+    Gtk::Button m_btn_social_google, m_btn_social_fb, m_btn_social_apple;
+    Gtk::Image m_img_google, m_img_fb, m_img_apple;
+
+    // Biến cũ (Giữ lại để tương thích constructor, nhưng không dùng hiển thị chính)
+    Gtk::Box m_box_login; 
+
+    // ==========================================
+    // 2. Màn hình Lobby (Giữ nguyên)
+    // ==========================================
+    Gtk::Box m_box_lobby;
+    Gtk::Label m_lbl_welcome;
+    Gtk::Entry m_entry_room_name, m_entry_room_id;
+    Gtk::Button m_btn_create, m_btn_join, m_btn_logout;
+
+    // ==========================================
+    // 3. Màn hình Invite (Giữ nguyên)
+    // ==========================================
+    Gtk::Box m_box_invite;
+    Gtk::Label m_lbl_invite_msg;
+    Gtk::Button m_btn_accept, m_btn_decline;
+    int m_pending_invite_room_id = -1;
+
+    // ==========================================
+    // 4. Màn hình Game (Giữ nguyên)
+    // ==========================================
+    Gtk::Box m_box_game;
+    Gtk::Label m_lbl_room_info, m_lbl_question;
+    Gtk::Grid m_grid_answers;
+    Gtk::Button m_btn_opt[4]; // Nút A, B, C, D
+    Gtk::Button m_btn_start, m_btn_leave;
+    
+    Gtk::Box m_box_invite_tool;
+    Gtk::Entry m_entry_invite_target;
+    Gtk::Button m_btn_send_invite;
+
+    Gtk::ScrolledWindow m_scroll;
+    Gtk::TextView m_txt_log;
+
+    std::string m_current_q_id;
+
+    // --- CÁC HÀM HELPER ---
+    void setup_ui();
+    void on_network_signal(); 
+    void log_msg(const std::string& msg);
+
+    bool m_is_register_mode = false;
+    void toggle_auth_mode();
+
+    // --- HÀM UI MỚI ---
+    void load_css(); // Load file CSS styling
+    // Hàm vẽ background login (Galaxy + Logo)
+    bool on_draw_login_bg(const Cairo::RefPtr<Cairo::Context>& cr); 
+};

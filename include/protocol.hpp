@@ -1,51 +1,136 @@
 #pragma once
-#include <string>
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
+#include <cstdint>
+#include <cstring>
 
 namespace protocol {
-    // Hàm gửi/nhận (triển khai ở protocol.cpp)
-    bool sendMessage(int socket, const json& j);
-    json receiveMessage(int socket);
 
-    // === Client Gửi (C2S) ===
-    const std::string C2S_LOGIN = "C2S_LOGIN";
-    const std::string C2S_LOGOUT = "C2S_LOGOUT";
-    const std::string C2S_CREATE_ACCOUNT = "C2S_CREATE_ACCOUNT";
-    
-    const std::string C2S_CREATE_ROOM = "C2S_CREATE_ROOM";
-    const std::string C2S_JOIN_ROOM = "C2S_JOIN_ROOM";
-    const std::string C2S_INVITE_PLAYER = "C2S_INVITE_PLAYER";
-    const std::string C2S_LEAVE_ROOM = "C2S_LEAVE_ROOM";
-    
-    const std::string C2S_START_GAME = "C2S_START_GAME";
-    const std::string C2S_SUBMIT_ANSWER = "C2S_SUBMIT_ANSWER"; // (Game Management)
-    const std::string C2S_SURRENDER = "C2S_SURRENDER";
+    // === OpCodes (Loại lệnh) ===
+    enum CommandType : uint16_t {
+        CMD_UNKNOWN = 0,
 
-    // === Server Gửi (S2C) ===
-    const std::string S2C_LOGIN_SUCCESS = "S2C_LOGIN_SUCCESS";
-    const std::string S2C_LOGIN_FAILURE = "S2C_LOGIN_FAILURE";
-    const std::string S2C_LOGOUT_SUCCESS = "S2C_LOGOUT_SUCCESS";
-    const std::string S2C_CREATE_ACCOUNT_SUCCESS = "S2C_CREATE_ACCOUNT_SUCCESS";
-    const std::string S2C_CREATE_ACCOUNT_FAILURE = "S2C_CREATE_ACCOUNT_FAILURE";
-    
-    // Gửi cho client một thông báo (lỗi, thông tin)
-    const std::string S2C_INFO = "S2C_INFO"; 
-    
-    // Gửi cho client khi họ vào phòng thành công
-    const std::string S2C_JOIN_SUCCESS = "S2C_JOIN_SUCCESS"; 
-    // Gửi cho client khi họ bị mời
-    const std::string S2C_INVITE_RECEIVED = "S2C_INVITE_RECEIVED"; 
-    
-    // Gửi cho mọi người trong phòng khi có cập nhật (có người vào/ra)
-    const std::string S2C_ROOM_UPDATE = "S2C_ROOM_UPDATE"; 
+        // --- CLIENT GỬI ---
+        CMD_LOGIN = 1,
+        CMD_CREATE_ACCOUNT = 2, 
+        CMD_REGISTER = 2,       
+        CMD_LOGOUT = 3,
+        CMD_CREATE_ROOM = 4,
+        CMD_JOIN_ROOM = 5,
+        CMD_INVITE_PLAYER = 6,
+        CMD_DECLINE_INVITE = 7,
+        CMD_LEAVE_ROOM = 8,
+        CMD_START_GAME = 9,
+        CMD_SUBMIT_ANSWER = 10,
+        CMD_SURRENDER = 11,
 
-    // Gửi khi game bắt đầu
-    const std::string S2C_GAME_STARTED = "S2C_GAME_STARTED";
-    const std::string S2C_NEW_QUESTION = "S2C_NEW_QUESTION";
-    const std::string S2C_ANSWER_RESULT = "S2C_ANSWER_RESULT";
-    const std::string S2C_GAME_OVER = "S2C_GAME_OVER"; // (Khi surrender hoặc sai)
-    const std::string S2C_LEAVE_SUCCESS = "S2C_LEAVE_SUCCESS"; // Server xác nhận rời phòng
-    const std::string C2S_DECLINE_INVITE = "C2S_DECLINE_INVITE";
+        // --- SERVER GỬI ---
+        CMD_LOGIN_SUCCESS = 50,
+        CMD_LOGIN_FAILURE = 51,
+        CMD_CREATE_ACCOUNT_SUCCESS = 52,
+        CMD_CREATE_ACCOUNT_FAILURE = 53,
+        CMD_REGISTER_RESULT = 53, 
+        CMD_LOGOUT_SUCCESS = 54,
+        CMD_JOIN_SUCCESS = 55,
+        CMD_LEAVE_SUCCESS = 56,
+        CMD_INFO = 57,
+        CMD_INVITE_RECEIVED = 58,
+        CMD_ROOM_UPDATE = 59,     
+        CMD_PLAYER_INFO = 60,     
+        CMD_GAME_STARTED = 61,
+        CMD_NEW_QUESTION = 62,
+        CMD_ANSWER_RESULT = 63,
+        CMD_GAME_OVER = 64
+    };
+
+    // === Header ===
+    #pragma pack(push, 1)
+    struct PacketHeader {
+        uint16_t type;      
+        uint16_t length; 
+    };
+    #pragma pack(pop)
+
+    // === Các Struct Payload ===
+
+    // 1. Auth
+    struct Payload_Auth {
+        char username[32];
+        char password[32];
+    };
+    using AuthPacket = Payload_Auth; 
+
+    // 2. Login Result
+    struct Payload_LoginSuccess {
+        int score;
+        char username[32];
+    };
+    using LoginResultPacket = Payload_LoginSuccess;
+
+    // 3. Room Req
+    struct Payload_RoomReq {
+        int room_id;
+        char room_name[64];
+    };
+    using RoomReqPacket = Payload_RoomReq;
+
+    // 4. Room Info / Update (QUAN TRỌNG: Đã thêm vào để fix lỗi Server)
+    struct Payload_RoomInfo {
+        int room_id;
+        char room_name[64];
+        char host_username[32];
+        char state[16];   
+        int player_count; 
+    };
+    using RoomUpdateHeader = Payload_RoomInfo; // Alias cho Server dùng
+
+    // 5. Player Info (QUAN TRỌNG: Đã thêm vào để fix lỗi Server)
+    struct Payload_PlayerInfo {
+        char username[32];
+        int score;
+    };
+    using PlayerInfoPacket = Payload_PlayerInfo; // Alias cho Server dùng
+
+    // 6. Invite
+    struct Payload_Invite {
+        char target_username[32];
+        char from_username[32];
+        int room_id;
+    };
+    using InvitePacket = Payload_Invite;
+
+    // 7. Question
+    struct Payload_Question {
+        char question_id[16];
+        char question_text[256];
+        char options[4][64]; 
+    };
+    using QuestionPacket = Payload_Question;
+
+    // 8. Answer
+    struct Payload_Answer {
+        char question_id[16];
+        char answer[64];
+    };
+    using AnswerPacket = Payload_Answer;
+
+    // 9. Result
+    struct Payload_Result {
+        char player_username[32];
+        bool is_correct;
+        int new_score;
+        char correct_answer[64];
+    };
+    using AnswerResultPacket = Payload_Result;
+
+    // 10. Message
+    struct Payload_Message {
+        char message[256];
+    };
+    using MessagePacket = Payload_Message;
+    
+    using GameOverPacket = Payload_Message;
+
+    // === Functions ===
+    bool sendPacket(int sock, uint16_t type, const void* data, uint16_t len);
+    bool recvHeader(int sock, uint16_t &type, uint16_t &len);
+    bool recvData(int sock, void* buffer, uint16_t len);
 }

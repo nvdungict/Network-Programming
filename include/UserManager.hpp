@@ -1,39 +1,36 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <set> // <-- THÊM THƯ VIỆN SET
+#include <set>
 #include <mutex>
 #include <nlohmann/json.hpp>
+#include "protocol.hpp" // Cần protocol struct
 
 using json = nlohmann::json;
-class Server; // Khai báo trước (Forward declaration)
+class Server; 
 
 class UserManager {
 private:
-    Server* m_server; // Con trỏ để gọi lại Server
-    std::vector<json> m_users_db; // CSDL user (từ file)
+    Server* m_server;
+    std::vector<json> m_users_db; // Vẫn dùng JSON để lưu file cho tiện (Server side only)
     
-    // --- SỬA LỖI: Thêm các biến bị thiếu ---
-    std::set<std::string> m_active_sessions; // Các user đang online
-    std::mutex m_db_mutex; // Mutex bảo vệ CSDL (file)
-    std::mutex m_session_mutex; // Mutex bảo vệ session (runtime)
-    // --- Hết sửa ---
+    std::set<std::string> m_active_sessions; 
+    std::mutex m_db_mutex; 
+    std::mutex m_session_mutex; 
 
-    bool saveUsersToFile(); // Hàm nội bộ
+    bool saveUsersToFile(); 
 
 public:
     UserManager(Server* server);
     void loadUsers(const std::string& filename);
 
-    // Xử lý các "action" từ client
-    void handleLogin(int client_sock, const json& payload, int& login_attempts);
-    void handleCreateAccount(int client_sock, const json& payload);
-    void handleLogout(int client_sock);
+    // Thay đổi tham số sang struct
+    void handleLogin(int client_sock, const protocol::AuthPacket* pkt, int& login_attempts);
+    void handleCreateAccount(int client_sock, const protocol::AuthPacket* pkt);
     
-    // Xử lý khi client ngắt kết nối
+    void handleLogout(int client_sock);
     void handleDisconnect(int client_sock);
 
-    // Cập nhật điểm
     void resetScore(const std::string& username);
     int addScore(const std::string& username, int points_to_add);
 };
