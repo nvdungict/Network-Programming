@@ -1,36 +1,32 @@
 #pragma once
+#include "../db/Database.hpp"
+#include "protocol.hpp"
+#include <mutex>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
-#include <mutex>
-#include <nlohmann/json.hpp>
-#include "protocol.hpp" // Cần protocol struct
 
-using json = nlohmann::json;
-class Server; 
+class Server; // Forward declaration
 
 class UserManager {
 private:
-    Server* m_server;
-    std::vector<json> m_users_db; // Vẫn dùng JSON để lưu file cho tiện (Server side only)
-    
-    std::set<std::string> m_active_sessions; 
-    std::mutex m_db_mutex; 
-    std::mutex m_session_mutex; 
+  Server *m_server;
+  Database &m_db; // Tham chiếu đến Database
 
-    bool saveUsersToFile(); 
+  std::set<std::string> m_active_sessions;
+  std::mutex m_session_mutex;
 
 public:
-    UserManager(Server* server);
-    void loadUsers(const std::string& filename);
+  // Constructor nhận Server và Database
+  UserManager(Server *server, Database &db);
 
-    // Thay đổi tham số sang struct
-    void handleLogin(int client_sock, const protocol::AuthPacket* pkt, int& login_attempts);
-    void handleCreateAccount(int client_sock, const protocol::AuthPacket* pkt);
-    
-    void handleLogout(int client_sock);
-    void handleDisconnect(int client_sock);
+  // Xử lý Login có biến đếm attempts
+  void handleLogin(int client_sock, const protocol::AuthPacket *pkt,
+                   int &login_attempts);
+  void handleCreateAccount(int client_sock, const protocol::AuthPacket *pkt);
+  void handleLogout(int client_sock);
+  void handleDisconnect(int client_sock);
 
-    void resetScore(const std::string& username);
-    int addScore(const std::string& username, int points_to_add);
+  // ELO update function
+  void updateElo(const std::string &username, int elo_change);
 };

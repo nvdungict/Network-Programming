@@ -1,0 +1,50 @@
+[2026-01-04 14:24:21] [INFO] === Server Started ===
+[2026-01-04 14:24:21] [INFO] Server starting on port 5500
+[2026-01-04 14:24:21] [INFO] Database opened successfully
+[2026-01-04 14:24:38] [INFO] === Server Started ===
+[2026-01-04 14:24:38] [INFO] Server starting on port 5500
+[2026-01-04 14:24:38] [INFO] Database opened successfully
+[2026-01-04 14:24:38] [ERROR] Failed to start server!
+[2026-01-04 14:24:39] [INFO] === Server Started ===
+[2026-01-04 14:24:39] [INFO] Server starting on port 5500
+[2026-01-04 14:24:39] [INFO] Database opened successfully
+[2026-01-04 14:24:39] [ERROR] Failed to start server!
+[2026-01-04 14:24:59] [INFO] === Server Started ===
+[2026-01-04 14:24:59] [INFO] Server starting on port 5500
+[2026-01-04 14:24:59] [INFO] Database opened successfully
+[2026-01-04 14:24:59] [ERROR] Failed to start server!
+[2026-01-04 14:25:24] [INFO] === Server Started ===
+[2026-01-04 14:25:24] [INFO] Server starting on port 5500
+[2026-01-04 14:25:24] [INFO] Database opened successfully
+[2026-01-04 14:25:26] [INFO] Client connected: socket 7
+[2026-01-04 14:25:31] [INFO] [AUTH] New account created: 'dung'
+[2026-01-04 14:25:32] [INFO] [AUTH] User 'dung' logged in. ELO: 1000
+[2026-01-04 14:25:44] [INFO] [AUTH] New account created: 'nminh'
+[2026-01-04 14:25:48] [INFO] [AUTH] New account created: 'yen'
+[2026-01-04 14:25:52] [INFO] [AUTH] New account created: 'quang'
+[2026-01-04 14:25:56] [INFO] [AUTH] New account created: 'quan'
+[2026-01-04 14:25:57] [INFO] Client disconnected: socket 7
+[2026-01-04 14:26:42] [INFO] Client connected: socket 7
+[2026-01-04 14:26:42] [INFO] Client connected: socket 8
+[2026-01-04 14:26:42] [INFO] Client connected: socket 9
+[2026-01-04 14:27:02] [INFO] [AUTH] User 'dung' logged in. ELO: 1000
+[2026-01-04 14:27:06] [INFO] [AUTH] User 'nminh' logged in. ELO: 1000
+[2026-01-04 14:27:08] [INFO] [AUTH] User 'yen' logged in. ELO: 1000
+[2026-01-04 14:27:10] [INFO] [ROOM] 'dung' created room 'hi' (ID: 100)
+[2026-01-04 14:27:18] [INFO] [ROOM] 'nminh' joined room 100
+[2026-01-04 14:27:23] [INFO] [ROOM] 'yen' joined room 100
+[2026-01-04 14:27:24] [INFO] [GAME] Game started with 3 players
+[2026-01-04 14:27:33] [INFO] [GAME] Game ended: Nguoi chien thang: dung (Duration: 8s)
+[2026-01-04 14:27:33] [INFO] [GAME] Match result saved (ID: 1)
+[2026-01-04 14:29:29] [INFO] [AUTH] User 'dung' logged in. ELO: 1025
+[2026-01-04 14:30:09] [INFO] Client disconnected: dung (socket 7)
+[2026-01-04 14:30:11] [INFO] Client disconnected: yen (socket 8)
+[2026-01-04 14:30:15] [INFO] [ROOM] Room 100 closed (empty)
+[2026-01-04 14:30:15] [INFO] Client disconnected: nminh (socket 9)
+[2026-01-04 14:31:55] [INFO] === Server Started ===
+[2026-01-04 14:31:55] [INFO] Server starting on port 5500
+[2026-01-04 14:31:56] [INFO] Database opened successfully
+[2026-01-04 14:31:57] [INFO] Client connected: socket 7
+[2026-01-04 14:31:57] [INFO] Client disconnected: socket 7
+[2026-01-04 14:32:05] [INFO] Client connected: socket 7
+[2026-01-04 14:32:05] [INFO] Client disconnected: socket 7

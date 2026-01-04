@@ -3,12 +3,16 @@
 #include <map>
 #include <mutex>
 #include "UserManager.hpp"
-#include "RoomManager.hpp" 
+#include "RoomManager.hpp"
+#include "../db/Database.hpp"
 
 class Server {
 private:
     int m_port;
     int m_server_fd;
+
+    // SỬA: Dùng tham chiếu (Reference)
+    Database& m_db; 
 
     UserManager m_user_manager;
     RoomManager m_room_manager;
@@ -20,12 +24,12 @@ private:
     void handleClient(int client_socket);
 
 public:
-    Server(int port);
+    // Constructor nhận tham chiếu DB
+    Server(int port, Database& db);
     ~Server();
     bool start();
     void run();
 
-    // Thay đổi: Hàm gửi packet binary
     void sendPacket(int client_sock, uint16_t type, const void* data, uint16_t len);
 
     int getSocketForUser(const std::string& username);
@@ -36,4 +40,6 @@ public:
     
     UserManager& getUserManager() { return m_user_manager; }
     RoomManager& getRoomManager() { return m_room_manager; }
+    
+    Database& getDatabase() { return m_db; }
 };

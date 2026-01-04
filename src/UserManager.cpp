@@ -1,139 +1,104 @@
 #include "../include/UserManager.hpp"
+#include "../include/Logger.hpp"
 #include "../include/server.hpp"
-#include <iostream>
-#include <fstream>
 #include <cstring>
+#include <iostream>
 
-UserManager::UserManager(Server* server) : m_server(server) {}
+// Constructor khớp với Header: Nhận cả Server* và Database&
+UserManager::UserManager(Server *server, Database &db)
+    : m_server(server), m_db(db) {}
 
-void UserManager::loadUsers(const std::string& filename) {
-    std::lock_guard<std::mutex> lock(m_db_mutex); 
-    std::ifstream f(filename);
-    if (!f.is_open()) {
-        std::ofstream o(filename);
-        json default_users = json::array();
-        default_users.push_back({{"username", "admin"}, {"password", "123"}, {"status", "active"}, {"score", 0}});
-        o << std::setw(2) << default_users;
-        o.close();
-        f.open(filename);
+void UserManager::handleLogin(int client_sock, const protocol::AuthPacket *pkt,
+                              int &login_attempts) {
+  std::string user = pkt->username;
+  std::string pass = pkt->password;
+
+  protocol::MessagePacket msg_pkt;
+  memset(&msg_pkt, 0, sizeof(msg_pkt));
+
+  int elo = 1000;
+  // Dùng m_db trực tiếp
+  int result = m_db.checkLogin(user, pass, elo);
+
+  if (result == 0) { // Success
+    {
+      std::lock_guard<std::mutex> session_lock(m_session_mutex);
+      if (m_active_sessions.count(user)) {
+        strncpy(msg_pkt.message, "Tai khoan dang duoc su dung!", 255);
+        m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt,
+                             sizeof(msg_pkt));
+        return;
+      }
+      m_active_sessions.insert(user);
     }
-    try {
-        json data = json::parse(f);
-        m_users_db = data.get<std::vector<json>>(); 
-    } catch (...) {}
+
+    m_server->registerSession(client_sock, user);
+
+    protocol::LoginResultPacket res;
+    memset(&res, 0, sizeof(res));
+    strncpy(res.username, user.c_str(), 31);
+    res.elo = elo;
+    m_server->sendPacket(client_sock, protocol::CMD_LOGIN_SUCCESS, &res,
+                         sizeof(res));
+
+    Logger::getInstance().info("[AUTH] User '" + user +
+                               "' logged in. ELO: " + std::to_string(elo));
+
+  } else if (result == 1) { // Not Found
+    strncpy(msg_pkt.message, "Tai khoan khong ton tai!", 255);
+    m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt,
+                         sizeof(msg_pkt));
+  } else if (result == 2) { // Wrong Pass
+    strncpy(msg_pkt.message, "Sai mat khau!", 255);
+    m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt,
+                         sizeof(msg_pkt));
+
+    login_attempts++;
+    if (login_attempts >= 3) {
+      m_db.blockUser(user);
+    }
+  } else if (result == 3) { // Blocked
+    strncpy(msg_pkt.message, "Tai khoan da bi KHOA!", 255);
+    m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt,
+                         sizeof(msg_pkt));
+  }
 }
 
-bool UserManager::saveUsersToFile() {
-    try {
-        json j_users(m_users_db);
-        std::ofstream o("../data/users.json");
-        if (!o.is_open()) return false;
-        o << std::setw(2) << j_users;
-        return true;
-    } catch (...) { return false; }
-}
+void UserManager::handleCreateAccount(int client_sock,
+                                      const protocol::AuthPacket *pkt) {
+  std::string user = pkt->username;
+  std::string pass = pkt->password;
 
-void UserManager::handleLogin(int client_sock, const protocol::AuthPacket* pkt, int& login_attempts) {
-    std::string user = pkt->username;
-    std::string pass = pkt->password;
-    
-    std::lock_guard<std::mutex> db_lock(m_db_mutex);
-    bool found = false;
+  protocol::MessagePacket msg_pkt;
+  memset(&msg_pkt, 0, sizeof(msg_pkt));
 
-    protocol::MessagePacket msg_pkt;
-    memset(&msg_pkt, 0, sizeof(msg_pkt));
-
-    for (auto& user_data : m_users_db) {
-        if (user_data["username"] == user) {
-            found = true;
-            if (user_data["status"] == "blocked") {
-                strncpy(msg_pkt.message, "Account Blocked", 255);
-                m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt, sizeof(msg_pkt));
-            } else if (user_data["password"] != pass) {
-                login_attempts++;
-                if(login_attempts >= 3) {
-                    user_data["status"] = "blocked";
-                    saveUsersToFile();
-                }
-                strncpy(msg_pkt.message, "Wrong password", 255);
-                m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt, sizeof(msg_pkt));
-            } else {
-                std::lock_guard<std::mutex> session_lock(m_session_mutex);
-                if (m_active_sessions.count(user)) {
-                     strncpy(msg_pkt.message, "Already logged in", 255);
-                     m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt, sizeof(msg_pkt));
-                } else {
-                    m_active_sessions.insert(user);
-                    m_server->registerSession(client_sock, user);
-                    
-                    protocol::LoginResultPacket res;
-                    memset(&res, 0, sizeof(res));
-                    strncpy(res.username, user.c_str(), 31);
-                    res.score = user_data["score"];
-                    m_server->sendPacket(client_sock, protocol::CMD_LOGIN_SUCCESS, &res, sizeof(res));
-                }
-            }
-            break;
-        }
-    }
-    if (!found) {
-        strncpy(msg_pkt.message, "User not found", 255);
-        m_server->sendPacket(client_sock, protocol::CMD_LOGIN_FAILURE, &msg_pkt, sizeof(msg_pkt));
-    }
-}
-
-void UserManager::handleCreateAccount(int client_sock, const protocol::AuthPacket* pkt) {
-    std::lock_guard<std::mutex> db_lock(m_db_mutex);
-    std::string user = pkt->username;
-    
-    protocol::MessagePacket msg_pkt;
-    memset(&msg_pkt, 0, sizeof(msg_pkt));
-
-    for (const auto& user_data : m_users_db) {
-        if (user_data["username"] == user) {
-            strncpy(msg_pkt.message, "User exists", 255);
-            m_server->sendPacket(client_sock, protocol::CMD_CREATE_ACCOUNT_FAILURE, &msg_pkt, sizeof(msg_pkt));
-            return;
-        }
-    }
-    m_users_db.push_back({{"username", user}, {"password", pkt->password}, {"status", "active"}, {"score", 0}});
-    saveUsersToFile();
-    
-    strncpy(msg_pkt.message, "Created successfully", 255);
-    m_server->sendPacket(client_sock, protocol::CMD_CREATE_ACCOUNT_SUCCESS, &msg_pkt, sizeof(msg_pkt));
+  if (m_db.createUser(user, pass)) {
+    strncpy(msg_pkt.message, "Tao tai khoan thanh cong!", 255);
+    m_server->sendPacket(client_sock, protocol::CMD_CREATE_ACCOUNT_SUCCESS,
+                         &msg_pkt, sizeof(msg_pkt));
+    Logger::getInstance().info("[AUTH] New account created: '" + user + "'");
+  } else {
+    strncpy(msg_pkt.message, "Ten tai khoan da ton tai!", 255);
+    m_server->sendPacket(client_sock, protocol::CMD_CREATE_ACCOUNT_FAILURE,
+                         &msg_pkt, sizeof(msg_pkt));
+    Logger::getInstance().warn("[AUTH] Account creation failed - user '" +
+                               user + "' exists");
+  }
 }
 
 void UserManager::handleLogout(int client_sock) {
-    handleDisconnect(client_sock);
-    m_server->sendPacket(client_sock, protocol::CMD_LOGOUT_SUCCESS, nullptr, 0);
+  handleDisconnect(client_sock);
+  m_server->sendPacket(client_sock, protocol::CMD_LOGOUT_SUCCESS, nullptr, 0);
 }
 
 void UserManager::handleDisconnect(int client_sock) {
-    std::lock_guard<std::mutex> session_lock(m_session_mutex);
-    std::string username = m_server->getUserForSocket(client_sock);
-    if (!username.empty()) m_active_sessions.erase(username);
+  std::lock_guard<std::mutex> session_lock(m_session_mutex);
+  std::string username = m_server->getUserForSocket(client_sock);
+  if (!username.empty()) {
+    m_active_sessions.erase(username);
+  }
 }
 
-void UserManager::resetScore(const std::string& username) {
-    std::lock_guard<std::mutex> lock(m_db_mutex);
-    for (auto& user_data : m_users_db) {
-        if (user_data["username"] == username) {
-            user_data["score"] = 0;
-            saveUsersToFile();
-            return;
-        }
-    }
-}
-
-int UserManager::addScore(const std::string& username, int points) {
-     std::lock_guard<std::mutex> lock(m_db_mutex);
-     for (auto& user_data : m_users_db) {
-        if (user_data["username"] == username) {
-            int current = user_data["score"];
-            user_data["score"] = current + points;
-            saveUsersToFile();
-            return current + points;
-        }
-    }
-    return 0;
+void UserManager::updateElo(const std::string &username, int elo_change) {
+  m_db.updateElo(username, elo_change);
 }

@@ -15,9 +15,7 @@ private:
     std::mutex m_rooms_mutex; 
     int m_next_room_id;
 
-    std::vector<Question> m_questions_pool; 
-    void loadQuestions(const std::string& filename);
-    
+    // Helper functions
     std::shared_ptr<Room> findRoomBySocket_UNLOCKED(int client_sock);
     void handleLeaveRoom_UNLOCKED(int client_sock);
 
@@ -25,7 +23,7 @@ public:
     RoomManager(Server* server);
     void init(); 
 
-    // Thay đổi tham số sang struct
+    // Các hàm xử lý sự kiện từ Server
     void handleCreateRoom(int client_sock, const protocol::RoomReqPacket* pkt);
     void handleJoinRoom(int client_sock, const protocol::RoomReqPacket* pkt);
     void handleInvitePlayer(int client_sock, const protocol::InvitePacket* pkt);
