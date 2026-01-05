@@ -159,6 +159,7 @@ void Room::updatePlayersElo(
     const std::vector<std::pair<std::string, int>> &rankings) {
   // Cập nhật ELO dựa trên xếp hạng
   // rankings: vector của (username, rank) - rank 1 = top 1
+  (void)winner; // Suppress unused parameter warning
   for (const auto &[username, rank] : rankings) {
     int elo_change = 0;
     switch (rank) {

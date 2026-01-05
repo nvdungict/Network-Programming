@@ -1,0 +1,31 @@
+[BOT-HOST] HostBot starting game...
+[BOT-HOST] HostBot starting game...
+[BOT-HOST] HostBot starting game...
+[BOT-INFO] >>> ROUND 1: SPEED MCQ (Top 3 qualify) <<<
+[BOT] HostBot received Q (Type 0)
+[BOT] HostBot answering: B
+[BOT] HostBot received Q (Type 0)
+[BOT] HostBot answering: B
+[BOT] HostBot received Q (Type 0)
+[BOT] HostBot answering: A
+[BOT] HostBot received Q (Type 0)
+[BOT] HostBot answering: B
+[BOT] HostBot received Q (Type 0)
+[BOT] HostBot answering: D
+[BOT-INFO] Player3 has been eliminated.
+[BOT-INFO] Player1 has been eliminated.
+[BOT-INFO] Player2 has been eliminated.
+[BOT-INFO] >>> ROUND 2: SEMANTIC TEXT (Top 2 qualify) <<<
+[BOT] HostBot received Q (Type 1)
+[BOT] HostBot answering: TestAnswer
+[BOT] HostBot received Q (Type 1)
+[BOT] HostBot answering: TestAnswer
+[BOT] HostBot received Q (Type 1)
+[BOT] HostBot answering: TestAnswer
+[BOT-INFO] Player5 has been eliminated.
+[BOT-INFO] >>> ROUND 3: ESTIMATION FINAL <<<
+[BOT] HostBot received Q (Type 2)
+[BOT] HostBot answering: 1922
+[BOT] HostBot received Q (Type 2)
+[BOT] HostBot answering: 1930
+[BOT] Game Over.

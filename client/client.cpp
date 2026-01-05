@@ -140,13 +140,20 @@ void listenToServer(int sock) {
             }
             case protocol::CMD_NEW_QUESTION: {
                 auto pkt = (protocol::QuestionPacket*)buffer.data();
-                std::cout << "\n>>> QUESTION: " << pkt->question_text << std::endl;
-                for(int i=0; i<4; ++i) {
-                    if (strlen(pkt->options[i]) > 0) {
-                        std::cout << "   " << pkt->options[i] << std::endl;
+                std::cout << "\n>>> QUESTION (" << (int)pkt->question_type << "): " << pkt->question_text << std::endl;
+                
+                if (pkt->question_type == protocol::QT_MCQ) {
+                    for(int i=0; i<4; ++i) {
+                        if (strlen(pkt->options[i]) > 0) {
+                            std::cout << "   " << pkt->options[i] << std::endl;
+                        }
                     }
+                    std::cout << "Your answer (A/B/C/D): ";
+                } else if (pkt->question_type == protocol::QT_TEXT) {
+                    std::cout << "Type your answer: ";
+                } else {
+                    std::cout << "Type your estimation (number): ";
                 }
-                std::cout << "Your answer (A/B/C/D): ";
                 std::cout.flush();
                 break;
             }

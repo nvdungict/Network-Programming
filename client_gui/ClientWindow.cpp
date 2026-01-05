@@ -938,9 +938,25 @@ void ClientWindow::setup_ui() {
     m_entry_invite_target.set_text("");
   });
 
+  // Setup Entry & Submit Button for Text/Estimation
+  m_entry_answer.set_placeholder_text("Nhập câu trả lời của bạn...");
+  m_btn_submit_answer.set_label("Gửi Câu Trả Lời");
+  m_btn_submit_answer.get_style_context()->add_class("btn-gold"); // Re-use gold style
+  
+  m_box_game.pack_start(m_entry_answer, Gtk::PACK_SHRINK);
+  m_box_game.pack_start(m_btn_submit_answer, Gtk::PACK_SHRINK);
+
+  m_btn_submit_answer.signal_clicked().connect([this]() {
+      m_client.sendSubmitAnswer(m_current_q_id, m_entry_answer.get_text());
+      m_entry_answer.set_text(""); // Clear after send
+      m_btn_submit_answer.set_sensitive(false); // Prevent double submit
+  });
+
   m_stack.add(m_box_game, "game");
   show_all_children();
   m_grid_answers.hide();
+  m_entry_answer.hide();
+  m_btn_submit_answer.hide();
 }
 
 void ClientWindow::log_msg(const std::string &msg) {
@@ -1027,11 +1043,28 @@ void ClientWindow::on_network_signal() {
       auto p = (protocol::Payload_Question *)data;
       m_current_q_id = p->question_id;
       m_lbl_question.set_text(p->question_text);
-      for (int i = 0; i < 4; i++) {
-        m_btn_opt[i].set_label(p->options[i]);
-        m_btn_opt[i].set_sensitive(true);
+      
+      // Reset controls
+      m_btn_submit_answer.set_sensitive(true);
+
+      if (p->question_type == protocol::QT_MCQ) {
+          // MCQ Mode
+          m_entry_answer.hide();
+          m_btn_submit_answer.hide();
+          
+          for (int i = 0; i < 4; i++) {
+            m_btn_opt[i].set_label(p->options[i]);
+            m_btn_opt[i].set_sensitive(true);
+          }
+          m_grid_answers.show();
+      } else {
+          // Text / Estimation Mode
+          m_grid_answers.hide();
+          m_entry_answer.set_text("");
+          m_entry_answer.show();
+          m_btn_submit_answer.show();
+          m_entry_answer.grab_focus();
       }
-      m_grid_answers.show();
       break;
     }
     case protocol::CMD_ANSWER_RESULT: {

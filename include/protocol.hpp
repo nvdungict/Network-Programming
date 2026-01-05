@@ -103,8 +103,15 @@ struct Payload_Question {
   char question_id[16];
   char question_text[256];
   char options[4][64];
+  uint8_t question_type; // 0=MCQ, 1=TEXT, 2=ESTIMATION
 };
 using QuestionPacket = Payload_Question;
+
+enum QuestionType : uint8_t {
+  QT_MCQ = 0,
+  QT_TEXT = 1,
+  QT_ESTIMATION = 2
+};
 
 // 8. Answer
 struct Payload_Answer {

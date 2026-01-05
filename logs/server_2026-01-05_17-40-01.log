@@ -1,0 +1,32 @@
+[2026-01-05 17:40:01] [INFO] === Server Started ===
+[2026-01-05 17:40:01] [INFO] Server starting on port 5500
+[2026-01-05 17:40:01] [INFO] Database opened successfully
+[2026-01-05 17:40:03] [INFO] Client connected: socket 6
+[2026-01-05 17:40:03] [INFO] [AUTH] New account created: 'HostBot'
+[2026-01-05 17:40:04] [INFO] [AUTH] User 'HostBot' logged in. ELO: 1000
+[2026-01-05 17:40:05] [INFO] [ROOM] 'HostBot' created room 'BotRoom' (ID: 100)
+[2026-01-05 17:40:05] [INFO] Client connected: socket 7
+[2026-01-05 17:40:05] [INFO] Client connected: socket 8
+[2026-01-05 17:40:05] [INFO] Client connected: socket 10
+[2026-01-05 17:40:05] [INFO] Client connected: socket 11
+[2026-01-05 17:40:05] [INFO] [AUTH] New account created: 'Player4'
+[2026-01-05 17:40:05] [INFO] [AUTH] New account created: 'Player1'
+[2026-01-05 17:40:05] [INFO] [AUTH] New account created: 'Player2'
+[2026-01-05 17:40:05] [INFO] [AUTH] New account created: 'Player3'
+[2026-01-05 17:40:06] [INFO] [AUTH] User 'Player4' logged in. ELO: 1000
+[2026-01-05 17:40:06] [INFO] [AUTH] User 'Player2' logged in. ELO: 1000
+[2026-01-05 17:40:06] [INFO] [AUTH] User 'Player3' logged in. ELO: 1000
+[2026-01-05 17:40:06] [INFO] [AUTH] User 'Player1' logged in. ELO: 1000
+[2026-01-05 17:40:08] [INFO] [ROOM] 'Player4' joined room 100
+[2026-01-05 17:40:08] [INFO] [ROOM] 'Player1' joined room 100
+[2026-01-05 17:40:08] [INFO] [ROOM] 'Player3' joined room 100
+[2026-01-05 17:40:08] [INFO] [ROOM] 'Player2' joined room 100
+[2026-01-05 17:40:10] [INFO] [GAME] Game started with 5 players
+[2026-01-05 17:40:19] [INFO] Client disconnected: Player3 (socket 11)
+[2026-01-05 17:40:19] [INFO] Client disconnected: Player2 (socket 10)
+[2026-01-05 17:40:22] [INFO] Client disconnected: Player1 (socket 8)
+[2026-01-05 17:40:23] [INFO] [GAME] Game ended: Final Round Complete! (Duration: 13s)
+[2026-01-05 17:40:23] [INFO] [GAME] Match result saved (ID: 1)
+[2026-01-05 17:40:24] [INFO] Client disconnected: HostBot (socket 6)
+[2026-01-05 17:40:24] [INFO] [ROOM] Room 100 closed (empty)
+[2026-01-05 17:40:24] [INFO] Client disconnected: Player4 (socket 7)

@@ -150,6 +150,10 @@ private:
   Gtk::TextView m_txt_log;
 
   std::string m_current_q_id;
+  
+  // NEW: UI for Text/Estimation Rounds
+  Gtk::Entry m_entry_answer;
+  Gtk::Button m_btn_submit_answer;
 
   // --- CÁC HÀM HELPER ---
   void setup_ui();

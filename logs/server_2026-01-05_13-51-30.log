@@ -1,0 +1,28 @@
+[2026-01-05 13:51:30] [INFO] === Server Started ===
+[2026-01-05 13:51:30] [INFO] Server starting on port 5500
+[2026-01-05 13:51:30] [INFO] Database opened successfully
+[2026-01-05 13:51:34] [INFO] Client connected: socket 6
+[2026-01-05 13:51:34] [INFO] Client connected: socket 7
+[2026-01-05 13:51:34] [INFO] Client connected: socket 8
+[2026-01-05 13:52:08] [INFO] Client connected: socket 9
+[2026-01-05 13:52:16] [INFO] Client disconnected: socket 6
+[2026-01-05 13:53:46] [INFO] Client disconnected: socket 7
+[2026-01-05 13:53:46] [INFO] Client disconnected: socket 8
+[2026-01-05 13:55:40] [INFO] Client disconnected: socket 9
+[2026-01-05 13:55:43] [INFO] Client connected: socket 10
+[2026-01-05 13:56:23] [INFO] [AUTH] New account created: 'huy'
+[2026-01-05 13:56:26] [INFO] [AUTH] User 'huy' logged in. ELO: 1000
+[2026-01-05 13:56:43] [INFO] [AUTH] User 'huy' logged in. ELO: 1000
+[2026-01-05 13:57:09] [INFO] [ROOM] 'huy' created room '' (ID: 100)
+[2026-01-05 13:57:30] [INFO] [ROOM] Room 100 closed (empty)
+[2026-01-05 13:59:38] [INFO] Client connected: socket 6
+[2026-01-05 13:59:57] [INFO] [AUTH] New account created: 'huy2'
+[2026-01-05 14:00:00] [INFO] [AUTH] User 'huy2' logged in. ELO: 1000
+[2026-01-05 14:00:13] [INFO] [ROOM] 'huy' created room '12345' (ID: 101)
+[2026-01-05 14:00:40] [INFO] [ROOM] 'huy2' joined room 101
+[2026-01-05 14:01:10] [INFO] [ROOM] 'huy2' joined room 101
+[2026-01-05 14:01:26] [INFO] [GAME] Game started with 2 players
+[2026-01-05 14:01:53] [INFO] [GAME] Game ended: Tat ca nguoi choi da bi loai! (Duration: 27s)
+[2026-01-05 14:01:53] [INFO] [GAME] Match result saved (ID: 3)
+[2026-01-05 14:16:17] [INFO] [AUTH] User 'huy' logged in. ELO: 1010
+[2026-01-05 14:17:11] [INFO] [ROOM] 'huy' created room '12345' (ID: 102)
