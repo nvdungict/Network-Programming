@@ -1464,36 +1464,33 @@ void ClientWindow::setup_ui() {
   // Add log to scroll (only once)
   m_scroll.add(m_txt_log);
 
-  m_box_game.pack_start(m_lbl_room_info, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_btn_start, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_box_invite_tool, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_lbl_question, Gtk::PACK_SHRINK, 20);
-  m_box_game.pack_start(m_grid_answers, Gtk::PACK_SHRINK);
+  // Add waiting room to main game box (default view)
+  m_box_game.pack_start(m_box_game_waiting, Gtk::PACK_EXPAND_WIDGET);
+
+  // Integrate User Features into Friend's New UI
   
-  // NEW: Ranking Label
+  // 1. Ranking Board -> Add to Right Panel (Score area)
   m_lbl_ranking.set_text("--- LEADERBOARD ---");
   m_lbl_ranking.set_halign(Gtk::ALIGN_CENTER);
-  m_box_game.pack_start(m_lbl_ranking, Gtk::PACK_SHRINK, 10);
-  
-  m_box_game.pack_start(m_scroll, Gtk::PACK_EXPAND_WIDGET);
-  m_box_game.pack_start(m_btn_leave, Gtk::PACK_SHRINK);
+  m_box_game_right.pack_start(m_lbl_ranking, Gtk::PACK_SHRINK, 10);
 
-  // Button signals
+  // 2. Text/Estimation Inputs -> Add to Left Panel (Question area)
+  // We place them below the Grid Answers (which are hidden for these types anyway)
+  m_box_game_left.pack_start(m_entry_answer, Gtk::PACK_SHRINK, 10);
+  m_box_game_left.pack_start(m_btn_submit_answer, Gtk::PACK_SHRINK, 5);
+
+  // Button signals (Restored)
   m_btn_start.signal_clicked().connect([this]() { m_client.sendStartGame(); });
   m_btn_leave.signal_clicked().connect([this]() { m_client.sendLeaveRoom(); });
   m_btn_send_invite.signal_clicked().connect([this]() {
     m_client.sendInvite(m_entry_invite_target.get_text());
     m_entry_invite_target.set_text("");
   });
-
-  // Setup Entry & Submit Button for Text/Estimation
+  
+  // Setup Entry Styles
   m_entry_answer.set_placeholder_text("Nhập câu trả lời của bạn...");
   m_btn_submit_answer.set_label("Gửi Câu Trả Lời");
-  m_btn_submit_answer.get_style_context()->add_class(
-      "btn-gold"); // Re-use gold style
-
-  m_box_game.pack_start(m_entry_answer, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_btn_submit_answer, Gtk::PACK_SHRINK);
+  m_btn_submit_answer.get_style_context()->add_class("btn-gold");
 
   m_btn_submit_answer.signal_clicked().connect([this]() {
     m_client.sendSubmitAnswer(m_current_q_id, m_entry_answer.get_text());
