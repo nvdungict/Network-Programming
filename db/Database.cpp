@@ -26,7 +26,8 @@ bool Database::open(const std::string &path) {
                           "id TEXT PRIMARY KEY, "
                           "text TEXT, "
                           "opt_a TEXT, opt_b TEXT, opt_c TEXT, opt_d TEXT, "
-                          "correct_ans TEXT);";
+                          "correct_ans TEXT, "
+                          "round_id INTEGER DEFAULT 1);";
   sqlite3_exec(m_db, sql_quest, 0, 0, 0);
 
   // Tạo bảng Match Results nếu chưa có
@@ -146,27 +147,37 @@ bool Database::blockUser(const std::string &user) {
   return ok;
 }
 
-std::vector<Question> Database::getRandomQuestions(int count) {
+std::vector<Question> Database::getRandomQuestions(int round_id, int count) {
   std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<Question> result;
 
-  // Lấy random câu hỏi
-  std::string sql = "SELECT * FROM questions ORDER BY RANDOM() LIMIT ?;";
+  // Lấy random câu hỏi theo round_id
+  std::string sql = "SELECT * FROM questions WHERE round_id = ? ORDER BY RANDOM() LIMIT ?;";
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return result;
 
-  sqlite3_bind_int(stmt, 1, count);
+  sqlite3_bind_int(stmt, 1, round_id);
+  sqlite3_bind_int(stmt, 2, count);
 
   while (sqlite3_step(stmt) == SQLITE_ROW) {
     Question q;
     q.id = (const char *)sqlite3_column_text(stmt, 0);
     q.text = (const char *)sqlite3_column_text(stmt, 1);
-    q.options["A"] = (const char *)sqlite3_column_text(stmt, 2);
-    q.options["B"] = (const char *)sqlite3_column_text(stmt, 3);
-    q.options["C"] = (const char *)sqlite3_column_text(stmt, 4);
-    q.options["D"] = (const char *)sqlite3_column_text(stmt, 5);
+    
+    // Check for nulls on options (Round 2/3 have null options)
+    const char* a = (const char *)sqlite3_column_text(stmt, 2);
+    const char* b = (const char *)sqlite3_column_text(stmt, 3);
+    const char* c = (const char *)sqlite3_column_text(stmt, 4);
+    const char* d = (const char *)sqlite3_column_text(stmt, 5);
+    
+    if (a) q.options["A"] = a;
+    if (b) q.options["B"] = b;
+    if (c) q.options["C"] = c;
+    if (d) q.options["D"] = d;
+    
     q.correct_answer = (const char *)sqlite3_column_text(stmt, 6);
+    q.round_id = sqlite3_column_int(stmt, 7);
     result.push_back(q);
   }
   sqlite3_finalize(stmt);

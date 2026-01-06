@@ -1,12 +1,9 @@
-[Logger] Log file: logs/server_2026-01-06_17-08-28.log
 [2026-01-06 17:08:28] [INFO] === Server Started ===
 [2026-01-06 17:08:28] [INFO] Server starting on port 5500
 [2026-01-06 17:08:28] [INFO] Database opened successfully
-Server listening on port 5500
 [2026-01-06 17:08:30] [INFO] Client connected: socket 6
 [2026-01-06 17:08:30] [INFO] [AUTH] New account created: 'HostBot'
 [2026-01-06 17:08:31] [INFO] [AUTH] User 'HostBot' logged in. ELO: 1000
-[RoomManager] Loaded 20 questions from DB (R1:10, R2:5, R3:5).
 [2026-01-06 17:08:32] [INFO] [ROOM] 'HostBot' created room 'BotRoom' (ID: 100)
 [2026-01-06 17:08:32] [INFO] Client connected: socket 7
 [2026-01-06 17:08:32] [INFO] Client connected: socket 8
@@ -29,63 +26,10 @@ Server listening on port 5500
 [2026-01-06 17:08:35] [INFO] [ROOM] 'Player2' joined room 100
 [2026-01-06 17:08:35] [INFO] [ROOM] 'Player4' joined room 100
 [2026-01-06 17:08:37] [INFO] [GAME] Game started with 6 players
-[GameManager] Sock 7 answered: A
-[GameManager] Sock 8 answered: A
-[GameManager] Sock 9 answered: B
-[GameManager] Sock 12 answered: A
-[GameManager] Sock 11 answered: B
-[GameManager] Sock 6 answered: B
-[GameManager] Processing Results (Round 1)...
-[GameManager] Sock 12 answered: B
-[GameManager] Sock 7 answered: C
-[GameManager] Sock 9 answered: B
-[GameManager] Sock 11 answered: C
-[GameManager] Sock 6 answered: C
-[GameManager] Sock 8 answered: D
-[GameManager] Processing Results (Round 1)...
-[GameManager] Sock 11 answered: D
-[GameManager] Sock 12 answered: B
-[GameManager] Sock 9 answered: A
-[GameManager] Sock 6 answered: D
-[GameManager] Sock 7 answered: B
-[GameManager] Sock 8 answered: B
-[GameManager] Processing Results (Round 1)...
-[GameManager] Sock 11 answered: A
-[GameManager] Sock 6 answered: C
-[GameManager] Sock 7 answered: A
-[GameManager] Sock 9 answered: C
-[GameManager] Sock 12 answered: B
-[GameManager] Sock 8 answered: A
-[GameManager] Processing Results (Round 1)...
-[GameManager] Sock 6 answered: C
-[GameManager] Sock 8 answered: D
-[GameManager] Sock 7 answered: A
-[GameManager] Sock 12 answered: B
-[GameManager] Sock 11 answered: B
-[GameManager] Sock 9 answered: D
-[GameManager] Processing Results (Round 1)...
 [2026-01-06 17:08:47] [INFO] Client disconnected: Player1 (socket 9)
 [2026-01-06 17:08:47] [INFO] Client disconnected: HostBot (socket 6)
-[GameManager] Sock 7 answered: TestAnswer
 [2026-01-06 17:08:47] [INFO] Client disconnected: Player5 (socket 12)
-[GameManager] Sock 11 answered: TestAnswer
-[GameManager] Sock 8 answered: TestAnswer
-[GameManager] Processing Results (Round 2)...
-[GameManager] Sock 11 answered: TestAnswer
-[GameManager] Sock 8 answered: TestAnswer
-[GameManager] Sock 7 answered: TestAnswer
-[GameManager] Processing Results (Round 2)...
-[GameManager] Sock 8 answered: TestAnswer
-[GameManager] Sock 7 answered: TestAnswer
-[GameManager] Sock 11 answered: TestAnswer
-[GameManager] Processing Results (Round 2)...
 [2026-01-06 17:08:51] [INFO] Client disconnected: Player2 (socket 11)
-[GameManager] Sock 8 answered: 1951
-[GameManager] Sock 7 answered: 1944
-[GameManager] Processing Results (Round 3)...
-[GameManager] Sock 8 answered: 1956
-[GameManager] Sock 7 answered: 1911
-[GameManager] Processing Results (Round 3)...
 [2026-01-06 17:08:53] [INFO] [GAME] Game ended: Final Round Complete! (Duration: 17s)
 [2026-01-06 17:08:53] [INFO] [GAME] Match result saved (ID: 1)
 [2026-01-06 17:08:54] [INFO] Client disconnected: Player3 (socket 8)

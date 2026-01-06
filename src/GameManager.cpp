@@ -107,8 +107,22 @@ void GameManager::sendNextQuestion_UNLOCKED() {
   for (int s : m_active_players)
     m_player_answers[s] = "";
 
-  // Chọn ngẫu nhiên
-  int idx = std::rand() % m_questions_pool.size();
+  // Chọn câu hỏi phù hợp với Round hiện tại
+  std::vector<int> valid_indices;
+  for(size_t i=0; i<m_questions_pool.size(); ++i) {
+      if (m_questions_pool[i].round_id == m_current_round) {
+          valid_indices.push_back(i);
+      }
+  }
+
+  if (valid_indices.empty()) {
+      std::cerr << "[GameManager] Error: No questions found for Round " << m_current_round << std::endl;
+      // Fallback: Pick any question to avoid crash
+      valid_indices.push_back(std::rand() % m_questions_pool.size());
+  }
+
+  // Chọn ngẫu nhiên từ danh sách hợp lệ
+  int idx = valid_indices[std::rand() % valid_indices.size()];
   m_current_question = m_questions_pool[idx];
 
   // Đóng gói QuestionPacket
@@ -233,6 +247,17 @@ void GameManager::processRoundResults_UNLOCKED() {
     std::strncpy(res.correct_answer, correct_text.c_str(), 63);
 
     m_room->broadcast_UNLOCKED(protocol::CMD_ANSWER_RESULT, &res, sizeof(res), -1);
+  }
+  
+  // *** REAL-TIME RANKING UPDATE ***
+  // Gửi bảng xếp hạng mới nhất cho tất cả client
+  for (int s : m_active_players) {
+      protocol::Payload_PlayerInfo info;
+      std::memset(&info, 0, sizeof(info));
+      std::strncpy(info.username, m_player_names[s].c_str(), 31);
+      info.score = (int)m_scores[s]; 
+      
+      m_room->broadcast_UNLOCKED(protocol::CMD_PLAYER_INFO, &info, sizeof(info));
   }
 
   // Delay for visualization then Next Question

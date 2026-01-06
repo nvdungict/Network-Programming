@@ -1464,8 +1464,19 @@ void ClientWindow::setup_ui() {
   // Add log to scroll (only once)
   m_scroll.add(m_txt_log);
 
-  // Add waiting room to main game box (default view)
-  m_box_game.pack_start(m_box_game_waiting, Gtk::PACK_EXPAND_WIDGET);
+  m_box_game.pack_start(m_lbl_room_info, Gtk::PACK_SHRINK);
+  m_box_game.pack_start(m_btn_start, Gtk::PACK_SHRINK);
+  m_box_game.pack_start(m_box_invite_tool, Gtk::PACK_SHRINK);
+  m_box_game.pack_start(m_lbl_question, Gtk::PACK_SHRINK, 20);
+  m_box_game.pack_start(m_grid_answers, Gtk::PACK_SHRINK);
+  
+  // NEW: Ranking Label
+  m_lbl_ranking.set_text("--- LEADERBOARD ---");
+  m_lbl_ranking.set_halign(Gtk::ALIGN_CENTER);
+  m_box_game.pack_start(m_lbl_ranking, Gtk::PACK_SHRINK, 10);
+  
+  m_box_game.pack_start(m_scroll, Gtk::PACK_EXPAND_WIDGET);
+  m_box_game.pack_start(m_btn_leave, Gtk::PACK_SHRINK);
 
   // Button signals
   m_btn_start.signal_clicked().connect([this]() { m_client.sendStartGame(); });
@@ -1793,6 +1804,32 @@ void ClientWindow::on_network_signal() {
       m_lbl_welcome.set_text("Welcome " + std::string(p->username) +
                              " (ELO: " + std::to_string(p->elo) + ")");
       log_msg("ELO Updated: " + std::to_string(p->elo));
+      break;
+    }
+    case protocol::CMD_PLAYER_INFO: {
+      auto p = (protocol::Payload_PlayerInfo *)data;
+      std::string name(p->username);
+      int score = p->score;
+      
+      m_scoreboard[name] = score;
+      
+      // Sort and Display
+      std::vector<std::pair<std::string, int>> sorted_scores;
+      for (auto const& [n, s] : m_scoreboard) {
+          sorted_scores.push_back({n, s});
+      }
+      std::sort(sorted_scores.begin(), sorted_scores.end(), [](const auto& a, const auto& b){
+          return a.second > b.second;
+      });
+      
+      std::stringstream ss;
+      ss << "--- LEADERBOARD ---\n";
+      int rank = 1;
+      for (const auto& item : sorted_scores) {
+          ss << rank << ". " << item.first << " (" << item.second << " pts)\n";
+          rank++;
+      }
+      m_lbl_ranking.set_text(ss.str());
       break;
     }
     }

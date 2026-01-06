@@ -192,6 +192,7 @@ private:
   Gtk::ProgressBar m_progress_questions;
 
   // Old elements (kept for compatibility)
+  Gtk::Box m_box_invite_tool;
   Gtk::Label m_lbl_room_info;
 
   Gtk::ScrolledWindow m_scroll;
@@ -206,6 +207,10 @@ private:
   // NEW: UI for Text/Estimation Rounds
   Gtk::Entry m_entry_answer;
   Gtk::Button m_btn_submit_answer;
+  
+  // NEW: Ranking Board
+  Gtk::Label m_lbl_ranking;
+  std::map<std::string, int> m_scoreboard;
 
   // --- CÁC HÀM HELPER ---
   void setup_ui();

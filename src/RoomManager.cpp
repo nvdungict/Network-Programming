@@ -30,14 +30,22 @@ void RoomManager::handleCreateRoom(int client_sock,
     return;
 
   // Lấy câu hỏi từ DB
-  std::vector<Question> room_questions =
-      m_server->getDatabase().getRandomQuestions(30);
+  // Lấy câu hỏi từ DB cho từng vòng
+  std::vector<Question> room_questions;
+  auto q1 = m_server->getDatabase().getRandomQuestions(1, 10);
+  auto q2 = m_server->getDatabase().getRandomQuestions(2, 5);
+  auto q3 = m_server->getDatabase().getRandomQuestions(3, 5);
+  
+  room_questions.insert(room_questions.end(), q1.begin(), q1.end());
+  room_questions.insert(room_questions.end(), q2.begin(), q2.end());
+  room_questions.insert(room_questions.end(), q3.begin(), q3.end());
 
   if (room_questions.empty()) {
     std::cerr << "[RoomManager] Warning: DB returned 0 questions!\n";
   } else {
     std::cout << "[RoomManager] Loaded " << room_questions.size()
-              << " questions from DB.\n";
+              << " questions from DB (R1:" << q1.size() 
+              << ", R2:" << q2.size() << ", R3:" << q3.size() << ").\n";
   }
 
   int new_room_id;

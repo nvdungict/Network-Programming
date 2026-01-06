@@ -87,6 +87,7 @@ using RoomUpdateHeader = Payload_RoomInfo; // Alias cho Server dùng
 struct Payload_PlayerInfo {
   char username[32];
   int elo;
+  int score;
 };
 using PlayerInfoPacket = Payload_PlayerInfo; // Alias cho Server dùng
 

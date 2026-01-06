@@ -33,7 +33,7 @@ public:
   bool blockUser(const std::string &user);
 
   // --- Question Related ---
-  std::vector<Question> getRandomQuestions(int count);
+  std::vector<Question> getRandomQuestions(int round_id, int count);
 
   // --- Match Result Related ---
   int saveMatchResult(int room_id, const std::string &winner, int total_players,

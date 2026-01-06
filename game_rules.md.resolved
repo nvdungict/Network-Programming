@@ -1,0 +1,38 @@
+# Battle Royale Game Rules
+
+## Overview
+Participate in a 3-round elimination tournament. Only the best players will survive to the final round!
+**Players**: 4-5 Players
+**Total Rounds**: 3
+
+## Round Breakdown
+
+### Round 1: Speed MCQ
+*   **Format**: Multiple Choice Questions (A/B/C/D).
+*   **Question Count**: 5 Questions.
+*   **Scoring**:
+    *   **Accuracy**: Must be 100% correct.
+    *   **Speed Bonus**: Faster answers = Higher scores.
+    *   *Formula*: `Score = 100 * TimeFactor (1.0 -> 0.5 over 10s)`
+*   **Elimination**: Top **3** players advance. Others are eliminated.
+
+### Round 2: Semantic Text
+*   **Format**: Text Entry (Type the answer).
+*   **Question Count**: 3 Questions.
+*   **Scoring**:
+    *   **Accuracy**: Based on Levenshtein distance (fuzzy matching). Minor typos are penalized but accepted.
+    *   **Speed Bonus**: Applies similarly to Round 1.
+    *   *Formula*: `Score = 100 * Accuracy * TimeFactor`
+*   **Elimination**: Top **2** players advance to the Final.
+
+### Round 3: Estimation Final
+*   **Format**: Numerical Estimation.
+*   **Question Count**: 2 Questions.
+*   **Scoring**:
+    *   **Precision**: Points awarded based on how close your number is to the target.
+    *   *Formula*: `Score = 100 * (1.0 - ErrorRate)`
+*   **Winner**: The player with the highest score at the end of Round 3 wins the game.
+
+## General Rules
+*   **Score Reset**: Scores are reset to 0 at the start of each round. Every round is a fresh start!
+*   **Tie-Breaker**: (Implicit) If scores are tied, strictly equal ranking logic applies, but usually high precision floating point scores prevent ties.

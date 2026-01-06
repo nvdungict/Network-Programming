@@ -13,8 +13,9 @@ struct Question {
   std::string text;
   std::map<std::string, std::string> options;
   std::string correct_answer; // For Text/MCQ
-  long long numeric_answer = 0; // For Estimation
-  int question_type = 0; // 0=MCQ, 1=Text, 2=Est
+  int numeric_answer; // For Estimation
+  int question_type; // 0=MCQ, 1=Text, 2=Estimate
+  int round_id; // 1, 2, 3
 };
 
 class GameManager {
