@@ -1,0 +1,15 @@
+[2026-01-06 10:30:09] [INFO] === Server Started ===
+[2026-01-06 10:30:09] [INFO] Server starting on port 5501
+[2026-01-06 10:30:09] [INFO] Database opened successfully
+[2026-01-06 10:30:14] [INFO] Client connected: socket 7
+[2026-01-06 10:30:23] [INFO] [AUTH] User 'dung' logged in. ELO: 1050
+[2026-01-06 10:30:38] [INFO] Client connected: socket 8
+[2026-01-06 10:30:43] [INFO] [AUTH] User 'nminh' logged in. ELO: 1000
+[2026-01-06 10:30:49] [INFO] [ROOM] 'dung' created room '' (ID: 100)
+[2026-01-06 10:30:56] [INFO] [ROOM] 'nminh' joined room 100
+[2026-01-06 10:31:02] [INFO] [GAME] Game started with 2 players
+[2026-01-06 10:31:31] [INFO] [GAME] Game ended: Tat ca nguoi choi da bi loai! (Duration: 28s)
+[2026-01-06 10:31:31] [INFO] [GAME] Match result saved (ID: 3)
+[2026-01-06 10:32:13] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 10:32:14] [INFO] [ROOM] Room 100 closed (empty)
+[2026-01-06 10:32:14] [INFO] Client disconnected: nminh (socket 8)

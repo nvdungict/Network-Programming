@@ -1,0 +1,113 @@
+[2026-01-06 11:10:22] [INFO] === Server Started ===
+[2026-01-06 11:10:22] [INFO] Server starting on port 5500
+[2026-01-06 11:10:22] [INFO] Database opened successfully
+[2026-01-06 11:10:24] [INFO] Client connected: socket 7
+[2026-01-06 11:10:27] [INFO] [AUTH] User 'dung' logged in. ELO: 1000
+[2026-01-06 11:10:30] [INFO] [ROOM] 'dung' created room '' (ID: 100)
+[2026-01-06 11:11:06] [INFO] [ROOM] Room 100 closed (empty)
+[2026-01-06 11:11:07] [INFO] [ROOM] 'dung' created room '' (ID: 101)
+[2026-01-06 11:11:12] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:11:18] [INFO] [ROOM] Room 101 closed (empty)
+[2026-01-06 11:11:18] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:12:55] [INFO] Client connected: socket 7
+[2026-01-06 11:12:57] [INFO] Client connected: socket 8
+[2026-01-06 11:13:01] [INFO] [AUTH] User 'dung' logged in. ELO: 1000
+[2026-01-06 11:13:05] [INFO] [AUTH] User 'nminh' logged in. ELO: 1000
+[2026-01-06 11:13:09] [INFO] [ROOM] 'dung' created room '' (ID: 102)
+[2026-01-06 11:13:24] [INFO] [ROOM] 'nminh' joined room 102
+[2026-01-06 11:13:35] [INFO] [GAME] Game started with 2 players
+[2026-01-06 11:13:46] [INFO] Client disconnected: dung (socket 8)
+[2026-01-06 11:13:47] [INFO] [ROOM] Room 102 closed (empty)
+[2026-01-06 11:13:47] [INFO] Client disconnected: nminh (socket 7)
+[2026-01-06 11:15:26] [INFO] Client connected: socket 7
+[2026-01-06 11:15:29] [INFO] [AUTH] User 'dung' logged in. ELO: 1000
+[2026-01-06 11:15:31] [INFO] [ROOM] 'dung' created room '' (ID: 103)
+[2026-01-06 11:15:32] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:15:35] [INFO] [ROOM] Room 103 closed (empty)
+[2026-01-06 11:15:35] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:23:11] [INFO] Client connected: socket 7
+[2026-01-06 11:23:23] [INFO] [AUTH] User 'dung' logged in. ELO: 1000
+[2026-01-06 11:23:25] [INFO] [ROOM] 'dung' created room '' (ID: 104)
+[2026-01-06 11:23:25] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:24:27] [INFO] [GAME] Game ended: Winner determined by elimination! (Duration: 61s)
+[2026-01-06 11:24:27] [INFO] [GAME] Match result saved (ID: 2)
+[2026-01-06 11:24:29] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:24:32] [INFO] [GAME] Game ended: Winner determined by elimination! (Duration: 3s)
+[2026-01-06 11:24:32] [INFO] [GAME] Match result saved (ID: 3)
+[2026-01-06 11:24:34] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:24:39] [INFO] [GAME] Game ended: Winner determined by elimination! (Duration: 4s)
+[2026-01-06 11:24:39] [INFO] [GAME] Match result saved (ID: 4)
+[2026-01-06 11:24:40] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:24:55] [INFO] [ROOM] Room 104 closed (empty)
+[2026-01-06 11:24:59] [INFO] Client connected: socket 8
+[2026-01-06 11:25:04] [INFO] [AUTH] User 'nminh' logged in. ELO: 1000
+[2026-01-06 11:25:14] [INFO] [ROOM] 'dung' created room '' (ID: 105)
+[2026-01-06 11:25:17] [INFO] [ROOM] Room 105 closed (empty)
+[2026-01-06 11:25:20] [INFO] [ROOM] 'nminh' created room '' (ID: 106)
+[2026-01-06 11:25:22] [INFO] [ROOM] 'dung' created room '' (ID: 107)
+[2026-01-06 11:25:23] [INFO] [ROOM] Room 107 closed (empty)
+[2026-01-06 11:25:26] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:25:31] [INFO] Client connected: socket 7
+[2026-01-06 11:25:34] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:25:41] [INFO] [ROOM] 'dung' joined room 106
+[2026-01-06 11:25:48] [INFO] [GAME] Game started with 2 players
+[2026-01-06 11:26:43] [INFO] [ROOM] 'dung' created room '' (ID: 108)
+[2026-01-06 11:26:46] [INFO] [ROOM] Room 108 closed (empty)
+[2026-01-06 11:26:50] [INFO] [ROOM] Room 106 closed (empty)
+[2026-01-06 11:29:16] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:29:21] [INFO] Client disconnected: nminh (socket 8)
+[2026-01-06 11:29:23] [INFO] Client connected: socket 7
+[2026-01-06 11:29:26] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:29:28] [INFO] [ROOM] 'dung' created room '' (ID: 109)
+[2026-01-06 11:29:29] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:29:33] [INFO] [ROOM] Room 109 closed (empty)
+[2026-01-06 11:29:33] [INFO] [ROOM] 'dung' created room '' (ID: 110)
+[2026-01-06 11:29:36] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:34:16] [INFO] Client connected: socket 8
+[2026-01-06 11:34:24] [INFO] Client disconnected: socket 8
+[2026-01-06 11:34:27] [INFO] [ROOM] Room 110 closed (empty)
+[2026-01-06 11:34:27] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:34:32] [INFO] Client connected: socket 7
+[2026-01-06 11:34:36] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:34:38] [INFO] [ROOM] 'dung' created room '' (ID: 111)
+[2026-01-06 11:34:39] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:37:18] [INFO] [ROOM] Room 111 closed (empty)
+[2026-01-06 11:37:18] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:37:19] [INFO] Client connected: socket 7
+[2026-01-06 11:37:23] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:37:29] [INFO] [ROOM] 'dung' created room '' (ID: 112)
+[2026-01-06 11:37:31] [INFO] [ROOM] Room 112 closed (empty)
+[2026-01-06 11:37:33] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:38:22] [INFO] Client connected: socket 7
+[2026-01-06 11:38:25] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:38:26] [INFO] [ROOM] 'dung' created room '' (ID: 113)
+[2026-01-06 11:38:27] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:38:53] [INFO] [ROOM] Room 113 closed (empty)
+[2026-01-06 11:38:53] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:41:40] [INFO] Client connected: socket 7
+[2026-01-06 11:41:43] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:41:45] [INFO] [ROOM] 'dung' created room '' (ID: 114)
+[2026-01-06 11:41:47] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:44:51] [INFO] [ROOM] Room 114 closed (empty)
+[2026-01-06 11:44:51] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:44:52] [INFO] Client connected: socket 7
+[2026-01-06 11:44:56] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:44:58] [INFO] [ROOM] 'dung' created room '' (ID: 115)
+[2026-01-06 11:44:59] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:47:16] [INFO] [ROOM] Room 115 closed (empty)
+[2026-01-06 11:47:16] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 11:47:20] [INFO] Client connected: socket 7
+[2026-01-06 11:47:24] [INFO] [AUTH] User 'dung' logged in. ELO: 1075
+[2026-01-06 11:47:26] [INFO] [ROOM] 'dung' created room '' (ID: 116)
+[2026-01-06 11:47:27] [INFO] [GAME] Game started with 1 players
+[2026-01-06 11:47:51] [INFO] [GAME] Game ended: Winner determined by elimination! (Duration: 24s)
+[2026-01-06 11:47:51] [INFO] [GAME] Match result saved (ID: 5)
+[2026-01-06 11:47:53] [INFO] [ROOM] Room 116 closed (empty)
+[2026-01-06 11:47:53] [INFO] Client disconnected: dung (socket 7)
+[2026-01-06 12:44:06] [INFO] Client connected: socket 7
+[2026-01-06 12:44:09] [INFO] [AUTH] User 'dung' logged in. ELO: 1100
+[2026-01-06 12:44:11] [INFO] [ROOM] 'dung' created room '' (ID: 117)
+[2026-01-06 12:44:19] [INFO] [GAME] Game started with 1 players
+[2026-01-06 12:45:07] [INFO] [ROOM] Room 117 closed (empty)
+[2026-01-06 12:45:11] [INFO] [ROOM] 'dung' created room '' (ID: 118)
+[2026-01-06 12:45:15] [INFO] [GAME] Game started with 1 players

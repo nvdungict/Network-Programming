@@ -271,6 +271,16 @@ const std::string CSS_DATA = R"(
         font-weight: 600;
     }
     
+    /* Timer Label */
+    .timer-label {
+        background-color: #ef4444;
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 16px;
+        padding: 8px 16px;
+        border-radius: 10px;
+    }
+
     /* Orange Button */
     button.btn-orange {
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
@@ -307,7 +317,211 @@ const std::string CSS_DATA = R"(
         color: #22c55e;
         font-size: 10px;
     }
-)";
+    
+    /* === WAITING ROOM STYLES === */
+    
+    /* Room Code Card */
+    .room-code-card {
+        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+        border-radius: 16px;
+        padding: 20px;
+    }
+    .room-code-text {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+    
+    /* Start Game Button */
+    button.btn-start-game {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 16px;
+        border-radius: 12px;
+        min-height: 50px;
+        border: none;
+    }
+    button.btn-start-game:hover {
+        background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    }
+    
+    /* Player List Item */
+    .player-item {
+        background-color: rgba(241, 245, 249, 1);
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+    }
+    .player-avatar-emoji {
+        font-size: 28px;
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        border-radius: 50%;
+        padding: 8px;
+    }
+    
+    /* Status Badges */
+    .badge-owner {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 6px;
+        padding: 4px 10px;
+    }
+    .badge-ready {
+        background-color: #d1fae5;
+        color: #10b981;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 4px 10px;
+    }
+    
+    /* Invite Card */
+    .invite-card {
+        background-color: rgba(248, 250, 252, 1);
+        border: 2px dashed rgba(148, 163, 184, 0.3);
+        border-radius: 12px;
+        padding: 16px;
+    }
+    
+    /* Send Invite Button */
+    button.btn-send-invite {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 10px;
+        min-height: 40px;
+        border: none;
+    }
+    
+    /* Settings Display */
+    .setting-item {
+        background-color: rgba(241, 245, 249, 1);
+        border-radius: 10px;
+        padding: 10px 14px;
+    }
+    
+    /* === GAME PLAYING SCREEN STYLES === */
+    
+    /* Game Header */
+    .game-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid rgba(226, 232, 240, 1);
+        padding: 16px 24px;
+    }
+    .game-room-label {
+        color: #7c3aed;
+        font-weight: 600;
+        font-size: 12px;
+    }
+    .question-counter {
+        background-color: rgba(243, 232, 255, 1);
+        color: #7c3aed;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 6px 14px;
+        border-radius: 8px;
+    }
+    
+    /* Question Card */
+    .question-card {
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .question-badge {
+        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 8px 14px;
+        border-radius: 10px;
+    }
+    .question-text {
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 15px;
+    }
+    
+    /* Answer Buttons */
+    button.answer-option {
+        background-color: #ffffff;
+        border: 2px solid rgba(139, 92, 246, 0.3);
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 12px;
+        min-height: 60px;
+        padding: 12px 20px;
+    }
+    button.answer-option:hover {
+        background-color: rgba(243, 232, 255, 0.5);
+        border-color: #8b5cf6;
+    }
+    
+    /* Player Score Item */
+    .player-score-item {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-bottom: 6px;
+    }
+    .player-score-name {
+        color: #475569;
+        font-weight: 600;
+        font-size: 11px;
+    }
+    .player-score-value {
+        color: #1e293b;
+        font-weight: 700;
+        font-size: 12px;
+    }
+    .status-correct {
+        color: #10b981;
+        font-size: 14px;
+    }
+    .status-wrong {
+        color: #ef4444;
+        font-size: 14px;
+    }
+    
+    /* Score Card */
+    .score-gradient-card {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        border-radius: 16px;
+        padding: 20px;
+    }
+    .score-card-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 10px;
+        font-weight: 500;
+    }
+    .score-card-value {
+        color: #ffffff;
+        font-size: 36px;
+        font-weight: 800;
+    }
+    .score-card-subtext {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    /* Progress Bar */
+    progressbar {
+        background-color: rgba(226, 232, 240, 0.5);
+        border-radius: 10px;
+        min-height: 8px;
+    }
+    progressbar progress {
+        background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
+        border-radius: 10px;
+    }
+ )";
 
 // === [QUAN TRỌNG] IMPLEMENT HÀM VẼ STATUS CIRCLE ===
 // Thiếu hàm này sẽ gây lỗi "vtable for StatusCircle"
@@ -439,7 +653,17 @@ ClientWindow::ClientWindow(const std::string &ip, int port)
       m_box_lobby(Gtk::ORIENTATION_VERTICAL),
       m_box_invite(Gtk::ORIENTATION_VERTICAL),
       m_box_game(Gtk::ORIENTATION_VERTICAL),
-      m_box_invite_tool(Gtk::ORIENTATION_HORIZONTAL) {
+      m_box_game_waiting(Gtk::ORIENTATION_HORIZONTAL),
+      m_box_game_playing(Gtk::ORIENTATION_VERTICAL),
+      m_box_waiting_left(Gtk::ORIENTATION_VERTICAL),
+      m_box_waiting_right(Gtk::ORIENTATION_VERTICAL),
+      m_box_player_list(Gtk::ORIENTATION_VERTICAL),
+      m_box_settings(Gtk::ORIENTATION_VERTICAL),
+      m_box_game_header(Gtk::ORIENTATION_HORIZONTAL),
+      m_box_game_left(Gtk::ORIENTATION_VERTICAL),
+      m_box_game_right(Gtk::ORIENTATION_VERTICAL),
+      m_box_game_players(Gtk::ORIENTATION_VERTICAL),
+      m_box_score_card(Gtk::ORIENTATION_VERTICAL) {
   set_title("Đấu Trường Tri Thức");
   set_default_size(900, 600); // Trở lại size landscape cũ cho Login
   set_position(Gtk::WIN_POS_CENTER);
@@ -615,9 +839,7 @@ void ClientWindow::setup_ui() {
 
   // Wrap in ScrolledWindow to ensure everything fits
   m_lobby_scroll.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
-  m_lobby_scroll.add(m_box_lobby_main);
-  m_lobby_overlay.add(m_lobby_bg_area);
-  m_lobby_overlay.add_overlay(m_lobby_scroll);
+  // (Actual packing moved to end of setup_ui to avoid GTK warnings)
 
   // === LEFT SIDE: Hero Section ===
   m_box_left_hero.set_orientation(Gtk::ORIENTATION_VERTICAL);
@@ -806,11 +1028,13 @@ void ClientWindow::setup_ui() {
   m_box_footer.set_valign(Gtk::ALIGN_END);
   m_box_footer.set_margin_start(30);
   m_box_footer.set_margin_bottom(15);
+  m_lbl_system_status.get_style_context()->add_class("footer-text");
   m_lbl_system_status.set_markup(
-      "<span color='#22c55e'>●</span> <span color='#64748b'>Hệ thống hoạt động "
+      "<span color='#22c55e'>●</span> <span color='#94a3b8'>Hệ thống hoạt động "
       "tốt</span>");
+  m_lbl_copyright.get_style_context()->add_class("footer-text");
   m_lbl_copyright.set_markup(
-      "<span color='#475569'>© 2026 Đấu Trường Tri Thức, Version 2.0</span>");
+      "<span color='#94a3b8'>© 2026 Đấu Trường Tri Thức, Version 2.0</span>");
   m_lbl_copyright.set_margin_top(5);
 
   Gtk::Box *footer_box =
@@ -877,39 +1101,268 @@ void ClientWindow::setup_ui() {
   });
   m_stack.add(m_box_invite, "invite");
 
-  // --- PAGE 4: GAME ---
-  m_box_game.set_border_width(15);
-  m_box_game.set_spacing(12);
+  // --- PAGE 4: WAITING ROOM (REDESIGNED) ---
 
+  // Set light background for waiting room
+  m_box_game.override_background_color(Gdk::RGBA("#f8fafc"));
+  m_box_game.set_spacing(0);
+
+  // === LEFT PANEL - Room Controls ===
+  m_box_waiting_left.set_spacing(16);
+  m_box_waiting_left.set_margin_start(24);
+  m_box_waiting_left.set_margin_end(12);
+  m_box_waiting_left.set_margin_top(24);
+  m_box_waiting_left.set_margin_bottom(24);
+
+  // Room Code Card
+  Gtk::Box *room_code_card =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 8));
+  room_code_card->get_style_context()->add_class("room-code-card");
+
+  m_lbl_room_code_title.set_markup(
+      "<span color='#e0e7ff' size='10000'>Mã phòng</span>");
+  m_lbl_room_code_title.set_halign(Gtk::ALIGN_START);
+
+  Gtk::Box *code_row =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
+  m_lbl_room_code.set_markup(
+      "<span size='28000' weight='800' letter_spacing='2048'>ABC123</span>");
+  m_lbl_room_code.get_style_context()->add_class("room-code-text");
+  m_lbl_room_code.set_halign(Gtk::ALIGN_START);
+
+  m_btn_copy_code.set_label("📋");
+  m_btn_copy_code.set_size_request(40, 40);
+  m_btn_copy_code.get_style_context()->add_class("btn-ghost");
+
+  code_row->pack_start(m_lbl_room_code, Gtk::PACK_SHRINK);
+  code_row->pack_start(m_btn_copy_code, Gtk::PACK_SHRINK);
+
+  Gtk::Label *code_hint = Gtk::manage(new Gtk::Label());
+  code_hint->set_markup("<span color='#e0e7ff' size='9000'>Chia sẻ mã này để "
+                        "bạn bè tham gia</span>");
+  code_hint->set_halign(Gtk::ALIGN_START);
+
+  room_code_card->pack_start(m_lbl_room_code_title, Gtk::PACK_SHRINK);
+  room_code_card->pack_start(*code_row, Gtk::PACK_SHRINK);
+  room_code_card->pack_start(*code_hint, Gtk::PACK_SHRINK);
+
+  // Start Game Button
+  m_btn_start.set_label("▶ Bắt đầu game");
+  m_btn_start.get_style_context()->add_class("btn-start-game");
+
+  // Invite Section
+  Gtk::Box *invite_card =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 12));
+  invite_card->get_style_context()->add_class("invite-card");
+
+  m_lbl_invite_title.set_markup("<span color='#64748b' size='10000' "
+                                "weight='600'>👥 Mời người chơi</span>");
+  m_lbl_invite_title.set_halign(Gtk::ALIGN_START);
+
+  Gtk::Box *invite_row =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 8));
+  m_entry_invite_target.set_placeholder_text("Tên người chơi...");
+  m_btn_send_invite.set_label("Gửi lời mời");
+  m_btn_send_invite.get_style_context()->add_class("btn-send-invite");
+
+  invite_row->pack_start(m_entry_invite_target, Gtk::PACK_EXPAND_WIDGET);
+  invite_row->pack_start(m_btn_send_invite, Gtk::PACK_SHRINK);
+
+  invite_card->pack_start(m_lbl_invite_title, Gtk::PACK_SHRINK);
+  invite_card->pack_start(*invite_row, Gtk::PACK_SHRINK);
+
+  // Stats
+  Gtk::Box *stats_row =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 20));
+
+  Gtk::Box *stat1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
+  m_lbl_player_count.set_markup("<span size='20000' weight='700'>3/8</span>");
+  Gtk::Label *stat1_label = Gtk::manage(new Gtk::Label());
+  stat1_label->set_markup(
+      "<span color='#94a3b8' size='10000'>Người chơi</span>");
+  stat1->pack_start(m_lbl_player_count, Gtk::PACK_SHRINK);
+  stat1->pack_start(*stat1_label, Gtk::PACK_SHRINK);
+
+  Gtk::Box *stat2 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
+  m_lbl_q_count.set_markup("<span size='20000' weight='700'>2/3</span>");
+  Gtk::Label *stat2_label = Gtk::manage(new Gtk::Label());
+  stat2_label->set_markup(
+      "<span color='#94a3b8' size='10000'>Đã sẵn sàng</span>");
+  stat2->pack_start(m_lbl_q_count, Gtk::PACK_SHRINK);
+  stat2->pack_start(*stat2_label, Gtk::PACK_SHRINK);
+
+  stats_row->pack_start(*stat1, Gtk::PACK_SHRINK);
+  stats_row->pack_start(*stat2, Gtk::PACK_SHRINK);
+
+  // Pack left panel
+  m_box_waiting_left.pack_start(*room_code_card, Gtk::PACK_SHRINK);
+  m_box_waiting_left.pack_start(m_btn_start, Gtk::PACK_SHRINK);
+  m_box_waiting_left.pack_start(*invite_card, Gtk::PACK_SHRINK);
+  m_box_waiting_left.pack_start(*stats_row, Gtk::PACK_SHRINK);
+
+  // === RIGHT PANEL - Player List & Settings ===
+  m_box_waiting_right.set_spacing(16);
+  m_box_waiting_right.set_margin_start(12);
+  m_box_waiting_right.set_margin_end(24);
+  m_box_waiting_right.set_margin_top(24);
+  m_box_waiting_right.set_margin_bottom(24);
+
+  // Player List Title
+  m_lbl_player_list_title.set_markup(
+      "<span color='#1e293b' size='11000' weight='600'>👥 Danh sách người "
+      "chơi</span>");
+  m_lbl_player_list_title.set_halign(Gtk::ALIGN_START);
+  m_lbl_player_list_title.set_margin_bottom(4);
+
+  // Player List Container
+  m_box_player_list.set_spacing(0);
+  m_scroll_players.add(m_box_player_list);
+  m_scroll_players.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+  m_scroll_players.set_min_content_height(200);
+  m_scroll_players.set_max_content_height(300);
+
+  // Add sample players
+  // Player list populated dynamically when players join
+
+  // Settings Section
+  m_lbl_settings_title.set_markup("<span color='#1e293b' size='11000' "
+                                  "weight='600'>⚙️ Cài đặt trận đấu</span>");
+  m_lbl_settings_title.set_halign(Gtk::ALIGN_START);
+  m_lbl_settings_title.set_margin_top(8);
+  m_lbl_settings_title.set_margin_bottom(8);
+
+  m_box_settings.set_spacing(8);
+
+  // Setting items
+  Gtk::Box *setting1 =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
+  setting1->get_style_context()->add_class("setting-item");
+  Gtk::Label *s1_icon = Gtk::manage(new Gtk::Label("📊"));
+  m_lbl_setting_questions.set_markup(
+      "<span size='10000' weight='500'>20 câu hỏi</span>");
+  Gtk::Label *s1_val = Gtk::manage(new Gtk::Label());
+  s1_val->set_markup("<span color='#64748b' size='9000'>Số câu hỏi</span>");
+  setting1->pack_start(*s1_icon, Gtk::PACK_SHRINK);
+  setting1->pack_start(*s1_val, Gtk::PACK_EXPAND_WIDGET);
+  setting1->pack_end(m_lbl_setting_questions, Gtk::PACK_SHRINK);
+
+  Gtk::Box *setting2 =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
+  setting2->get_style_context()->add_class("setting-item");
+  Gtk::Label *s2_icon = Gtk::manage(new Gtk::Label("⏱️"));
+  m_lbl_setting_time.set_markup("<span size='10000' weight='500'>30s</span>");
+  Gtk::Label *s2_val = Gtk::manage(new Gtk::Label());
+  s2_val->set_markup("<span color='#64748b' size='9000'>Thời gian/câu</span>");
+  setting2->pack_start(*s2_icon, Gtk::PACK_SHRINK);
+  setting2->pack_start(*s2_val, Gtk::PACK_EXPAND_WIDGET);
+  setting2->pack_end(m_lbl_setting_time, Gtk::PACK_SHRINK);
+
+  Gtk::Box *setting3 =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
+  setting3->get_style_context()->add_class("setting-item");
+  Gtk::Label *s3_icon = Gtk::manage(new Gtk::Label("⭐"));
+  m_lbl_setting_difficulty.set_markup(
+      "<span size='10000' weight='500'>Trung bình</span>");
+  Gtk::Label *s3_val = Gtk::manage(new Gtk::Label());
+  s3_val->set_markup("<span color='#64748b' size='9000'>Độ khó</span>");
+  setting3->pack_start(*s3_icon, Gtk::PACK_SHRINK);
+  setting3->pack_start(*s3_val, Gtk::PACK_EXPAND_WIDGET);
+  setting3->pack_end(m_lbl_setting_difficulty, Gtk::PACK_SHRINK);
+
+  m_box_settings.pack_start(*setting1, Gtk::PACK_SHRINK);
+  m_box_settings.pack_start(*setting2, Gtk::PACK_SHRINK);
+  m_box_settings.pack_start(*setting3, Gtk::PACK_SHRINK);
+
+  // Leave Button
+  m_btn_leave.set_label("🚪 Rời phòng");
+  m_btn_leave.get_style_context()->add_class("btn-leave-room");
+  m_btn_leave.set_margin_top(12);
+
+  // Pack right panel
+  m_box_waiting_right.pack_start(m_lbl_player_list_title, Gtk::PACK_SHRINK);
+  m_box_waiting_right.pack_start(m_scroll_players, Gtk::PACK_EXPAND_WIDGET);
+  m_box_waiting_right.pack_start(m_lbl_settings_title, Gtk::PACK_SHRINK);
+  m_box_waiting_right.pack_start(m_box_settings, Gtk::PACK_SHRINK);
+  m_box_waiting_right.pack_start(m_btn_leave, Gtk::PACK_SHRINK);
+
+  // === Assemble 2-column layout ===
+  m_box_game_waiting.pack_start(m_box_waiting_left, Gtk::PACK_EXPAND_WIDGET);
+  m_box_game_waiting.pack_start(m_box_waiting_right, Gtk::PACK_EXPAND_WIDGET);
+
+  // === Setup game playing elements (for when game starts) ===
   m_lbl_room_info.set_markup(
       "<span size='14000' weight='bold'>🎮 PHÒNG GAME</span>");
   m_lbl_room_info.set_halign(Gtk::ALIGN_CENTER);
 
-  m_btn_start.set_label("🚀 BẮT ĐẦU GAME");
-  m_btn_start.get_style_context()->add_class("btn-start");
-  m_btn_start.set_size_request(-1, 52);
+  // Text log setup - moved to avoid duplicate add
+  m_txt_log.set_editable(false);
+  m_scroll.set_min_content_height(100);
 
-  m_btn_leave.set_label("Rời Phòng");
-  m_btn_leave.get_style_context()->add_class("btn-leave");
-  m_btn_leave.set_size_request(-1, 45);
+  // Pack game playing elements (hidden by default, shown when game starts)
+  // === GAME PLAYING SCREEN - REDESIGNED ===
 
-  m_entry_invite_target.set_placeholder_text("Tên người chơi...");
-  m_btn_send_invite.set_label("Mời");
-  m_btn_send_invite.get_style_context()->add_class("btn-create");
-  m_box_invite_tool.pack_start(m_entry_invite_target, Gtk::PACK_EXPAND_WIDGET);
-  m_box_invite_tool.pack_start(m_btn_send_invite, Gtk::PACK_SHRINK);
+  m_box_game_playing.set_spacing(0);
+  m_box_game_playing.override_background_color(Gdk::RGBA("#f8fafc"));
 
+  // === HEADER BAR ===
+  m_box_game_header.get_style_context()->add_class("game-header");
+  m_box_game_header.set_spacing(0);
+
+  m_lbl_game_room.set_markup(
+      "<span size='10000' weight='600' color='#7c3aed'>Đấu Trường Tri "
+      "Thức</span>\n<span size='9000' color='#64748b'>Phòng: ABC123</span>");
+  m_lbl_game_room.set_halign(Gtk::ALIGN_START);
+  m_lbl_game_room.set_margin_end(20);
+
+  m_lbl_question_counter.set_markup("<span>3/20</span>");
+  m_lbl_question_counter.get_style_context()->add_class("question-counter");
+
+  m_lbl_timer.set_text("⏱ 24s");
+  m_lbl_timer.get_style_context()->add_class("timer-label");
+
+  m_box_game_header.pack_start(m_lbl_game_room, Gtk::PACK_EXPAND_WIDGET);
+  m_box_game_header.pack_start(m_lbl_question_counter, Gtk::PACK_SHRINK);
+  m_box_game_header.pack_end(m_lbl_timer, Gtk::PACK_SHRINK);
+
+  // === LEFT PANEL - Question & Answers ===
+  m_box_game_left.set_spacing(16);
+  m_box_game_left.set_margin_start(24);
+  m_box_game_left.set_margin_end(12);
+  m_box_game_left.set_margin_top(20);
+  m_box_game_left.set_margin_bottom(20);
+
+  // Question Card
+  Gtk::Box *question_card =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 12));
+  question_card->get_style_context()->add_class("question-card");
+
+  Gtk::Box *q_header =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 8));
+  Gtk::Label *q_badge = Gtk::manage(new Gtk::Label("Q3"));
+  q_badge->get_style_context()->add_class("question-badge");
+  q_header->pack_start(*q_badge, Gtk::PACK_SHRINK);
+
+  m_lbl_question.set_markup(
+      "<span>Thủ đô của Việt Nam là thành phố nào?</span>");
+  m_lbl_question.get_style_context()->add_class("question-text");
+  m_lbl_question.set_line_wrap(true);
+  m_lbl_question.set_halign(Gtk::ALIGN_START);
+
+  question_card->pack_start(*q_header, Gtk::PACK_SHRINK);
+  question_card->pack_start(m_lbl_question, Gtk::PACK_SHRINK);
+
+  // Answer grid (2x2)
   m_grid_answers.set_column_spacing(12);
   m_grid_answers.set_row_spacing(12);
-  m_grid_answers.set_halign(Gtk::ALIGN_CENTER);
+  m_grid_answers.set_column_homogeneous(true);
+  m_grid_answers.set_row_homogeneous(true);
 
   const char *labels[] = {"A", "B", "C", "D"};
   for (int i = 0; i < 4; i++) {
-    m_btn_opt[i].set_label(labels[i]);
-    m_btn_opt[i].get_style_context()->add_class("answer-btn");
+    m_btn_opt[i].get_style_context()->add_class("answer-option");
     m_grid_answers.attach(m_btn_opt[i], i % 2, i / 2, 1, 1);
     m_btn_opt[i].set_hexpand(true);
-    m_btn_opt[i].set_size_request(160, 65);
+    m_btn_opt[i].set_size_request(-1, 60);
 
     std::string ans = labels[i];
     m_btn_opt[i].signal_clicked().connect([this, ans]() {
@@ -919,18 +1372,102 @@ void ClientWindow::setup_ui() {
     });
   }
 
-  m_txt_log.set_editable(false);
+  // Surrender button (in-game) - returns to waiting room
+  m_btn_leave_game.set_label("🏳️ Surrender");
+  m_btn_leave_game.get_style_context()->add_class("btn-leave-room");
+  m_btn_leave_game.signal_clicked().connect([this]() {
+    // Return to waiting room
+    if (m_box_game_playing.get_visible()) {
+      m_box_game_playing.hide();
+      m_box_game.remove(m_box_game_playing);
+      m_box_game.pack_start(m_box_game_waiting, Gtk::PACK_EXPAND_WIDGET);
+      m_box_game_waiting.show_all();
+    }
+  });
+
+  m_box_game_left.pack_start(*question_card, Gtk::PACK_SHRINK);
+  m_box_game_left.pack_start(m_grid_answers, Gtk::PACK_SHRINK);
+  m_box_game_left.pack_start(m_btn_leave_game, Gtk::PACK_SHRINK);
+
+  // === RIGHT PANEL - Player Scores & My Score ===
+  m_box_game_right.set_spacing(16);
+  m_box_game_right.set_margin_start(12);
+  m_box_game_right.set_margin_end(24);
+  m_box_game_right.set_margin_top(20);
+  m_box_game_right.set_margin_bottom(20);
+
+  // Player list title
+  m_lbl_game_players_title.set_markup(
+      "<span color='#1e293b' size='11000' weight='600'>👥 Người chơi</span>");
+  m_lbl_game_players_title.set_halign(Gtk::ALIGN_START);
+
+  // Player list (scrollable)
+  m_box_game_players.set_spacing(6);
+  m_scroll_game_players.add(m_box_game_players);
+  m_scroll_game_players.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+  m_scroll_game_players.set_min_content_height(150);
+  m_scroll_game_players.set_max_content_height(200);
+
+  // Add mock game players
+  add_game_player("Người chơi #1234", 850, true);  // Correct answer
+  add_game_player("Người chơi #5678", 720, true);  // Correct answer
+  add_game_player("Người chơi #9012", 650, false); // Wrong answer
+  add_game_player("Người chơi #3456", 500, false); // Not answered yet
+
+  // Score Card (Purple Gradient)
+  m_box_score_card.get_style_context()->add_class("score-gradient-card");
+  m_box_score_card.set_spacing(8);
+
+  Gtk::Label *score_label = Gtk::manage(new Gtk::Label());
+  score_label->set_markup("<span size='9000'>Điểm của bạn</span>");
+  score_label->get_style_context()->add_class("score-card-label");
+  score_label->set_halign(Gtk::ALIGN_START);
+
+  m_lbl_my_score.set_text("850");
+  m_lbl_my_score.get_style_context()->add_class("score-card-value");
+  m_lbl_my_score.set_halign(Gtk::ALIGN_START);
+
+  m_lbl_correct_count.set_markup("<span>🎯 5 câu đúng</span>");
+  m_lbl_correct_count.get_style_context()->add_class("score-card-subtext");
+  m_lbl_correct_count.set_halign(Gtk::ALIGN_START);
+
+  m_box_score_card.pack_start(*score_label, Gtk::PACK_SHRINK);
+  m_box_score_card.pack_start(m_lbl_my_score, Gtk::PACK_SHRINK);
+  m_box_score_card.pack_start(m_lbl_correct_count, Gtk::PACK_SHRINK);
+
+  // Progress bar
+  Gtk::Label *progress_label = Gtk::manage(new Gtk::Label());
+  progress_label->set_markup(
+      "<span color='#64748b' size='10000'>Tiến trình</span>");
+  progress_label->set_halign(Gtk::ALIGN_START);
+  progress_label->set_margin_top(8);
+
+  m_progress_questions.set_fraction(0.15); // 3/20
+  m_progress_questions.set_show_text(true);
+  m_progress_questions.set_text("3 / 20 câu hỏi");
+
+  m_box_game_right.pack_start(m_lbl_game_players_title, Gtk::PACK_SHRINK);
+  m_box_game_right.pack_start(m_scroll_game_players, Gtk::PACK_EXPAND_WIDGET);
+  m_box_game_right.pack_start(m_box_score_card, Gtk::PACK_SHRINK);
+  m_box_game_right.pack_start(*progress_label, Gtk::PACK_SHRINK);
+  m_box_game_right.pack_start(m_progress_questions, Gtk::PACK_SHRINK);
+
+  // === Assemble Game Playing Screen ===
+  Gtk::Box *game_content =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL));
+  game_content->pack_start(m_box_game_left, Gtk::PACK_EXPAND_WIDGET);
+  game_content->pack_start(m_box_game_right, Gtk::PACK_EXPAND_WIDGET);
+
+  m_box_game_playing.pack_start(m_box_game_header, Gtk::PACK_SHRINK);
+  m_box_game_playing.pack_start(*game_content, Gtk::PACK_EXPAND_WIDGET);
+
+  // Add log to scroll (only once)
   m_scroll.add(m_txt_log);
-  m_scroll.set_min_content_height(100);
 
-  m_box_game.pack_start(m_lbl_room_info, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_btn_start, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_box_invite_tool, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_lbl_question, Gtk::PACK_SHRINK, 20);
-  m_box_game.pack_start(m_grid_answers, Gtk::PACK_SHRINK);
-  m_box_game.pack_start(m_scroll, Gtk::PACK_EXPAND_WIDGET);
-  m_box_game.pack_start(m_btn_leave, Gtk::PACK_SHRINK);
+  // Add waiting room to main game box (default view)
+  m_box_game.pack_start(m_box_game_waiting, Gtk::PACK_EXPAND_WIDGET);
 
+  // Button signals
   m_btn_start.signal_clicked().connect([this]() { m_client.sendStartGame(); });
   m_btn_leave.signal_clicked().connect([this]() { m_client.sendLeaveRoom(); });
   m_btn_send_invite.signal_clicked().connect([this]() {
@@ -941,15 +1478,16 @@ void ClientWindow::setup_ui() {
   // Setup Entry & Submit Button for Text/Estimation
   m_entry_answer.set_placeholder_text("Nhập câu trả lời của bạn...");
   m_btn_submit_answer.set_label("Gửi Câu Trả Lời");
-  m_btn_submit_answer.get_style_context()->add_class("btn-gold"); // Re-use gold style
-  
+  m_btn_submit_answer.get_style_context()->add_class(
+      "btn-gold"); // Re-use gold style
+
   m_box_game.pack_start(m_entry_answer, Gtk::PACK_SHRINK);
   m_box_game.pack_start(m_btn_submit_answer, Gtk::PACK_SHRINK);
 
   m_btn_submit_answer.signal_clicked().connect([this]() {
-      m_client.sendSubmitAnswer(m_current_q_id, m_entry_answer.get_text());
-      m_entry_answer.set_text(""); // Clear after send
-      m_btn_submit_answer.set_sensitive(false); // Prevent double submit
+    m_client.sendSubmitAnswer(m_current_q_id, m_entry_answer.get_text());
+    m_entry_answer.set_text("");              // Clear after send
+    m_btn_submit_answer.set_sensitive(false); // Prevent double submit
   });
 
   m_stack.add(m_box_game, "game");
@@ -959,11 +1497,146 @@ void ClientWindow::setup_ui() {
   m_btn_submit_answer.hide();
 }
 
+// Helper function to add a player to the waiting room list
+void ClientWindow::add_player_to_list(const std::string &name,
+                                      const std::string &emoji, bool is_owner,
+                                      bool is_ready) {
+  Gtk::Box *player_item =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
+  player_item->get_style_context()->add_class("player-item");
+  player_item->set_margin_bottom(8);
+
+  // Avatar emoji
+  Gtk::Label *avatar = Gtk::manage(new Gtk::Label(emoji));
+  avatar->get_style_context()->add_class("player-avatar-emoji");
+  avatar->set_size_request(45, 45);
+
+  // Player info (name + status badges)
+  Gtk::Box *info_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
+
+  Gtk::Label *name_label = Gtk::manage(new Gtk::Label());
+  name_label->set_markup("<span weight='600' size='10000'>" + name + "</span>");
+  name_label->set_halign(Gtk::ALIGN_START);
+
+  // Status badges row
+  Gtk::Box *badge_row =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 6));
+
+  if (is_owner) {
+    Gtk::Label *owner_badge = Gtk::manage(new Gtk::Label());
+    owner_badge->set_markup("<span size='8000'>Chủ phòng</span>");
+    owner_badge->get_style_context()->add_class("badge-owner");
+    badge_row->pack_start(*owner_badge, Gtk::PACK_SHRINK);
+  }
+
+  if (is_ready) {
+    Gtk::Label *ready_badge = Gtk::manage(new Gtk::Label());
+    ready_badge->set_markup("<span size='8000'>✓ Sẵn sàng</span>");
+    ready_badge->get_style_context()->add_class("badge-ready");
+    badge_row->pack_start(*ready_badge, Gtk::PACK_SHRINK);
+  }
+
+  info_box->pack_start(*name_label, Gtk::PACK_SHRINK);
+  info_box->pack_start(*badge_row, Gtk::PACK_SHRINK);
+
+  player_item->pack_start(*avatar, Gtk::PACK_SHRINK);
+  player_item->pack_start(*info_box, Gtk::PACK_EXPAND_WIDGET);
+
+  m_box_player_list.pack_start(*player_item, Gtk::PACK_SHRINK);
+}
+
+// Helper function to add a player to the game screen player list
+void ClientWindow::add_game_player(const std::string &name, int score,
+                                   bool answered_correctly) {
+  static int player_number = 0;
+  player_number++;
+
+  Gtk::Box *player_item =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
+  player_item->get_style_context()->add_class("player-score-item");
+
+  // Numbered avatar circle
+  Gtk::Label *avatar =
+      Gtk::manage(new Gtk::Label(std::to_string(player_number)));
+  avatar->set_size_request(45, 45);
+  avatar->set_halign(Gtk::ALIGN_CENTER);
+  avatar->set_valign(Gtk::ALIGN_CENTER);
+
+  // Different colors for different positions
+  if (player_number == 1) {
+    avatar->set_markup("<span size='14000' weight='800' color='#ffffff'>" +
+                       std::to_string(player_number) + "</span>");
+    avatar->override_background_color(Gdk::RGBA("#f59e0b")); // Gold
+  } else if (player_number == 3) {
+    avatar->set_markup("<span size='14000' weight='800' color='#ffffff'>" +
+                       std::to_string(player_number) + "</span>");
+    avatar->override_background_color(Gdk::RGBA("#f97316")); // Orange
+  } else {
+    avatar->set_markup("<span size='14000' weight='800' color='#ffffff'>" +
+                       std::to_string(player_number) + "</span>");
+    avatar->override_background_color(Gdk::RGBA("#94a3b8")); // Gray
+  }
+
+  // Player info box
+  Gtk::Box *info_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
+
+  Gtk::Label *name_label = Gtk::manage(new Gtk::Label());
+  std::string name_text = name;
+  if (player_number == 1)
+    name_text += " 👑";
+  name_label->set_markup("<span size='10500' weight='600'>" + name_text +
+                         "</span>");
+  name_label->set_halign(Gtk::ALIGN_START);
+
+  Gtk::Label *score_label = Gtk::manage(new Gtk::Label());
+  score_label->set_markup("<span size='9500' color='#64748b'>Điểm: " +
+                          std::to_string(score) + "</span>");
+  score_label->set_halign(Gtk::ALIGN_START);
+
+  info_box->pack_start(*name_label, Gtk::PACK_SHRINK);
+  info_box->pack_start(*score_label, Gtk::PACK_SHRINK);
+
+  // Status indicator (circle with icon)
+  Gtk::Label *status = Gtk::manage(new Gtk::Label());
+  status->set_size_request(32, 32);
+  status->set_halign(Gtk::ALIGN_CENTER);
+  status->set_valign(Gtk::ALIGN_CENTER);
+
+  if (answered_correctly) {
+    status->set_markup("<span size='16000' color='#ffffff'>✓</span>");
+    status->override_background_color(Gdk::RGBA("#10b981")); // Green
+  } else if (player_number == 4) {
+    status->set_markup("<span size='16000' color='#64748b'>💡</span>");
+    status->override_background_color(Gdk::RGBA("#e2e8f0")); // Light gray
+  } else {
+    status->set_markup("<span size='16000' color='#ffffff'>✗</span>");
+    status->override_background_color(Gdk::RGBA("#ef4444")); // Red
+  }
+
+  player_item->pack_start(*avatar, Gtk::PACK_SHRINK);
+  player_item->pack_start(*info_box, Gtk::PACK_EXPAND_WIDGET);
+  player_item->pack_start(*status, Gtk::PACK_SHRINK);
+
+  m_box_game_players.pack_start(*player_item, Gtk::PACK_SHRINK);
+}
+
 void ClientWindow::log_msg(const std::string &msg) {
   auto buf = m_txt_log.get_buffer();
   buf->insert(buf->end(), msg + "\n");
   auto mark = buf->create_mark(buf->end());
   m_txt_log.scroll_to(mark);
+}
+
+// Timer countdown handler
+bool ClientWindow::on_timer_tick() {
+  if (m_timer_seconds > 0) {
+    m_timer_seconds--;
+    m_lbl_timer.set_text("⏱ " + std::to_string(m_timer_seconds) + "s");
+    return true; // Continue timer
+  } else {
+    m_lbl_timer.set_text("⏱ 0s");
+    return false; // Stop timer
+  }
 }
 
 void ClientWindow::on_network_signal() {
@@ -1043,27 +1716,50 @@ void ClientWindow::on_network_signal() {
       auto p = (protocol::Payload_Question *)data;
       m_current_q_id = p->question_id;
       m_lbl_question.set_text(p->question_text);
-      
+
+      // Switch from waiting room to game playing screen
+      if (m_box_game_waiting.get_visible()) {
+        m_box_game_waiting.hide();
+        m_box_game.remove(m_box_game_waiting);
+        m_box_game.pack_start(m_box_game_playing, Gtk::PACK_EXPAND_WIDGET);
+        m_box_game_playing.show_all();
+      }
+
+      // Start countdown timer (30 seconds default)
+      m_timer_seconds = 30;
+      m_lbl_timer.set_text("⏱ 30s");
+      // Stop previous timer if running
+      if (m_timer_connection.connected()) {
+        m_timer_connection.disconnect();
+      }
+      // Start new timer (update every 1000ms = 1 second)
+      m_timer_connection = Glib::signal_timeout().connect(
+          sigc::mem_fun(*this, &ClientWindow::on_timer_tick), 1000);
+
       // Reset controls
       m_btn_submit_answer.set_sensitive(true);
 
       if (p->question_type == protocol::QT_MCQ) {
-          // MCQ Mode
-          m_entry_answer.hide();
-          m_btn_submit_answer.hide();
-          
-          for (int i = 0; i < 4; i++) {
-            m_btn_opt[i].set_label(p->options[i]);
-            m_btn_opt[i].set_sensitive(true);
-          }
-          m_grid_answers.show();
+        // MCQ Mode - add A/B/C/D labels
+        m_entry_answer.hide();
+        m_btn_submit_answer.hide();
+
+        const char *labels[] = {"A", "B", "C", "D"};
+        for (int i = 0; i < 4; i++) {
+          // Set button label with A/B/C/D prefix
+          std::string btn_label =
+              std::string(labels[i]) + "   " + p->options[i];
+          m_btn_opt[i].set_label(btn_label);
+          m_btn_opt[i].set_sensitive(true);
+        }
+        m_grid_answers.show();
       } else {
-          // Text / Estimation Mode
-          m_grid_answers.hide();
-          m_entry_answer.set_text("");
-          m_entry_answer.show();
-          m_btn_submit_answer.show();
-          m_entry_answer.grab_focus();
+        // Text / Estimation Mode
+        m_grid_answers.hide();
+        m_entry_answer.set_text("");
+        m_entry_answer.show();
+        m_btn_submit_answer.show();
+        m_entry_answer.grab_focus();
       }
       break;
     }
@@ -1080,6 +1776,15 @@ void ClientWindow::on_network_signal() {
     case protocol::CMD_GAME_OVER: {
       auto p = (protocol::Payload_Message *)data;
       log_msg("GAME OVER: " + std::string(p->message));
+
+      // Switch back to waiting room
+      if (m_box_game_playing.get_visible()) {
+        m_box_game_playing.hide();
+        m_box_game.remove(m_box_game_playing);
+        m_box_game.pack_start(m_box_game_waiting, Gtk::PACK_EXPAND_WIDGET);
+        m_box_game_waiting.show_all();
+      }
+
       m_grid_answers.hide();
       break;
     }

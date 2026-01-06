@@ -1,0 +1,4 @@
+[2026-01-06 10:35:14] [INFO] === Server Started ===
+[2026-01-06 10:35:14] [INFO] Server starting on port 5500
+[2026-01-06 10:35:14] [INFO] Database opened successfully
+[2026-01-06 10:35:14] [ERROR] Failed to start server!
