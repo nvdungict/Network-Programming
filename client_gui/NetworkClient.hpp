@@ -56,6 +56,8 @@ public:
     }
 
     // --- Wrapper gọi hàm từ protocol.cpp ---
+    bool isConnected() const { return m_running; }
+
     template <typename T>
     void sendData(uint16_t type, const T& payload) {
         if (m_running) protocol::sendPacket(m_sock, type, &payload, sizeof(T));

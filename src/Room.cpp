@@ -145,6 +145,12 @@ int Room::getHostSocket() {
   std::lock_guard<std::mutex> lock(m_mutex);
   return m_host_socket;
 }
+
+int Room::getPlayerCount() {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  return m_players.size();
+}
+
 std::string Room::getHostName() {
   std::lock_guard<std::mutex> lock(m_mutex);
   return getHostName_UNLOCKED();
@@ -179,6 +185,6 @@ void Room::updatePlayersElo(
       elo_change = -20;
       break; // rank 5+
     }
-    m_server->getUserManager().updateElo(username, elo_change);
+    m_server->getUserManager().updateUserStats(username, elo_change, username == winner);
   }
 }

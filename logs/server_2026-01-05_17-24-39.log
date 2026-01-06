@@ -1,7 +1,0 @@
-[2026-01-05 17:24:39] [INFO] === Server Started ===
-[2026-01-05 17:24:39] [INFO] Server starting on port 5500
-[2026-01-05 17:24:39] [INFO] Database opened successfully
-[2026-01-05 17:24:41] [INFO] Client connected: socket 6
-[2026-01-05 17:24:43] [INFO] Client connected: socket 7
-[2026-01-05 17:24:43] [INFO] Client connected: socket 8
-[2026-01-05 17:24:43] [INFO] Client connected: socket 9

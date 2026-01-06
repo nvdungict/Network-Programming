@@ -28,5 +28,6 @@ public:
   void handleDisconnect(int client_sock);
 
   // ELO update function
-  void updateElo(const std::string &username, int elo_change);
+  // ELO & Stats update function
+  void updateUserStats(const std::string &username, int elo_change, bool is_win);
 };

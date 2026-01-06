@@ -35,6 +35,7 @@ public:
   int getID();
   std::string getState();
   bool isEmpty();
+  int getPlayerCount(); // NEW
   bool hasPlayer(int s);
   int getHostSocket();
   std::string getHostName();

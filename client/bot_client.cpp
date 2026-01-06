@@ -13,6 +13,8 @@
 #define SERVER_IP "127.0.0.1"
 #define PORT 5500
 
+#define PORT 5500
+
 std::atomic<bool> g_running(true);
 std::string g_username;
 int g_sock = 0;
@@ -49,6 +51,16 @@ void listenToServer(int sock) {
         if (len > 0 && !protocol::recvData(sock, buffer.data(), len)) break;
 
         switch (type) {
+            case protocol::CMD_LOGIN_SUCCESS: {
+                auto pkt = (protocol::Payload_LoginSuccess*)buffer.data();
+                std::cout << "[BOT] Login Success! Stats: Wins=" << pkt->wins << ", Matches=" << pkt->matches_played << ", ELO=" << pkt->elo << std::endl;
+                break;
+            }
+            case protocol::CMD_GLOBAL_STATS: {
+                 // Verify packet size/content
+                 std::cout << "[BOT] Received Global Stats" << std::endl;
+                 break;
+            }
             case protocol::CMD_NEW_QUESTION: {
                  auto pkt = (protocol::QuestionPacket*)buffer.data();
                  std::cout << "[BOT] " << g_username << " received Q (Type " << (int)pkt->question_type << ")" << std::endl;
@@ -58,10 +70,17 @@ void listenToServer(int sock) {
             }
             case protocol::CMD_ROOM_UPDATE: {
                 auto pkt = (protocol::RoomUpdateHeader*)buffer.data();
-                if (g_is_host && std::string(pkt->state) == "LOBBY" && pkt->player_count >= 4) {
-                    std::cout << "[BOT-HOST] " << g_username << " starting game..." << std::endl;
-                    std::this_thread::sleep_for(std::chrono::seconds(2));
-                    protocol::sendPacket(sock, protocol::CMD_START_GAME, nullptr, 0);
+                if (g_is_host && std::string(pkt->state) == "LOBBY") {
+                    std::cout << "[BOT-HOST] Players: " << pkt->player_count << std::endl;
+                    if (pkt->player_count >= 3) { // Changed to 3
+                        std::cout << "[BOT-HOST] " << g_username << " starting game..." << std::endl;
+                        std::this_thread::sleep_for(std::chrono::seconds(2));
+                        protocol::sendPacket(sock, protocol::CMD_START_GAME, nullptr, 0);
+                    } else if (pkt->player_count == 2) {
+                        // Try start to test failure
+                        std::cout << "[BOT-HOST] Trying to start with 2 players (Should Fail)..." << std::endl;
+                         protocol::sendPacket(sock, protocol::CMD_START_GAME, nullptr, 0);
+                    }
                 }
                 break;
             }
@@ -85,9 +104,11 @@ void listenToServer(int sock) {
 
 int main(int argc, char* argv[]) {
     setbuf(stdout, NULL);
+    std::cout << "[BOT-DEBUG] Bot starting..." << std::endl;
     srand(time(0) + getpid());
     if (argc > 1) g_username = argv[1];
     else g_username = "Bot" + std::to_string(rand() % 1000);
+    std::cout << "[BOT-DEBUG] Username: " << g_username << std::endl;
     
     if (argc > 2 && std::string(argv[2]) == "HOST") g_is_host = true;
 

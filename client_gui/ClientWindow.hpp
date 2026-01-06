@@ -231,4 +231,7 @@ private:
                           bool is_owner, bool is_ready);
   void add_game_player(const std::string &name, int score,
                        bool answered_correctly);
+  
+  std::string m_my_username;
+  bool m_is_host = false;
 };

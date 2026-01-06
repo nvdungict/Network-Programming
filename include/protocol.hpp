@@ -39,8 +39,36 @@ enum CommandType : uint16_t {
   CMD_NEW_QUESTION = 62,
   CMD_ANSWER_RESULT = 63,
   CMD_GAME_OVER = 64,
-  CMD_ELO_UPDATE = 65 // NEW: Send updated ELO after game
+  CMD_ELO_UPDATE = 65,
+  CMD_GLOBAL_STATS = 66,
+  CMD_PLAYER_STATS = 67,
+  CMD_KICK_PLAYER = 12, // Client -> Server (Host only)
+  CMD_KICK_SUCCESS = 68
 };
+
+// ... (Existing Headers)
+
+// 11. Global Stats
+struct Payload_GlobalStats {
+  int online_users;
+  int active_rooms;
+};
+using GlobalStatsPacket = Payload_GlobalStats;
+
+// 12. Player Stats
+struct Payload_PlayerStats {
+  char username[32];
+  int wins;
+  int matches_played;
+  int elo;
+};
+using PlayerStatsPacket = Payload_PlayerStats;
+
+// 13. Kick Player
+struct Payload_Kick {
+  char target_username[32];
+};
+using KickPacket = Payload_Kick;
 
 // === Header ===
 #pragma pack(push, 1)
@@ -62,6 +90,8 @@ using AuthPacket = Payload_Auth;
 // 2. Login Result
 struct Payload_LoginSuccess {
   int elo;
+  int wins;
+  int matches_played;
   char username[32];
 };
 using LoginResultPacket = Payload_LoginSuccess;

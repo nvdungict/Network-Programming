@@ -81,6 +81,8 @@ void Server::handleClient(int client_socket) {
         break;
     }
 
+    std::cout << "[DEBUG] Recv Packet Type: " << type << " Len: " << len << " from Sock: " << client_socket << std::endl;
+
     switch (type) {
     case protocol::CMD_LOGIN: {
       auto pkt = (protocol::AuthPacket *)buffer.data();
@@ -139,6 +141,10 @@ void Server::handleClient(int client_socket) {
         is_logged_in = false;
       }
       break;
+    case protocol::CMD_KICK_PLAYER:
+      if (is_logged_in)
+        handleKickPlayer(client_socket, (protocol::KickPacket *)buffer.data());
+      break;
     }
   }
 
@@ -165,28 +171,54 @@ void Server::sendPacket(int client_sock, uint16_t type, const void *data,
 }
 
 int Server::getSocketForUser(const std::string &username) {
-  std::lock_guard<std::mutex> lock(m_session_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
   auto it = m_user_to_socket.find(username);
   return (it != m_user_to_socket.end()) ? it->second : -1;
 }
 
 std::string Server::getUserForSocket(int client_sock) {
-  std::lock_guard<std::mutex> lock(m_session_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
   auto it = m_socket_to_user.find(client_sock);
   return (it != m_socket_to_user.end()) ? it->second : "";
 }
 
 void Server::registerSession(int client_sock, const std::string &username) {
-  std::lock_guard<std::mutex> lock(m_session_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
   m_socket_to_user[client_sock] = username;
   m_user_to_socket[username] = client_sock;
+  broadcastGlobalStats();
+}
+
+void Server::broadcastGlobalStats() {
+  protocol::Payload_GlobalStats stats;
+  {
+      std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
+      stats.online_users = m_socket_to_user.size();
+  }
+  // This is a bit hacky, normally RoomManager should expose room count safely
+  // Assuming RoomManager has thread-safe getRoomCount or similar, or just 0 for now if not exposed
+  // But wait, RoomManager is right there.
+  // m_room_manager.getRoomCount() needs to be implemented or accessed.
+  // For now let's just count online users first.
+  stats.active_rooms = 0; // Placeholder until RoomManager exposure
+
+  // Broadcast to all connected clients
+  std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
+  for (auto const& [sock, user] : m_socket_to_user) {
+      sendPacket(sock, protocol::CMD_GLOBAL_STATS, &stats, sizeof(stats));
+  }
+}
+
+void Server::handleKickPlayer(int client_sock, const protocol::KickPacket *pkt) {
+    m_room_manager.handleKickPlayer(client_sock, pkt);
 }
 
 void Server::removeSession(int client_sock) {
-  std::lock_guard<std::mutex> lock(m_session_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
   auto it = m_socket_to_user.find(client_sock);
   if (it != m_socket_to_user.end()) {
     m_user_to_socket.erase(it->second);
     m_socket_to_user.erase(it);
+    broadcastGlobalStats();
   }
 }

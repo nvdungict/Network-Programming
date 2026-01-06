@@ -17,8 +17,12 @@ void UserManager::handleLogin(int client_sock, const protocol::AuthPacket *pkt,
   memset(&msg_pkt, 0, sizeof(msg_pkt));
 
   int elo = 1000;
+  int wins = 0;
+  int matches = 0;
   // Dùng m_db trực tiếp
-  int result = m_db.checkLogin(user, pass, elo);
+  std::cout << "[DEBUG] Checking login for: " << user << " | Pass: " << pass << std::endl;
+  int result = m_db.checkLogin(user, pass, elo, wins, matches);
+  std::cout << "[DEBUG] DB Result: " << result << " (0: OK, 1: NotFound, 2: WrongPass)" << std::endl;
 
   if (result == 0) { // Success
     {
@@ -38,6 +42,8 @@ void UserManager::handleLogin(int client_sock, const protocol::AuthPacket *pkt,
     memset(&res, 0, sizeof(res));
     strncpy(res.username, user.c_str(), 31);
     res.elo = elo;
+    res.wins = wins;
+    res.matches_played = matches;
     m_server->sendPacket(client_sock, protocol::CMD_LOGIN_SUCCESS, &res,
                          sizeof(res));
 
@@ -99,6 +105,6 @@ void UserManager::handleDisconnect(int client_sock) {
   }
 }
 
-void UserManager::updateElo(const std::string &username, int elo_change) {
-  m_db.updateElo(username, elo_change);
+void UserManager::updateUserStats(const std::string &username, int elo_change, bool is_win) {
+  m_db.updateUserStats(username, elo_change, is_win);
 }

@@ -21,13 +21,14 @@ public:
   // --- User Related ---
   // Trả về: 0=Login OK, 1=User not found, 2=Wrong Pass, 3=Blocked
   int checkLogin(const std::string &user, const std::string &pass,
-                 int &out_elo);
+                 int &out_elo, int &out_wins, int &out_matches);
 
   // Trả về: true=Thành công, false=Trùng user
   bool createUser(const std::string &user, const std::string &pass);
 
   // ELO functions
-  bool updateElo(const std::string &user, int elo_change);
+  // ELO & Stats functions
+  bool updateUserStats(const std::string &user, int elo_change, bool is_win);
   int getElo(const std::string &user);
 
   bool blockUser(const std::string &user);

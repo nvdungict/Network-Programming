@@ -32,6 +32,7 @@ public:
     void handleLeaveRoom(int client_sock);
     
     void handleStartGame(int client_sock);
+    void handleKickPlayer(int client_sock, const protocol::KickPacket* pkt);
     void handleSubmitAnswer(int client_sock, const protocol::AnswerPacket* pkt);
     void handleSurrender(int client_sock);
 

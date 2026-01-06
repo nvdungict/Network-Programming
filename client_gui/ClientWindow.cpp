@@ -14,10 +14,10 @@ const std::string CSS_DATA = R"(
         caret-color: #00f3ff;
         border: 1px solid rgba(0, 243, 255, 0.5);
         border-radius: 12px;
-        padding: 8px 12px;
-        min-height: 45px;
+        padding: 12px 16px;
+        min-height: 55px;
         font-family: 'Verdana';
-        font-size: 14px;
+        font-size: 18px;
     }
     
     /* SỬA LỖI: Định nghĩa màu bôi đen text (Selection) tách riêng ra */
@@ -37,8 +37,9 @@ const std::string CSS_DATA = R"(
         background-image: linear-gradient(to right, #FFD700, #FFA500);
         color: #0b0f19;
         font-weight: 900;
-        font-size: 16px;
-        border-radius: 25px;
+        font-size: 20px;
+        border-radius: 30px;
+        padding: 10px 20px;
         border: 1px solid #ffffff;
         box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
     }
@@ -100,7 +101,8 @@ const std::string CSS_DATA = R"(
         background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
         color: #1e293b;
         font-weight: 800;
-        font-size: 15px;
+        font-size: 18px;
+        padding: 12px 24px;
         box-shadow: 0 4px 14px rgba(251, 191, 36, 0.5);
     }
     button.btn-start:hover {
@@ -142,7 +144,7 @@ const std::string CSS_DATA = R"(
         background-color: rgba(15, 23, 42, 0.8);
         color: #e2e8f0;
         font-family: 'Monospace';
-        font-size: 13px;
+        font-size: 16px;
         border-radius: 8px;
         border: 1px solid rgba(56, 189, 248, 0.3);
     }
@@ -667,11 +669,29 @@ ClientWindow::ClientWindow(const std::string &ip, int port)
   set_title("Đấu Trường Tri Thức");
   set_default_size(900, 600); // Trở lại size landscape cũ cho Login
   set_position(Gtk::WIN_POS_CENTER);
+  maximize(); // Start full screen
 
   load_css();
 
   m_client.setNotifyCallback([this]() { m_dispatcher.emit(); });
   m_dispatcher.connect(sigc::mem_fun(*this, &ClientWindow::on_network_signal));
+
+  // --- DEBUG: Catch All Clicks ---
+  add_events(Gdk::BUTTON_PRESS_MASK);
+  signal_button_press_event().connect([this](GdkEventButton* event) {
+      std::cout << "[DEBUG-GLOBAL] Global Click at (" << event->x << ", " << event->y << ")" << std::endl;
+      
+      // Check Button State
+      std::cout << "[DEBUG-BTN] Login Button Visible=" << m_btn_login.get_visible() 
+                << " Sensitive=" << m_btn_login.get_sensitive() 
+                << " Mapped=" << m_btn_login.get_mapped() << std::endl;
+      
+      // Check Overlay Children
+      auto children = m_login_overlay.get_children();
+      std::cout << "[DEBUG-OVERLAY] Child count: " << children.size() << std::endl;
+      
+      return false; // Propagate
+  });
 
   setup_ui();
 
@@ -783,6 +803,14 @@ void ClientWindow::setup_ui() {
     std::string u = m_entry_user.get_text();
     std::string p = m_entry_pass.get_text();
 
+    std::cout << "[DEBUG] Login clicked. User: " << u << ", Pass: " << p << std::endl;
+
+    if (!m_client.isConnected()) {
+        std::cout << "[DEBUG] Client NOT connected!" << std::endl;
+        m_lbl_login_msg.set_text("Mất kết nối tới máy chủ!");
+        return;
+    }
+
     if (u.empty() || p.empty()) {
       m_lbl_login_msg.set_text("Vui lòng điền đầy đủ thông tin!");
       return;
@@ -790,9 +818,11 @@ void ClientWindow::setup_ui() {
 
     if (m_is_register_mode) {
       // Đang ở chế độ Đăng ký -> Gửi lệnh Register
+      std::cout << "[DEBUG] Sending Register..." << std::endl;
       m_client.sendRegister(u, p);
     } else {
       // Đang ở chế độ Đăng nhập -> Gửi lệnh Login
+      std::cout << "[DEBUG] Sending Login..." << std::endl;
       m_client.sendLogin(u, p);
     }
   });
@@ -827,15 +857,15 @@ void ClientWindow::setup_ui() {
         return true;
       });
 
-  // === MAIN LAYOUT (Vertical for small screen) ===
-  m_box_lobby_main.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  // === MAIN LAYOUT (Horizontal for Desktop) ===
+  m_box_lobby_main.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_lobby_main.set_spacing(15);
   m_box_lobby_main.set_halign(Gtk::ALIGN_FILL);
-  m_box_lobby_main.set_valign(Gtk::ALIGN_START);
-  m_box_lobby_main.set_margin_start(20);
-  m_box_lobby_main.set_margin_end(20);
-  m_box_lobby_main.set_margin_top(20);
-  m_box_lobby_main.set_margin_bottom(20);
+  m_box_lobby_main.set_valign(Gtk::ALIGN_CENTER); // Center vertically content
+  m_box_lobby_main.set_margin_start(60);
+  m_box_lobby_main.set_margin_end(60);
+  m_box_lobby_main.set_margin_top(60);
+  m_box_lobby_main.set_margin_bottom(60);
 
   // Wrap in ScrolledWindow to ensure everything fits
   m_lobby_scroll.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
@@ -843,8 +873,8 @@ void ClientWindow::setup_ui() {
 
   // === LEFT SIDE: Hero Section ===
   m_box_left_hero.set_orientation(Gtk::ORIENTATION_VERTICAL);
-  m_box_left_hero.set_spacing(10);
-  m_box_left_hero.set_valign(Gtk::ALIGN_START);
+  m_box_left_hero.set_spacing(15);
+  m_box_left_hero.set_valign(Gtk::ALIGN_CENTER); // Center Hero section
 
   // Badge
   m_lbl_badge_arena.set_markup("<span weight='bold'>⚔ QUIZ ARENA</span>");
@@ -853,11 +883,11 @@ void ClientWindow::setup_ui() {
   m_lbl_badge_arena.set_margin_bottom(10);
 
   // Title
-  m_lbl_title_main.set_markup("<span size='32000' weight='ultrabold' "
+  m_lbl_title_main.set_markup("<span size='48000' weight='ultrabold' "
                               "color='#ffffff'>Đấu Trường</span>");
   m_lbl_title_main.set_halign(Gtk::ALIGN_START);
   m_lbl_title_sub.set_markup(
-      "<span size='32000' weight='ultrabold' color='#22d3ee'>Tri Thức</span>");
+      "<span size='48000' weight='ultrabold' color='#22d3ee'>Tri Thức</span>");
   m_lbl_title_sub.set_halign(Gtk::ALIGN_START);
   m_lbl_slogan.set_markup(
       "<span color='#94a3b8'>Nơi những tâm trí vĩ đại giao tranh</span>");
@@ -866,16 +896,16 @@ void ClientWindow::setup_ui() {
 
   // Stats Row
   m_box_stats_row.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-  m_box_stats_row.set_spacing(15);
-  m_box_stats_row.set_margin_top(30);
+  m_box_stats_row.set_spacing(25);
+  m_box_stats_row.set_margin_top(50);
 
   // Online stat box
   m_box_stat_online.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_box_stat_online.set_spacing(5);
   m_box_stat_online.get_style_context()->add_class("stat-box");
-  m_lbl_online_icon.set_markup("<span color='#22d3ee'>👥 Online</span>");
+  m_lbl_online_icon.set_markup("<span color='#22d3ee' size='14000'>👥 Online</span>");
   m_lbl_online_count.set_markup(
-      "<span size='25000' weight='bold' color='#ffffff'>2,847</span>");
+      "<span size='36000' weight='bold' color='#ffffff'>2,847</span>");
   m_box_stat_online.pack_start(m_lbl_online_icon, Gtk::PACK_SHRINK);
   m_box_stat_online.pack_start(m_lbl_online_count, Gtk::PACK_SHRINK);
 
@@ -883,9 +913,9 @@ void ClientWindow::setup_ui() {
   m_box_stat_matches.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_box_stat_matches.set_spacing(5);
   m_box_stat_matches.get_style_context()->add_class("stat-box");
-  m_lbl_matches_icon.set_markup("<span color='#f59e0b'>⚡ Trận đấu</span>");
+  m_lbl_matches_icon.set_markup("<span color='#f59e0b' size='14000'>⚡ Trận đấu</span>");
   m_lbl_matches_count.set_markup(
-      "<span size='25000' weight='bold' color='#ffffff'>15,382</span>");
+      "<span size='36000' weight='bold' color='#ffffff'>15,382</span>");
   m_box_stat_matches.pack_start(m_lbl_matches_icon, Gtk::PACK_SHRINK);
   m_box_stat_matches.pack_start(m_lbl_matches_count, Gtk::PACK_SHRINK);
 
@@ -901,7 +931,7 @@ void ClientWindow::setup_ui() {
 
   // === RIGHT SIDE: Cards ===
   m_box_right_panel.set_orientation(Gtk::ORIENTATION_VERTICAL);
-  m_box_right_panel.set_spacing(15);
+  m_box_right_panel.set_spacing(25);
 
   // --- Player Card ---
   m_box_player_card.set_orientation(Gtk::ORIENTATION_VERTICAL);
@@ -938,9 +968,9 @@ void ClientWindow::setup_ui() {
   m_box_elo_card.set_spacing(10);
   m_box_elo_card.get_style_context()->add_class("elo-card");
 
-  m_lbl_elo_icon.set_markup("<span size='20000'>👑</span>");
+  m_lbl_elo_icon.set_markup("<span size='30000'>👑</span>");
   m_lbl_elo_value.set_markup(
-      "<span size='28000' weight='ultrabold' color='#ffffff'>1,000</span>");
+      "<span size='40000' weight='ultrabold' color='#ffffff'>1,000</span>");
   m_lbl_elo_change.set_markup(
       "<span color='#ffffff80'>Điểm ELO hiện tại</span>");
   m_lbl_elo_change.set_valign(Gtk::ALIGN_END);
@@ -958,7 +988,7 @@ void ClientWindow::setup_ui() {
                           const char *l) {
     Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
     val.set_markup(
-        std::string("<span size='18000' weight='bold' color='#ffffff'>") + v +
+        std::string("<span size='24000' weight='bold' color='#ffffff'>") + v +
         "</span>");
     lbl.set_markup(std::string("<span color='#94a3b8'>") + l + "</span>");
     box->pack_start(val, Gtk::PACK_SHRINK);
@@ -1018,9 +1048,12 @@ void ClientWindow::setup_ui() {
   m_box_right_panel.pack_start(m_box_create_card, Gtk::PACK_SHRINK);
   m_box_right_panel.pack_start(m_box_join_card, Gtk::PACK_SHRINK);
 
+  // Fix Aspect Ratio: Right Panel fixed width, Left Panel expands
+  m_box_right_panel.set_size_request(420, -1); // Fixed width for sidebar (increased for larger fonts)
+
   // Pack main layout
-  m_box_lobby_main.pack_start(m_box_left_hero, Gtk::PACK_SHRINK);
-  m_box_lobby_main.pack_start(m_box_right_panel, Gtk::PACK_SHRINK);
+  m_box_lobby_main.pack_start(m_box_left_hero, Gtk::PACK_EXPAND_WIDGET); // Takes remaining space
+  m_box_lobby_main.pack_start(m_box_right_panel, Gtk::PACK_SHRINK);      // Fixed size
 
   // Footer
   m_box_footer.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
@@ -1544,11 +1577,24 @@ void ClientWindow::add_player_to_list(const std::string &name,
     badge_row->pack_start(*ready_badge, Gtk::PACK_SHRINK);
   }
 
-  info_box->pack_start(*name_label, Gtk::PACK_SHRINK);
   info_box->pack_start(*badge_row, Gtk::PACK_SHRINK);
 
   player_item->pack_start(*avatar, Gtk::PACK_SHRINK);
   player_item->pack_start(*info_box, Gtk::PACK_EXPAND_WIDGET);
+
+  // KICK BUTTON (Host only)
+  if (m_is_host && name != m_my_username) {
+      Gtk::Button* btn_kick = Gtk::manage(new Gtk::Button("❌"));
+      btn_kick->set_tooltip_text("Kick " + name);
+      // btn_kick->get_style_context()->add_class("btn-danger");
+      btn_kick->signal_clicked().connect([this, name]() {
+          protocol::KickPacket pkt;
+          std::memset(&pkt, 0, sizeof(pkt));
+          std::strncpy(pkt.target_username, name.c_str(), 31);
+          m_client.sendData(protocol::CMD_KICK_PLAYER, pkt);
+      });
+      player_item->pack_end(*btn_kick, Gtk::PACK_SHRINK);
+  }
 
   m_box_player_list.pack_start(*player_item, Gtk::PACK_SHRINK);
 }
@@ -1648,15 +1694,19 @@ bool ClientWindow::on_timer_tick() {
 }
 
 void ClientWindow::on_network_signal() {
+  std::cout << "[DEBUG-CLIENT] on_network_signal called!" << std::endl;
   while (m_client.hasMessages()) {
     Packet pkt = m_client.popMessage();
     char *data = pkt.data.data();
+    
+    std::cout << "[DEBUG-CLIENT] Popped Message Type: " << pkt.type << std::endl;
 
     switch (pkt.type) {
     case protocol::CMD_LOGIN_SUCCESS: {
       auto p = (protocol::Payload_LoginSuccess *)data;
       std::string username = p->username;
       int elo = p->elo;
+      m_my_username = username; // Save my username
 
       // Update legacy welcome label (for compatibility)
       m_lbl_welcome.set_text("Welcome " + username +
@@ -1668,8 +1718,19 @@ void ClientWindow::on_network_signal() {
       m_lbl_elo_value.set_markup(
           "<span size='28000' weight='ultrabold' color='#ffffff'>" +
           std::to_string(elo) + "</span>");
+      
+      // Update Stats UI
+      m_lbl_wins.set_text(std::to_string(p->wins));
+      m_lbl_losses.set_text(std::to_string(p->matches_played - p->wins)); // Roughly
+      
+      double details_winrate = (p->matches_played > 0) ? ((double)p->wins / p->matches_played * 100.0) : 0.0;
+      char buff[16];
+      snprintf(buff, sizeof(buff), "%.1f%%", details_winrate);
+      m_lbl_winrate.set_text(std::string(buff));
+
       m_player_elo = elo;
 
+      std::cout << "[DEBUG-CLIENT] Switching to LOBBY..." << std::endl;
       m_stack.set_visible_child("lobby");
       resize(400, 700);
       break;
@@ -1683,6 +1744,7 @@ void ClientWindow::on_network_signal() {
       m_btn_login.set_sensitive(true);
 
       if (m_stack.get_visible_child_name() == "login") {
+        std::cout << "[DEBUG-CLIENT] Received Message: " << p->message << std::endl;
         m_lbl_login_msg.set_text(p->message);
 
         // Logic tự động: Nếu thông báo chứa chữ "Success" -> Chuyển về màn hình
@@ -1733,9 +1795,9 @@ void ClientWindow::on_network_signal() {
         m_box_game_playing.show_all();
       }
 
-      // Start countdown timer (30 seconds default)
-      m_timer_seconds = 30;
-      m_lbl_timer.set_text("⏱ 30s");
+      // Start countdown timer (20 seconds max per request)
+      m_timer_seconds = 20;
+      m_lbl_timer.set_text("⏱ 20s");
       // Stop previous timer if running
       if (m_timer_connection.connected()) {
         m_timer_connection.disconnect();
@@ -1828,6 +1890,30 @@ void ClientWindow::on_network_signal() {
       }
       m_lbl_ranking.set_text(ss.str());
       break;
+    }
+    case protocol::CMD_GLOBAL_STATS: {
+        auto p = (protocol::Payload_GlobalStats *)data;
+        m_lbl_online_count.set_markup("<span size='36000' weight='ultrabold' color='#22c55e'>" + 
+            std::to_string(p->online_users) + "</span>");
+        // Update matches count if available, for now just online
+        break;
+    }
+    case protocol::CMD_KICK_SUCCESS: {
+        auto p = (protocol::Payload_Message *)data;
+        Gtk::MessageDialog dialog(*this, std::string(p->message), false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
+        dialog.run();
+        // Return to lobby
+        m_stack.set_visible_child("lobby");
+        break;
+    }
+    case protocol::CMD_ROOM_UPDATE: {
+        // Handle Host check
+        // Note: Payload_RoomInfo is the struct
+        auto p = (protocol::Payload_RoomInfo*)data;
+        
+        m_is_host = (m_my_username == std::string(p->host_username));
+        // Also update room info label if needed
+        break;
     }
     }
   }

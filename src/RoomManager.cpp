@@ -179,8 +179,51 @@ void RoomManager::handleDisconnect(int client_sock) {
 
 void RoomManager::handleStartGame(int client_sock) {
   std::lock_guard<std::mutex> lock(m_rooms_mutex);
-  if (auto r = findRoomBySocket_UNLOCKED(client_sock))
+  if (auto r = findRoomBySocket_UNLOCKED(client_sock)) {
+    // Check min players
+    if (r->getPlayerCount() < 3) {
+        protocol::MessagePacket msg;
+        memset(&msg, 0, sizeof(msg));
+        strcpy(msg.message, "Can it nhat 3 nguoi choi de bat dau!");
+        m_server->sendPacket(client_sock, protocol::CMD_INFO, &msg, sizeof(msg));
+        return;
+    }
     r->handleStartGame(client_sock);
+  }
+}
+
+void RoomManager::handleKickPlayer(int client_sock, const protocol::KickPacket *pkt) {
+  std::lock_guard<std::mutex> lock(m_rooms_mutex);
+  auto room = findRoomBySocket_UNLOCKED(client_sock);
+  if (!room) return;
+
+  // Check if sender is host
+  if (room->getHostSocket() != client_sock) {
+      // Not host
+      return;
+  }
+
+  // Find target socket
+  std::string target_user = pkt->target_username;
+  int target_sock = m_server->getSocketForUser(target_user);
+  
+  if (target_sock != -1 && room->hasPlayer(target_sock)) {
+      // Remove player
+      handleLeaveRoom_UNLOCKED(target_sock);
+      
+      // Notify target
+      protocol::MessagePacket msg;
+      memset(&msg, 0, sizeof(msg));
+      strcpy(msg.message, "Ban da bi chu phong kick!");
+      m_server->sendPacket(target_sock, protocol::CMD_KICK_SUCCESS, &msg, sizeof(msg)); // Or just Info
+      // Actually CMD_LEAVE_SUCCESS is sent in handleLeaveRoom_UNLOCKED if I modify it or check it?
+      // handleLeaveRoom_UNLOCKED handles room logic removal. 
+      // The client needs to know they are out. handleLeaveRoom usually sends broadcast but maybe not to the leaver if disconnect?
+      // Room::removePlayer sends room update.
+      // We should send a specific "You were kicked" packet or just reuse Leave.
+      // Reusing Leave Success is fine, but maybe Kick specific CMD for UI info.
+      // Let's stick to simple removal for now, Room update handles the rest.
+  }
 }
 
 void RoomManager::handleSubmitAnswer(int client_sock,

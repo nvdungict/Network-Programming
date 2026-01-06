@@ -18,6 +18,8 @@ bool Database::open(const std::string &path) {
                          "username TEXT UNIQUE, "
                          "password TEXT, "
                          "elo INTEGER DEFAULT 1000, "
+                         "wins INTEGER DEFAULT 0, "
+                         "matches_played INTEGER DEFAULT 0, "
                          "status TEXT DEFAULT 'active');";
   sqlite3_exec(m_db, sql_user, 0, 0, 0);
 
@@ -63,11 +65,11 @@ void Database::close() {
 }
 
 int Database::checkLogin(const std::string &user, const std::string &pass,
-                         int &out_elo) {
+                         int &out_elo, int &out_wins, int &out_matches) {
   std::lock_guard<std::mutex> lock(m_mutex);
   sqlite3_stmt *stmt;
   std::string sql =
-      "SELECT password, status, elo FROM users WHERE username = ?;";
+      "SELECT password, status, elo, wins, matches_played FROM users WHERE username = ?;";
 
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return 1;
@@ -79,6 +81,8 @@ int Database::checkLogin(const std::string &user, const std::string &pass,
     std::string db_pass = (const char *)sqlite3_column_text(stmt, 0);
     std::string status = (const char *)sqlite3_column_text(stmt, 1);
     out_elo = sqlite3_column_int(stmt, 2);
+    out_wins = sqlite3_column_int(stmt, 3);
+    out_matches = sqlite3_column_int(stmt, 4);
 
     if (status == "blocked")
       result = 3;
@@ -107,14 +111,17 @@ bool Database::createUser(const std::string &user, const std::string &pass) {
   return success;
 }
 
-bool Database::updateElo(const std::string &user, int elo_change) {
+bool Database::updateUserStats(const std::string &user, int elo_change, bool is_win) {
   std::lock_guard<std::mutex> lock(m_mutex);
-  std::string sql = "UPDATE users SET elo = elo + ? WHERE username = ?;";
+  std::string sql = "UPDATE users SET elo = elo + ?, matches_played = matches_played + 1, wins = wins + ? WHERE username = ?;";
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return false;
-  sqlite3_bind_int(stmt, 1, elo_change);
-  sqlite3_bind_text(stmt, 2, user.c_str(), -1, SQLITE_STATIC);
+
+  sqlite3_bind_int(stmt, 1, elo_change); // elo change
+  sqlite3_bind_int(stmt, 2, is_win ? 1 : 0); // win increment
+  sqlite3_bind_text(stmt, 3, user.c_str(), -1, SQLITE_STATIC); // username
+
   bool ok = (sqlite3_step(stmt) == SQLITE_DONE);
   sqlite3_finalize(stmt);
   return ok;

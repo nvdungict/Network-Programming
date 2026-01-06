@@ -13,8 +13,7 @@
 namespace protocol {
 
     bool sendPacket(int sock, uint16_t type, const void* data, uint16_t len) {
-        // Log debug để xem nó có vào được đây không
-        // std::cout << "[Protocol] Sending Packet Type " << type << " to Sock " << sock << std::endl;
+        std::cout << "[PROTO] Sending type=" << type << " len=" << len << " to sock=" << sock << std::endl;
 
         if (sock <= 0) {
             std::cerr << "[Protocol] ERROR: Invalid socket " << sock << std::endl;
@@ -54,6 +53,7 @@ namespace protocol {
         }
         type = ntohs(header.type);
         len = ntohs(header.length);
+        std::cout << "[PROTO] Recv header type=" << type << " len=" << len << " on sock=" << sock << std::endl;
         return true;
     }
 
