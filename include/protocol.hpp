@@ -210,7 +210,7 @@ struct Payload_ReplayEntry {
   char opt_b[64];
   char opt_c[64];
   char opt_d[64];
-  char correct_answer[8];
+  char correct_answer[64];
   char player_name[32];
   char player_answer[64];
   int is_correct;

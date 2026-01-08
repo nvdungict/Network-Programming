@@ -309,6 +309,11 @@ private:
 
   std::string m_my_username;
   bool m_is_host = false;
+  int m_game_current_q = 0;
+  const int m_game_total_q = 10;
+  double m_anim_progress_step = 0.01;
+  sigc::connection m_anim_connection;
+  double m_target_progress = 0.0;
 
   // ==========================================
   // Replay Viewer
@@ -333,7 +338,7 @@ private:
   Gtk::Label m_lbl_replay_title;
   Gtk::Label m_lbl_replay_question;
   Gtk::Label m_lbl_replay_opt_a, m_lbl_replay_opt_b, m_lbl_replay_opt_c,
-      m_lbl_replay_opt_d;
+      m_lbl_replay_opt_d, m_lbl_replay_correct_ans;
   Gtk::Box m_box_replay_players;
   Gtk::Button m_btn_replay_prev, m_btn_replay_next;
   Gtk::Label m_lbl_replay_nav;

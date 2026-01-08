@@ -550,6 +550,13 @@ progressbar progress {
   padding: 10px;
   background: white;
 }
+
+.replay-glass {
+    background: rgba(15, 23, 42, 0.95); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
 )";
 
 // === [QUAN TRỌNG] IMPLEMENT HÀM VẼ STATUS CIRCLE ===
@@ -1441,15 +1448,16 @@ void ClientWindow::setup_ui() {
 
   // Profile Content Card
   Gtk::Box *profile_main_card =
-      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 24));
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 30));
   profile_main_card->get_style_context()->add_class("stat-card-glass");
+  profile_main_card->set_border_width(15);
 
   m_box_profile_header.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-  m_box_profile_header.set_spacing(20);
+  m_box_profile_header.set_spacing(15);
   m_box_profile_header.set_halign(Gtk::ALIGN_START);
 
   try {
-    auto pixbuf = Gdk::Pixbuf::create_from_file("avatar.png", 120, 120);
+    auto pixbuf = Gdk::Pixbuf::create_from_file("avatar.png", 80, 80);
     m_img_profile_avatar.set(pixbuf);
   } catch (...) {
     m_img_profile_avatar.set_from_icon_name("avatar-default",
@@ -1461,7 +1469,8 @@ void ClientWindow::setup_ui() {
       "<span size='18000' color='#fbbf24'>ELO: ---</span>");
 
   Gtk::Box *profile_info =
-      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
+  profile_info->set_valign(Gtk::ALIGN_CENTER);
   profile_info->pack_start(m_lbl_profile_name, Gtk::PACK_SHRINK);
   profile_info->pack_start(m_lbl_profile_elo, Gtk::PACK_SHRINK);
 
@@ -1469,8 +1478,9 @@ void ClientWindow::setup_ui() {
   m_box_profile_header.pack_start(*profile_info, Gtk::PACK_SHRINK);
 
   m_box_profile_stats.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-  m_box_profile_stats.set_spacing(40);
-  m_box_profile_stats.set_halign(Gtk::ALIGN_START);
+  m_box_profile_stats.set_spacing(25);
+  m_box_profile_stats.set_halign(Gtk::ALIGN_END);
+  m_box_profile_stats.set_margin_start(40); // Spacer between info and stats
 
   m_lbl_profile_wins.set_markup(
       "<span size='20000' weight='bold' color='#22c55e'>0</span>\n<span "
@@ -1486,12 +1496,13 @@ void ClientWindow::setup_ui() {
   m_lbl_profile_losses.set_justify(Gtk::JUSTIFY_CENTER);
   m_lbl_profile_winrate.set_justify(Gtk::JUSTIFY_CENTER);
 
+  m_box_profile_stats.set_valign(Gtk::ALIGN_CENTER);
   m_box_profile_stats.pack_start(m_lbl_profile_wins, Gtk::PACK_SHRINK);
   m_box_profile_stats.pack_start(m_lbl_profile_losses, Gtk::PACK_SHRINK);
   m_box_profile_stats.pack_start(m_lbl_profile_winrate, Gtk::PACK_SHRINK);
 
-  profile_main_card->pack_start(m_box_profile_header, Gtk::PACK_SHRINK);
-  profile_main_card->pack_start(m_box_profile_stats, Gtk::PACK_SHRINK);
+  profile_main_card->pack_start(m_box_profile_header, Gtk::PACK_EXPAND_WIDGET);
+  profile_main_card->pack_end(m_box_profile_stats, Gtk::PACK_SHRINK);
 
   // Match History - Wrapped in glass card
   Gtk::Box *history_card =
@@ -1893,9 +1904,9 @@ void ClientWindow::setup_ui() {
   progress_label->set_halign(Gtk::ALIGN_START);
   progress_label->set_margin_top(8);
 
-  m_progress_questions.set_fraction(0.15); // 3/20
+  m_progress_questions.set_fraction(0.0);
   m_progress_questions.set_show_text(true);
-  m_progress_questions.set_text("3 / 20 câu hỏi");
+  m_progress_questions.set_text("0 / 10 câu hỏi");
 
   // Leaderboard title at TOP of right panel
   m_lbl_ranking.set_markup("<span color='#7c3aed' size='12000' weight='700'>🏆 "
@@ -2326,11 +2337,36 @@ void ClientWindow::on_network_signal() {
 
       // Switch from waiting room to game playing screen
       if (m_box_game_waiting.get_visible()) {
+        m_game_current_q = 0;
+        m_progress_questions.set_fraction(0.0);
         m_box_game_waiting.hide();
         m_box_game.remove(m_box_game_waiting);
         m_box_game.pack_start(m_box_game_playing, Gtk::PACK_EXPAND_WIDGET);
         m_box_game_playing.show_all();
       }
+
+      m_game_current_q++;
+      m_progress_questions.set_text(std::to_string(m_game_current_q) + " / " +
+                                    std::to_string(m_game_total_q) +
+                                    " câu hỏi");
+
+      // Animate progress bar
+      m_target_progress = (double)m_game_current_q / m_game_total_q;
+      if (m_anim_connection.connected()) {
+        m_anim_connection.disconnect();
+      }
+      m_anim_connection = Glib::signal_timeout().connect(
+          [this]() {
+            double current = m_progress_questions.get_fraction();
+            if (std::abs(current - m_target_progress) < 0.005) {
+              m_progress_questions.set_fraction(m_target_progress);
+              return false;
+            }
+            double step = (m_target_progress > current) ? 0.01 : -0.01;
+            m_progress_questions.set_fraction(current + step);
+            return true;
+          },
+          16); // ~60 FPS
 
       // Start countdown timer (20 seconds max per request)
       m_timer_seconds = 20;
@@ -2573,7 +2609,7 @@ void ClientWindow::on_network_signal() {
       // Create match history item
       Gtk::Box *match_item =
           Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 12));
-      match_item->get_style_context()->add_class("glass-card");
+      match_item->get_style_context()->add_class("stat-card-glass");
       match_item->set_margin_bottom(8);
 
       // Winner indicator
@@ -3068,7 +3104,7 @@ void ClientWindow::show_replay_dialog() {
   if (!m_dialog_replay) {
     m_dialog_replay = new Gtk::Dialog("🎬 Xem lại trận đấu", *this, true);
     m_dialog_replay->set_default_size(700, 500);
-    m_dialog_replay->get_style_context()->add_class("glass-card");
+    m_dialog_replay->get_style_context()->add_class("replay-glass");
 
     auto content = m_dialog_replay->get_content_area();
     content->set_spacing(16);
@@ -3108,6 +3144,11 @@ void ClientWindow::show_replay_dialog() {
       options_box->pack_start(m_lbl_replay_opt_c, Gtk::PACK_SHRINK);
     if (!m_lbl_replay_opt_d.get_parent())
       options_box->pack_start(m_lbl_replay_opt_d, Gtk::PACK_SHRINK);
+
+    m_lbl_replay_correct_ans.set_halign(Gtk::ALIGN_START);
+    if (!m_lbl_replay_correct_ans.get_parent())
+      options_box->pack_start(m_lbl_replay_correct_ans, Gtk::PACK_SHRINK);
+
     content->pack_start(*options_box, Gtk::PACK_SHRINK);
 
     // Players answers section
@@ -3186,21 +3227,43 @@ void ClientWindow::update_replay_view() {
   m_lbl_replay_question.set_markup("<span size='12000' color='#ffffff'>" +
                                    q.question_text + "</span>");
 
-  // Update options with highlighting for correct answer
-  std::string correct = q.correct_answer;
-  auto format_opt = [&correct](const std::string &opt,
-                               const std::string &text) {
-    if (opt == correct) {
-      return "<span color='#22c55e' weight='bold'>✓ " + opt + ". " + text +
-             "</span>";
-    }
-    return "<span color='#94a3b8'>" + opt + ". " + text + "</span>";
-  };
+  // Update options or correct answer based on question type
+  bool is_mcq = !q.opt_a.empty();
 
-  m_lbl_replay_opt_a.set_markup(format_opt("A", q.opt_a));
-  m_lbl_replay_opt_b.set_markup(format_opt("B", q.opt_b));
-  m_lbl_replay_opt_c.set_markup(format_opt("C", q.opt_c));
-  m_lbl_replay_opt_d.set_markup(format_opt("D", q.opt_d));
+  if (is_mcq) {
+    m_lbl_replay_opt_a.show();
+    m_lbl_replay_opt_b.show();
+    m_lbl_replay_opt_c.show();
+    m_lbl_replay_opt_d.show();
+    m_lbl_replay_correct_ans.hide();
+
+    std::string correct = q.correct_answer;
+    auto format_opt = [&correct](const std::string &opt,
+                                 const std::string &text) {
+      if (opt == correct) {
+        return "<span color='#22c55e' weight='bold' size='11000'>✓ " + opt +
+               ". " + text + "</span>";
+      }
+      return "<span color='#94a3b8' size='11000'>" + opt + ". " + text +
+             "</span>";
+    };
+
+    m_lbl_replay_opt_a.set_markup(format_opt("A", q.opt_a));
+    m_lbl_replay_opt_b.set_markup(format_opt("B", q.opt_b));
+    m_lbl_replay_opt_c.set_markup(format_opt("C", q.opt_c));
+    m_lbl_replay_opt_d.set_markup(format_opt("D", q.opt_d));
+  } else {
+    m_lbl_replay_opt_a.hide();
+    m_lbl_replay_opt_b.hide();
+    m_lbl_replay_opt_c.hide();
+    m_lbl_replay_opt_d.hide();
+    m_lbl_replay_correct_ans.show();
+
+    m_lbl_replay_correct_ans.set_markup(
+        "<span color='#94a3b8' size='11000'>Đáp án đúng: </span>"
+        "<span color='#22c55e' weight='bold' size='12000'>" +
+        q.correct_answer + "</span>");
+  }
 
   // Update players answers
   for (auto child : m_box_replay_players.get_children()) {
