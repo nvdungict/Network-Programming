@@ -29,5 +29,7 @@ public:
 
   // ELO update function
   // ELO & Stats update function
-  void updateUserStats(const std::string &username, int elo_change, bool is_win);
+  void updateUserStats(const std::string &username, int elo_change,
+                       bool is_win);
+  void sendStatsUpdate(int client_sock, const std::string &username);
 };

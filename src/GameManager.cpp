@@ -51,11 +51,15 @@ void GameManager::startGame_UNLOCKED() {
     sc = 0;
   m_player_answers.clear();
   m_active_players.clear();
+  m_replay_buffer.clear();
+  m_total_questions_asked = 0;
+  m_game_start_time = std::chrono::steady_clock::now();
 
   // Nạp tất cả người chơi vào danh sách active
   for (auto const &[s, n] : m_player_names) {
     m_active_players.insert(s);
   }
+  m_total_players = m_active_players.size();
 
   if (m_active_players.empty()) {
     std::cerr << "[GameManager] FATAL: No active players found!" << std::endl;
@@ -71,7 +75,7 @@ void GameManager::startGame_UNLOCKED() {
   m_questions_in_round_asked = 0;
 
   protocol::MessagePacket msg;
-  std::strcpy(msg.message, ">>> ROUND 1: SPEED MCQ (Top 3 qualify) <<<");
+  std::strcpy(msg.message, ">>> ROUND 1: SPEED MCQ <<<");
   m_room->broadcast_UNLOCKED(protocol::CMD_INFO, &msg, sizeof(msg));
 
   // Gửi thông báo Game Started cho tất cả người chơi
@@ -156,6 +160,7 @@ void GameManager::sendNextQuestion_UNLOCKED() {
   }
 
   m_questions_in_round_asked++;
+  m_total_questions_asked++;
 
   // Start Timer for Question
   m_question_start_time = std::chrono::steady_clock::now();
@@ -274,6 +279,10 @@ void GameManager::processRoundResults_UNLOCKED() {
 
     m_room->broadcast_UNLOCKED(protocol::CMD_ANSWER_RESULT, &res, sizeof(res),
                                -1);
+
+    // Buffer for replay
+    m_replay_buffer.push_back({m_total_questions_asked, m_current_question.id,
+                               m_player_names[s], user_ans, is_correct});
   }
 
   // *** REAL-TIME RANKING UPDATE ***
@@ -332,11 +341,11 @@ void GameManager::eliminatePlayers_UNLOCKED() {
 }
 
 void GameManager::transitionRound_UNLOCKED() {
-  eliminatePlayers_UNLOCKED();
+  // Scores carry over between rounds (cumulative)
+  // Total Score = Round 1 + Round 2 + Round 3
 
-  if (m_active_players.size() <= 1) {
-    // If only 1 left, they win immediately
-    endGame_UNLOCKED("Winner determined by elimination!");
+  if (m_active_players.empty()) {
+    endGame_UNLOCKED("No players left!");
     return;
   }
 
@@ -350,13 +359,10 @@ void GameManager::transitionRound_UNLOCKED() {
   m_current_round++;
   m_questions_in_round_asked = 0;
 
-  // Reset Scores for new round (Rules: "Scores do not carry over")
-  for (auto &pair : m_scores)
-    pair.second = 0;
+  // Scores now carry over between rounds (cumulative)
 
-  std::string round_name = (m_current_round == 2)
-                               ? "ROUND 2: SEMANTIC TEXT (Top 2 qualify)"
-                               : "ROUND 3: ESTIMATION FINAL";
+  std::string round_name = (m_current_round == 2) ? "ROUND 2: SEMANTIC TEXT"
+                                                  : "ROUND 3: ESTIMATION FINAL";
   protocol::MessagePacket msg;
   std::strncpy(msg.message, (">>> " + round_name + " <<<").c_str(), 255);
   m_room->broadcast_UNLOCKED(protocol::CMD_INFO, &msg, sizeof(msg));
@@ -433,15 +439,9 @@ void GameManager::endGame_UNLOCKED(const std::string &reason) {
     }
   }
 
-  // Gửi ELO mới cho từng người chơi
+  // Gửi ELO và Thống kê mới cho từng người chơi
   for (const auto &[sock, name] : m_player_names) {
-    int new_elo = m_room->m_server->getDatabase().getElo(name);
-    protocol::Payload_PlayerInfo elo_pkt;
-    std::memset(&elo_pkt, 0, sizeof(elo_pkt));
-    std::strncpy(elo_pkt.username, name.c_str(), 31);
-    elo_pkt.elo = new_elo;
-    m_room->m_server->sendPacket(sock, protocol::CMD_ELO_UPDATE, &elo_pkt,
-                                 sizeof(elo_pkt));
+    m_room->m_server->getUserManager().sendStatsUpdate(sock, name);
   }
 
   // Lưu kết quả trận đấu vào Database
@@ -451,6 +451,14 @@ void GameManager::endGame_UNLOCKED(const std::string &reason) {
   if (match_id > 0) {
     Logger::getInstance().info(
         "[GAME] Match result saved (ID: " + std::to_string(match_id) + ")");
+
+    // Save replay data from buffer
+    for (const auto &entry : m_replay_buffer) {
+      m_room->m_server->getDatabase().saveReplayAction(
+          match_id, entry.question_order, entry.question_id, entry.username,
+          entry.answer, entry.is_correct);
+    }
+    m_replay_buffer.clear();
   }
 
   protocol::GameOverPacket over;

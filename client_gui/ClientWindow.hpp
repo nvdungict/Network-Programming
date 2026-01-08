@@ -44,17 +44,17 @@ private:
 
   // Container chia đôi màn hình (Trái: Branding, Phải: Form)
   Gtk::Box m_box_login_split;
-  
+
   // --- PANEL TRÁI (Branding & Intro) ---
   Gtk::Box m_box_login_left;
-  Gtk::Label m_lbl_brand_bubble;    // "QUIZ ARENA"
-  Gtk::Label m_lbl_brand_title;     // "Đấu Trường"
-  Gtk::Label m_lbl_brand_title_2;   // "Tri Thức"
-  Gtk::Label m_lbl_brand_slogan;    // "Nơi những tâm trí vĩ đại giao tranh"
-  
+  Gtk::Label m_lbl_brand_bubble;  // "QUIZ ARENA"
+  Gtk::Label m_lbl_brand_title;   // "Đấu Trường"
+  Gtk::Label m_lbl_brand_title_2; // "Tri Thức"
+  Gtk::Label m_lbl_brand_slogan;  // "Nơi những tâm trí vĩ đại giao tranh"
+
   // List feature (Icon + Text)
   Gtk::Box m_box_features;
-  
+
   // Stats row (Bottom Left)
   Gtk::Box m_box_login_stats;
   Gtk::Label m_lbl_stat_online;
@@ -62,14 +62,14 @@ private:
 
   // --- PANEL PHẢI (Form Card) ---
   Gtk::Box m_box_login_right;
-  Gtk::Box m_frame_login_card;      // Card kính (Glassmorphism)
-  
-  Gtk::Box m_box_card_header;       // Icon + Title ("Chao mung tro lai")
-  Gtk::Image m_img_logo_icon;       // Icon khiên vàng
-  Gtk::Label m_lbl_card_title;      // "Chào mừng trở lại"
-  Gtk::Label m_lbl_card_subtitle;   // "Đăng nhập để tiếp tục..."
+  Gtk::Box m_frame_login_card; // Card kính (Glassmorphism)
 
-  Gtk::Box m_box_login_form;        // Chứa các ô nhập liệu
+  Gtk::Box m_box_card_header;     // Icon + Title ("Chao mung tro lai")
+  Gtk::Image m_img_logo_icon;     // Icon khiên vàng
+  Gtk::Label m_lbl_card_title;    // "Chào mừng trở lại"
+  Gtk::Label m_lbl_card_subtitle; // "Đăng nhập để tiếp tục..."
+
+  Gtk::Box m_box_login_form; // Chứa các ô nhập liệu
 
   // Các widget nhập liệu
   Gtk::Label m_lbl_input_user, m_lbl_input_pass; // Label trên ô input
@@ -78,12 +78,12 @@ private:
   StatusCircle m_status_circle;
 
   // Các nút bấm chính & phụ
-  Gtk::Box m_box_remember;          // Checkbox ghi nhớ
+  Gtk::Box m_box_remember; // Checkbox ghi nhớ
   Gtk::CheckButton m_check_remember;
-  Gtk::Button m_btn_forgot_pass;    // Link text
+  Gtk::Button m_btn_forgot_pass; // Link text
 
-  Gtk::Button m_btn_login;          // Nút to màu cam
-  
+  Gtk::Button m_btn_login; // Nút to màu cam
+
   // Divider "Hoặc đăng nhập bằng"
   Gtk::Box m_box_divider;
   Gtk::Separator m_sep_left, m_sep_right;
@@ -97,7 +97,7 @@ private:
   // Footer: Register Link
   Gtk::Box m_box_card_footer;
   Gtk::Label m_lbl_no_account;
-  Gtk::Button m_btn_register;    // Nút text link
+  Gtk::Button m_btn_register; // Nút text link
 
   // Biến cũ (Giữ lại để tương thích constructor, nhưng không dùng hiển thị
   // chính)
@@ -129,7 +129,7 @@ private:
   // Player Card
   Gtk::Box m_box_player_card;
   Gtk::Box m_box_player_header;
-  Gtk::Label m_lbl_player_avatar; // Avatar emoji/icon
+  Gtk::Image m_img_player_avatar; // Avatar portrait image
   Gtk::Box m_box_player_info;
   Gtk::Label m_lbl_player_name;   // Username
   Gtk::Label m_lbl_player_status; // "Chiến binh trí thức"
@@ -142,9 +142,11 @@ private:
   Gtk::Button m_btn_logout_lobby; // Logout button in lobby
 
   // Profile Page
+  Gtk::Overlay m_profile_overlay;
+  Gtk::DrawingArea m_profile_bg_area;
   Gtk::Box m_box_profile;
   Gtk::Box m_box_profile_header;
-  Gtk::Label m_lbl_profile_avatar;
+  Gtk::Image m_img_profile_avatar;
   Gtk::Label m_lbl_profile_name;
   Gtk::Label m_lbl_profile_elo;
   Gtk::Box m_box_profile_stats;
@@ -296,6 +298,7 @@ private:
   void load_css(); // Load file CSS styling
   // Hàm vẽ background login (Galaxy + Logo)
   bool on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr);
+  bool on_draw_profile_bg(const Cairo::RefPtr<Cairo::Context> &cr);
 
   // Helper function for waiting room
   void add_player_to_list(const std::string &name, const std::string &emoji,

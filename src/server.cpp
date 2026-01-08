@@ -169,7 +169,7 @@ void Server::handleClient(int client_socket) {
     case protocol::CMD_GET_HISTORY: {
       if (is_logged_in) {
         std::string username = getUserForSocket(client_socket);
-        auto history = m_db.getMatchHistory(username, 10);
+        auto history = m_db.getMatchHistory(username, 1000);
 
         for (size_t i = 0; i < history.size(); ++i) {
           protocol::Payload_MatchHistory pkt;
@@ -252,7 +252,7 @@ void Server::handleClient(int client_socket) {
     m_all_sockets.erase(client_socket);
   }
   removeSession(client_socket);
-  broadcastGlobalStats(); 
+  broadcastGlobalStats();
   close(client_socket);
 }
 
@@ -286,8 +286,8 @@ void Server::broadcastGlobalStats() {
     std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
     stats.online_users = m_all_sockets.size();
   }
-  
-  stats.active_rooms = m_room_manager.getRoomCount(); 
+
+  stats.active_rooms = m_room_manager.getRoomCount();
   stats.matches_today = m_db.getMatchesCountToday();
 
   // Broadcast to all connected sockets (even those not logged in)

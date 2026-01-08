@@ -25,21 +25,21 @@ const std::string CSS_DATA = R"(
 
 .brand-title {
     color: #ffffff;
-    font-size: 56px;
+    font-size: 24px;
     font-weight: 300;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .brand-title-bold {
     color: #fbbf24; /* Vibrant Gold/Yellow */
-    font-size: 56px;
+    font-size: 24px;
     font-weight: 800;
     text-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
 }
 
 .brand-slogan {
     color: #cbd5e1;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 /* === FEATURES === */
@@ -53,12 +53,12 @@ const std::string CSS_DATA = R"(
 .feature-title {
     color: #ffffff;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .feature-desc {
     color: #94a3b8;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 /* === STATS === */
@@ -71,34 +71,34 @@ const std::string CSS_DATA = R"(
 
 .stat-value {
     color: #ffffff;
-    font-size: 28px;
+    font-size: 14px;
     font-weight: 800;
 }
 
 .stat-label {
     color: #94a3b8;
-    font-size: 12px;
+    font-size: 10px;
 }
 
 /* === LOGIN CARD === */
 .login-card-glass {
     background: rgba(30, 10, 80, 0.75); 
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 24px;
-    padding: 40px;
+    border-radius: 16px;
+    padding: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .card-title {
     color: #ffffff;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .card-subtitle {
     color: #94a3b8;
-    font-size: 14px;
+    font-size: 11px;
 }
 
 /* === INPUTS === */
@@ -110,9 +110,9 @@ const std::string CSS_DATA = R"(
 entry {
     background-color: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    border-radius: 10px;
     color: white;
-    padding: 12px;
+    padding: 6px;
     caret-color: #fbbf24;
 }
 
@@ -126,10 +126,10 @@ entry:focus {
     background: linear-gradient(to right, #fbbf24, #f59e0b);
     color: white;
     font-weight: 800;
-    font-size: 16px;
-    border-radius: 12px;
+    font-size: 14px;
+    border-radius: 10px;
     border: none;
-    padding: 14px;
+    padding: 7px;
     box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
 }
 
@@ -226,10 +226,10 @@ entry:focus {
     font-size: 13px;
 }
 .player-avatar {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #fbbf24;
     border-radius: 12px;
-    padding: 10px;
-    font-size: 24px;
+    padding: 0;
 }
 
 /* ELO Card */
@@ -593,24 +593,24 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
   // 1. Nền Gradient Tím Đậm hướng về Tím Sáng (Vibrant Theme)
   Cairo::RefPtr<Cairo::RadialGradient> bg_pat =
       Cairo::RadialGradient::create(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, w);
-  
+
   // Tím sáng ở giữa/tâm lan dần ra tím tối
   bg_pat->add_color_stop_rgb(0.0, 0.4, 0.2, 0.75);  // Brighter center
-  bg_pat->add_color_stop_rgb(0.6, 0.18, 0.06, 0.4);  // Mid
-  bg_pat->add_color_stop_rgb(1.0, 0.1, 0.03, 0.25);   // Border
+  bg_pat->add_color_stop_rgb(0.6, 0.18, 0.06, 0.4); // Mid
+  bg_pat->add_color_stop_rgb(1.0, 0.1, 0.03, 0.25); // Border
   cr->set_source(bg_pat);
   cr->paint();
 
   // 2. Họa tiết Grid Mờ cực nhẹ
-  cr->set_source_rgba(1.0, 1.0, 1.0, 0.03); 
+  cr->set_source_rgba(1.0, 1.0, 1.0, 0.03);
   cr->set_line_width(0.5);
   for (int x = 0; x < w; x += 60) {
-      cr->move_to(x, 0);
-      cr->line_to(x, h);
+    cr->move_to(x, 0);
+    cr->line_to(x, h);
   }
   for (int y = 0; y < h; y += 60) {
-      cr->move_to(0, y);
-      cr->line_to(w, y);
+    cr->move_to(0, y);
+    cr->line_to(w, y);
   }
   cr->stroke();
 
@@ -618,7 +618,7 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
   // Glow tím sáng góc trên trái
   Cairo::RefPtr<Cairo::RadialGradient> glow1 =
       Cairo::RadialGradient::create(w * 0.2, h * 0.2, 0, w * 0.2, h * 0.2, 500);
-  glow1->add_color_stop_rgba(0.0, 0.6, 0.2, 0.9, 0.35); 
+  glow1->add_color_stop_rgba(0.0, 0.6, 0.2, 0.9, 0.35);
   glow1->add_color_stop_rgba(1.0, 0.6, 0.2, 0.9, 0.0);
   cr->set_source(glow1);
   cr->paint();
@@ -626,9 +626,35 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
   // Glow vàng/cam ở cạnh phải (nơi có Login form) để tường đồng với Button
   Cairo::RefPtr<Cairo::RadialGradient> glow2 =
       Cairo::RadialGradient::create(w, h * 0.5, 0, w, h * 0.5, 400);
-  glow2->add_color_stop_rgba(0.0, 1.0, 0.7, 0.0, 0.25); 
+  glow2->add_color_stop_rgba(0.0, 1.0, 0.7, 0.0, 0.25);
   glow2->add_color_stop_rgba(1.0, 1.0, 0.7, 0.0, 0.0);
   cr->set_source(glow2);
+  cr->paint();
+
+  return true;
+}
+
+bool ClientWindow::on_draw_profile_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
+  Gtk::Allocation allocation = m_profile_bg_area.get_allocation();
+  const int w = allocation.get_width();
+  const int h = allocation.get_height();
+
+  // 1. Nền Gradient Tím Đậm (Match Login)
+  Cairo::RefPtr<Cairo::RadialGradient> bg_pat =
+      Cairo::RadialGradient::create(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, w);
+
+  bg_pat->add_color_stop_rgb(0.0, 0.4, 0.2, 0.75);
+  bg_pat->add_color_stop_rgb(0.6, 0.18, 0.06, 0.4);
+  bg_pat->add_color_stop_rgb(1.0, 0.1, 0.03, 0.25);
+  cr->set_source(bg_pat);
+  cr->paint();
+
+  // 2. Một chút glow Tím ở góc
+  Cairo::RefPtr<Cairo::RadialGradient> glow1 =
+      Cairo::RadialGradient::create(w * 0.8, h * 0.2, 0, w * 0.8, h * 0.2, 500);
+  glow1->add_color_stop_rgba(0.0, 0.6, 0.2, 0.9, 0.3);
+  glow1->add_color_stop_rgba(1.0, 0.6, 0.2, 0.9, 0.0);
+  cr->set_source(glow1);
   cr->paint();
 
   return true;
@@ -709,7 +735,7 @@ void ClientWindow::setup_ui() {
   // ===============================================
   // 1. LOGIN SCREEN (REDESIGNED)
   // ===============================================
-  
+
   // A. Background Layer
   m_login_bg_area.signal_draw().connect(
       sigc::mem_fun(*this, &ClientWindow::on_draw_login_bg));
@@ -717,16 +743,16 @@ void ClientWindow::setup_ui() {
 
   // B. Content Layer (Split Layout)
   m_box_login_split.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-  m_box_login_split.set_margin_top(40);
-  m_box_login_split.set_margin_bottom(40);
-  m_box_login_split.set_margin_start(60);
-  m_box_login_split.set_margin_end(60);
+  m_box_login_split.set_margin_top(5);
+  m_box_login_split.set_margin_bottom(5);
+  m_box_login_split.set_margin_start(20);
+  m_box_login_split.set_margin_end(20);
   m_box_login_split.get_style_context()->add_class("login-split");
 
   // --- LEFT PANEL: Branding & Info ---
   m_box_login_left.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_box_login_left.set_valign(Gtk::ALIGN_CENTER);
-  m_box_login_left.set_spacing(24);
+  m_box_login_left.set_spacing(8);
   m_box_login_left.set_halign(Gtk::ALIGN_START);
 
   // Branding Bubble
@@ -742,11 +768,11 @@ void ClientWindow::setup_ui() {
   m_lbl_brand_title.set_markup("<span font_weight='300'>Đấu Trường</span>");
   m_lbl_brand_title.get_style_context()->add_class("brand-title");
   m_lbl_brand_title.set_halign(Gtk::ALIGN_START);
-  
+
   m_lbl_brand_title_2.set_markup("<span font_weight='800'>Tri Thức</span>");
   m_lbl_brand_title_2.get_style_context()->add_class("brand-title-bold");
   m_lbl_brand_title_2.set_halign(Gtk::ALIGN_START);
-  
+
   title_box->pack_start(m_lbl_brand_title, Gtk::PACK_SHRINK);
   title_box->pack_start(m_lbl_brand_title_2, Gtk::PACK_SHRINK);
   m_box_login_left.pack_start(*title_box, Gtk::PACK_SHRINK);
@@ -759,104 +785,118 @@ void ClientWindow::setup_ui() {
 
   // Feature List (Spacer)
   Gtk::Box *spacer = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
-  spacer->set_size_request(-1, 20);
+  spacer->set_size_request(-1, 8);
   m_box_login_left.pack_start(*spacer, Gtk::PACK_SHRINK);
 
-  auto add_feature = [this](const std::string &icon_name, const std::string &title, const std::string &desc) {
-      Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
-      box->set_margin_bottom(16);
-      
-      Gtk::Box *icon_container = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
-      icon_container->get_style_context()->add_class("feature-box");
-      
-      Gtk::Image *img_icon = Gtk::manage(new Gtk::Image());
-      img_icon->set_from_icon_name(icon_name, Gtk::ICON_SIZE_DND);
-      icon_container->pack_start(*img_icon, Gtk::PACK_SHRINK);
-      
-      Gtk::Box *text_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
-      Gtk::Label *lbl_title = Gtk::manage(new Gtk::Label(title));
-      lbl_title->get_style_context()->add_class("feature-title");
-      lbl_title->set_halign(Gtk::ALIGN_START);
-      
-      Gtk::Label *lbl_desc = Gtk::manage(new Gtk::Label(desc));
-      lbl_desc->get_style_context()->add_class("feature-desc");
-      lbl_desc->set_halign(Gtk::ALIGN_START);
-      
-      text_box->pack_start(*lbl_title, Gtk::PACK_SHRINK);
-      text_box->pack_start(*lbl_desc, Gtk::PACK_SHRINK);
-      
-      box->pack_start(*icon_container, Gtk::PACK_SHRINK);
-      box->pack_start(*text_box, Gtk::PACK_SHRINK);
-      m_box_login_left.pack_start(*box, Gtk::PACK_SHRINK);
+  auto add_feature = [this](const std::string &icon_name,
+                            const std::string &title, const std::string &desc) {
+    Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
+    box->set_margin_bottom(6);
+
+    Gtk::Box *icon_container =
+        Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+    icon_container->get_style_context()->add_class("feature-box");
+
+    Gtk::Image *img_icon = Gtk::manage(new Gtk::Image());
+    img_icon->set_from_icon_name(icon_name, Gtk::ICON_SIZE_DND);
+    icon_container->pack_start(*img_icon, Gtk::PACK_SHRINK);
+
+    Gtk::Box *text_box =
+        Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
+    Gtk::Label *lbl_title = Gtk::manage(new Gtk::Label(title));
+    lbl_title->get_style_context()->add_class("feature-title");
+    lbl_title->set_halign(Gtk::ALIGN_START);
+
+    Gtk::Label *lbl_desc = Gtk::manage(new Gtk::Label(desc));
+    lbl_desc->get_style_context()->add_class("feature-desc");
+    lbl_desc->set_halign(Gtk::ALIGN_START);
+
+    text_box->pack_start(*lbl_title, Gtk::PACK_SHRINK);
+    text_box->pack_start(*lbl_desc, Gtk::PACK_SHRINK);
+
+    box->pack_start(*icon_container, Gtk::PACK_SHRINK);
+    box->pack_start(*text_box, Gtk::PACK_SHRINK);
+    m_box_login_left.pack_start(*box, Gtk::PACK_SHRINK);
   };
 
-  add_feature("input-gaming-symbolic", "Thi đấu real-time", "Cạnh tranh trực tiếp với người chơi khác");
-  add_feature("emblem-favorite-symbolic", "Hệ thống xếp hạng ELO", "Leo rank và trở thành huyền thoại");
-  add_feature("find-location-symbolic", "Thử thách tri thức", "Hàng ngàn câu hỏi đa dạng");
+  add_feature("input-gaming-symbolic", "Thi đấu real-time",
+              "Cạnh tranh trực tiếp với người chơi khác");
+  add_feature("emblem-favorite-symbolic", "Hệ thống xếp hạng ELO",
+              "Leo rank và trở thành huyền thoại");
+  add_feature("find-location-symbolic", "Thử thách tri thức",
+              "Hàng ngàn câu hỏi đa dạng");
 
   // Stats Row (Bottom)
   Gtk::Box *stats_space = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
-  stats_space->set_size_request(-1, 30);
+  stats_space->set_size_request(-1, 5);
   m_box_login_left.pack_start(*stats_space, Gtk::PACK_SHRINK);
 
   m_box_login_stats.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_login_stats.set_spacing(20);
 
-  auto add_stat_box = [](Gtk::Label &lbl_val, const std::string &val, const std::string &label) {
-      Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
-      box->get_style_context()->add_class("stat-card-glass");
-      
-      lbl_val.set_text(val);
-      lbl_val.get_style_context()->add_class("stat-value");
-      lbl_val.set_halign(Gtk::ALIGN_START);
-      
-      Gtk::Label *lbl_text = Gtk::manage(new Gtk::Label(label));
-      lbl_text->get_style_context()->add_class("stat-label");
-      lbl_text->set_halign(Gtk::ALIGN_START);
-      
-      box->pack_start(lbl_val, Gtk::PACK_SHRINK);
-      box->pack_start(*lbl_text, Gtk::PACK_SHRINK);
-      return box;
-  };
-  
-  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_online, "0", "Người chơi online"), Gtk::PACK_SHRINK);
-  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_matches, "0", "Trận đấu hôm nay"), Gtk::PACK_SHRINK);
-  
-  m_box_login_left.pack_start(m_box_login_stats, Gtk::PACK_SHRINK);
+  auto add_stat_box = [](Gtk::Label &lbl_val, const std::string &val,
+                         const std::string &label) {
+    Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
+    box->get_style_context()->add_class("stat-card-glass");
 
+    lbl_val.set_text(val);
+    lbl_val.get_style_context()->add_class("stat-value");
+    lbl_val.set_halign(Gtk::ALIGN_START);
+
+    Gtk::Label *lbl_text = Gtk::manage(new Gtk::Label(label));
+    lbl_text->get_style_context()->add_class("stat-label");
+    lbl_text->set_halign(Gtk::ALIGN_START);
+
+    box->pack_start(lbl_val, Gtk::PACK_SHRINK);
+    box->pack_start(*lbl_text, Gtk::PACK_SHRINK);
+    return box;
+  };
+
+  m_box_login_stats.pack_start(
+      *add_stat_box(m_lbl_stat_online, "0", "Người chơi online"),
+      Gtk::PACK_SHRINK);
+  m_box_login_stats.pack_start(
+      *add_stat_box(m_lbl_stat_matches, "0", "Trận đấu hôm nay"),
+      Gtk::PACK_SHRINK);
+
+  m_box_login_left.pack_start(m_box_login_stats, Gtk::PACK_SHRINK);
 
   // --- RIGHT PANEL: Login Card ---
   m_box_login_right.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_box_login_right.set_valign(Gtk::ALIGN_CENTER);
   m_box_login_right.set_halign(Gtk::ALIGN_END); // Push to right
-  
+
   m_frame_login_card.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_frame_login_card.get_style_context()->add_class("login-card-glass");
-  m_frame_login_card.set_size_request(400, -1);
-  m_frame_login_card.set_spacing(20);
+  m_frame_login_card.set_size_request(340, -1);
+  m_frame_login_card.set_spacing(12);
 
   // Card Header
   m_box_card_header.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_box_card_header.set_valign(Gtk::ALIGN_CENTER);
-  m_box_card_header.set_spacing(10);
-  
+  m_box_card_header.set_spacing(6);
+
   // Icon
   try {
-      // Use existing assets but resize? Or just use a emoji/label if image not perfect
-      // Drawing a shield icon with Cairo might be better but for now let's use a Label with Shield Emoji
-      // or try to load a 'shield.png' if it existed.
-      // Let's use a big Emoji for the logo icon at top of card
-       m_img_logo_icon.set_from_icon_name("security-high-symbolic", Gtk::ICON_SIZE_DIALOG); 
-       // Or better: manual button style
-  } catch(...) {}
-  
+    // Use existing assets but resize? Or just use a emoji/label if image not
+    // perfect Drawing a shield icon with Cairo might be better but for now
+    // let's use a Label with Shield Emoji or try to load a 'shield.png' if it
+    // existed. Let's use a big Emoji for the logo icon at top of card
+    m_img_logo_icon.set_from_icon_name("security-high-symbolic",
+                                       Gtk::ICON_SIZE_DIALOG);
+    // Or better: manual button style
+  } catch (...) {
+  }
+
   Gtk::Button *btn_icon = Gtk::manage(new Gtk::Button());
-  btn_icon->set_image_from_icon_name("security-high-symbolic", Gtk::ICON_SIZE_DND);
-  btn_icon->get_style_context()->add_class("btn-gold"); // Reuse gold style for the icon background
+  btn_icon->set_image_from_icon_name("security-high-symbolic",
+                                     Gtk::ICON_SIZE_DND);
+  btn_icon->get_style_context()->add_class(
+      "btn-gold");                // Reuse gold style for the icon background
   btn_icon->set_sensitive(false); // Just visual
   btn_icon->set_halign(Gtk::ALIGN_CENTER);
-  btn_icon->set_size_request(60, 60);
-  
+  btn_icon->set_size_request(32, 32);
+
   m_lbl_card_title.set_text("Chào mừng trở lại");
   m_lbl_card_title.get_style_context()->add_class("card-title");
   m_lbl_card_title.set_halign(Gtk::ALIGN_CENTER);
@@ -872,26 +912,28 @@ void ClientWindow::setup_ui() {
 
   // Login Form form
   m_box_login_form.set_orientation(Gtk::ORIENTATION_VERTICAL);
-  m_box_login_form.set_spacing(16);
+  m_box_login_form.set_spacing(4);
 
   // User input
-  Gtk::Box *box_user = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 6));
+  Gtk::Box *box_user = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
   m_lbl_input_user.set_text("Email hoặc tên đăng nhập");
   m_lbl_input_user.get_style_context()->add_class("input-label");
   m_lbl_input_user.set_halign(Gtk::ALIGN_START);
   m_entry_user.set_placeholder_text("Nhập email của bạn");
-  m_entry_user.set_icon_from_icon_name("mail-read-symbolic", Gtk::ENTRY_ICON_PRIMARY);
+  m_entry_user.set_icon_from_icon_name("mail-read-symbolic",
+                                       Gtk::ENTRY_ICON_PRIMARY);
   box_user->pack_start(m_lbl_input_user, Gtk::PACK_SHRINK);
   box_user->pack_start(m_entry_user, Gtk::PACK_SHRINK);
 
   // Pass input
-  Gtk::Box *box_pass = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 6));
+  Gtk::Box *box_pass = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
   m_lbl_input_pass.set_text("Mật khẩu");
   m_lbl_input_pass.get_style_context()->add_class("input-label");
   m_lbl_input_pass.set_halign(Gtk::ALIGN_START);
   m_entry_pass.set_placeholder_text("Nhập mật khẩu");
   m_entry_pass.set_visibility(false);
-  m_entry_pass.set_icon_from_icon_name("dialog-password-symbolic", Gtk::ENTRY_ICON_PRIMARY);
+  m_entry_pass.set_icon_from_icon_name("dialog-password-symbolic",
+                                       Gtk::ENTRY_ICON_PRIMARY);
   box_pass->pack_start(m_lbl_input_pass, Gtk::PACK_SHRINK);
   box_pass->pack_start(m_entry_pass, Gtk::PACK_SHRINK);
 
@@ -902,9 +944,10 @@ void ClientWindow::setup_ui() {
   m_box_remember.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_check_remember.set_label("Ghi nhớ đăng nhập");
   m_btn_forgot_pass.set_label("Quên mật khẩu?");
-  m_btn_forgot_pass.get_style_context()->add_class("btn-link-text"); // New style
+  m_btn_forgot_pass.get_style_context()->add_class(
+      "btn-link-text"); // New style
   m_btn_forgot_pass.set_halign(Gtk::ALIGN_END);
-  
+
   m_box_remember.pack_start(m_check_remember, Gtk::PACK_SHRINK);
   m_box_remember.pack_end(m_btn_forgot_pass, Gtk::PACK_SHRINK);
   m_box_login_form.pack_start(m_box_remember, Gtk::PACK_SHRINK);
@@ -923,10 +966,11 @@ void ClientWindow::setup_ui() {
   // Divider
   m_box_divider.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   // Just use a centered label with lines logic or simple label
-  m_lbl_divider_text.set_markup("<span size='small' color='#64748b'>Hoặc đăng nhập bằng</span>");
+  m_lbl_divider_text.set_markup(
+      "<span size='small' color='#64748b'>Hoặc đăng nhập bằng</span>");
   m_lbl_divider_text.set_halign(Gtk::ALIGN_CENTER);
-  m_lbl_divider_text.set_margin_top(12);
-  m_lbl_divider_text.set_margin_bottom(12);
+  m_lbl_divider_text.set_margin_top(4);
+  m_lbl_divider_text.set_margin_bottom(4);
   m_frame_login_card.pack_start(m_lbl_divider_text, Gtk::PACK_SHRINK);
 
   // Social Buttons
@@ -934,17 +978,18 @@ void ClientWindow::setup_ui() {
   m_box_social.set_halign(Gtk::ALIGN_CENTER);
   m_box_social.set_spacing(16);
 
-  auto setup_social = [](Gtk::Button &btn, Gtk::Image &img, const std::string &file) {
-      try {
-          // Increased size for 'full' look
-          auto pixbuf = Gdk::Pixbuf::create_from_file(file, 36, 36); 
-          img.set(pixbuf);
-      } catch(...) {
-          img.set_from_icon_name("image-missing", Gtk::ICON_SIZE_DND);
-      }
-      btn.set_image(img);
-      btn.set_always_show_image(true);
-      btn.get_style_context()->add_class("btn-social-glass");
+  auto setup_social = [](Gtk::Button &btn, Gtk::Image &img,
+                         const std::string &file) {
+    try {
+      // Increased size for 'full' look
+      auto pixbuf = Gdk::Pixbuf::create_from_file(file, 28, 28);
+      img.set(pixbuf);
+    } catch (...) {
+      img.set_from_icon_name("image-missing", Gtk::ICON_SIZE_DND);
+    }
+    btn.set_image(img);
+    btn.set_always_show_image(true);
+    btn.get_style_context()->add_class("btn-social-glass");
   };
 
   setup_social(m_btn_social_google, m_img_google, "google.png");
@@ -960,11 +1005,12 @@ void ClientWindow::setup_ui() {
   m_box_card_footer.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_card_footer.set_halign(Gtk::ALIGN_CENTER);
   m_box_card_footer.set_margin_top(20);
-  
-  m_lbl_no_account.set_markup("<span color='#cbd5e1' size='small'>Chưa có tài khoản? </span>");
+
+  m_lbl_no_account.set_markup(
+      "<span color='#cbd5e1' size='small'>Chưa có tài khoản? </span>");
   m_btn_register.set_label("Đăng ký ngay");
   m_btn_register.get_style_context()->add_class("btn-register-link");
-  
+
   m_box_card_footer.pack_start(m_lbl_no_account, Gtk::PACK_SHRINK);
   m_box_card_footer.pack_start(m_btn_register, Gtk::PACK_SHRINK);
   m_frame_login_card.pack_start(m_box_card_footer, Gtk::PACK_SHRINK);
@@ -974,7 +1020,7 @@ void ClientWindow::setup_ui() {
   // --- ASSEMBLE SPLIT ---
   m_box_login_split.pack_start(m_box_login_left, Gtk::PACK_EXPAND_WIDGET);
   m_box_login_split.pack_start(m_box_login_right, Gtk::PACK_EXPAND_WIDGET);
-  
+
   m_login_overlay.add_overlay(m_box_login_split);
   m_login_overlay.show_all(); // Ensure new widgets are visible
 
@@ -1115,8 +1161,14 @@ void ClientWindow::setup_ui() {
   m_box_player_header.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_player_header.set_spacing(12);
 
-  m_lbl_player_avatar.set_markup("<span size='15000' color='#fbbf24'>RANK</span>");
-  m_lbl_player_avatar.get_style_context()->add_class("player-avatar");
+  try {
+    auto pixbuf = Gdk::Pixbuf::create_from_file("avatar.png", 80, 80);
+    m_img_player_avatar.set(pixbuf);
+  } catch (...) {
+    m_img_player_avatar.set_from_icon_name("avatar-default",
+                                           Gtk::ICON_SIZE_DIALOG);
+  }
+  m_img_player_avatar.get_style_context()->add_class("player-avatar");
 
   m_box_player_info.set_orientation(Gtk::ORIENTATION_VERTICAL);
   m_lbl_player_name.set_markup(
@@ -1132,7 +1184,7 @@ void ClientWindow::setup_ui() {
   m_btn_profile.get_style_context()->add_class("btn-ghost");
   m_btn_profile.set_size_request(40, 40);
 
-  m_box_player_header.pack_start(m_lbl_player_avatar, Gtk::PACK_SHRINK);
+  m_box_player_header.pack_start(m_img_player_avatar, Gtk::PACK_SHRINK);
   m_box_player_header.pack_start(m_box_player_info, Gtk::PACK_EXPAND_WIDGET);
   m_box_player_header.pack_end(m_btn_profile, Gtk::PACK_SHRINK);
 
@@ -1349,7 +1401,8 @@ void ClientWindow::setup_ui() {
   m_btn_logout_lobby.set_margin_top(12);
   m_btn_logout_lobby.signal_clicked().connect([this]() {
     m_client.sendLogout();
-    m_btn_login.set_sensitive(true); // Fix: Re-enable login button for next session
+    m_btn_login.set_sensitive(
+        true); // Fix: Re-enable login button for next session
     m_stack.set_visible_child("login");
     resize(900, 600);
   });
@@ -1357,45 +1410,77 @@ void ClientWindow::setup_ui() {
 
   m_stack.add(m_lobby_overlay, "lobby");
 
-  // --- PAGE: PROFILE ---
-  m_box_profile.set_orientation(Gtk::ORIENTATION_VERTICAL);
-  m_box_profile.set_spacing(20);
-  m_box_profile.set_border_width(30);
-  m_box_profile.override_background_color(Gdk::RGBA("#1e1b4b"));
+  // --- PAGE: PROFILE (REDESIGNED) ---
+  m_profile_bg_area.signal_draw().connect(
+      sigc::mem_fun(*this, &ClientWindow::on_draw_profile_bg));
+  m_profile_overlay.add(m_profile_bg_area);
 
-  // Profile Header
+  m_box_profile.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_box_profile.set_spacing(24);
+  m_box_profile.set_margin_top(40);
+  m_box_profile.set_margin_bottom(40);
+  m_box_profile.set_margin_start(60);
+  m_box_profile.set_margin_end(60);
+
+  // Profile Top Bar: Small Back Button + Title
+  Gtk::Box *profile_top_bar =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL));
+  m_btn_back_to_lobby.set_label("←");
+  m_btn_back_to_lobby.get_style_context()->add_class("btn-ghost");
+  m_btn_back_to_lobby.set_size_request(40, 40);
+  m_btn_back_to_lobby.signal_clicked().connect(
+      [this]() { m_stack.set_visible_child("lobby"); });
+
+  Gtk::Label *lbl_p_title = Gtk::manage(new Gtk::Label());
+  lbl_p_title->set_markup(
+      "<span size='24000' weight='800' color='#ffffff'>HỒ SƠ CỦA BẠN</span>");
+  lbl_p_title->set_margin_start(20);
+
+  profile_top_bar->pack_start(m_btn_back_to_lobby, Gtk::PACK_SHRINK);
+  profile_top_bar->pack_start(*lbl_p_title, Gtk::PACK_SHRINK);
+
+  // Profile Content Card
+  Gtk::Box *profile_main_card =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 24));
+  profile_main_card->get_style_context()->add_class("stat-card-glass");
+
   m_box_profile_header.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_profile_header.set_spacing(20);
-  m_box_profile_header.set_halign(Gtk::ALIGN_CENTER);
+  m_box_profile_header.set_halign(Gtk::ALIGN_START);
 
-  m_lbl_profile_avatar.set_markup("<span size='60000' color='#fbbf24'>RANK</span>");
+  try {
+    auto pixbuf = Gdk::Pixbuf::create_from_file("avatar.png", 120, 120);
+    m_img_profile_avatar.set(pixbuf);
+  } catch (...) {
+    m_img_profile_avatar.set_from_icon_name("avatar-default",
+                                            Gtk::ICON_SIZE_DIALOG);
+  }
   m_lbl_profile_name.set_markup(
       "<span size='24000' weight='bold' color='#ffffff'>Loading...</span>");
   m_lbl_profile_elo.set_markup(
       "<span size='18000' color='#fbbf24'>ELO: ---</span>");
 
   Gtk::Box *profile_info =
-      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 8));
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
   profile_info->pack_start(m_lbl_profile_name, Gtk::PACK_SHRINK);
   profile_info->pack_start(m_lbl_profile_elo, Gtk::PACK_SHRINK);
 
-  m_box_profile_header.pack_start(m_lbl_profile_avatar, Gtk::PACK_SHRINK);
+  m_box_profile_header.pack_start(m_img_profile_avatar, Gtk::PACK_SHRINK);
   m_box_profile_header.pack_start(*profile_info, Gtk::PACK_SHRINK);
 
-  // Profile Stats
   m_box_profile_stats.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_profile_stats.set_spacing(40);
-  m_box_profile_stats.set_halign(Gtk::ALIGN_CENTER);
+  m_box_profile_stats.set_halign(Gtk::ALIGN_START);
 
   m_lbl_profile_wins.set_markup(
       "<span size='20000' weight='bold' color='#22c55e'>0</span>\n<span "
-      "size='10000' color='#94a3b8'>Trận thắng</span>");
+      "size='10000' color='#94a3b8'>Thắng</span>");
   m_lbl_profile_losses.set_markup(
       "<span size='20000' weight='bold' color='#ef4444'>0</span>\n<span "
-      "size='10000' color='#94a3b8'>Trận thua</span>");
+      "size='10000' color='#94a3b8'>Thua</span>");
   m_lbl_profile_winrate.set_markup(
       "<span size='20000' weight='bold' color='#3b82f6'>0%</span>\n<span "
-      "size='10000' color='#94a3b8'>Tỷ lệ thắng</span>");
+      "size='10000' color='#94a3b8'>Tỷ lệ</span>");
 
   m_lbl_profile_wins.set_justify(Gtk::JUSTIFY_CENTER);
   m_lbl_profile_losses.set_justify(Gtk::JUSTIFY_CENTER);
@@ -1405,9 +1490,17 @@ void ClientWindow::setup_ui() {
   m_box_profile_stats.pack_start(m_lbl_profile_losses, Gtk::PACK_SHRINK);
   m_box_profile_stats.pack_start(m_lbl_profile_winrate, Gtk::PACK_SHRINK);
 
-  // Match History
+  profile_main_card->pack_start(m_box_profile_header, Gtk::PACK_SHRINK);
+  profile_main_card->pack_start(m_box_profile_stats, Gtk::PACK_SHRINK);
+
+  // Match History - Wrapped in glass card
+  Gtk::Box *history_card =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 16));
+  history_card->get_style_context()->add_class("stat-card-glass");
+
   m_lbl_history_title.set_markup(
-      "<span size='16000' weight='bold' color='#e2e8f0'>Lịch sử đấu</span>");
+      "<span size='16000' weight='bold' color='#ffffff'>📜 Lịch sử đấu mới "
+      "nhất</span>");
   m_lbl_history_title.set_halign(Gtk::ALIGN_START);
 
   m_box_match_history.set_orientation(Gtk::ORIENTATION_VERTICAL);
@@ -1415,22 +1508,18 @@ void ClientWindow::setup_ui() {
 
   m_scroll_history.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
   m_scroll_history.add(m_box_match_history);
-  m_scroll_history.set_min_content_height(200);
+  m_scroll_history.set_min_content_height(150);
 
-  // Back Button
-  m_btn_back_to_lobby.set_label("← Quay lại Lobby");
-  m_btn_back_to_lobby.get_style_context()->add_class("btn-secondary");
-  m_btn_back_to_lobby.signal_clicked().connect(
-      [this]() { m_stack.set_visible_child("lobby"); });
+  history_card->pack_start(m_lbl_history_title, Gtk::PACK_SHRINK);
+  history_card->pack_start(m_scroll_history, Gtk::PACK_EXPAND_WIDGET);
 
   // Assemble Profile Page
-  m_box_profile.pack_start(m_btn_back_to_lobby, Gtk::PACK_SHRINK);
-  m_box_profile.pack_start(m_box_profile_header, Gtk::PACK_SHRINK);
-  m_box_profile.pack_start(m_box_profile_stats, Gtk::PACK_SHRINK);
-  m_box_profile.pack_start(m_lbl_history_title, Gtk::PACK_SHRINK);
-  m_box_profile.pack_start(m_scroll_history, Gtk::PACK_EXPAND_WIDGET);
+  m_box_profile.pack_start(*profile_top_bar, Gtk::PACK_SHRINK);
+  m_box_profile.pack_start(*profile_main_card, Gtk::PACK_SHRINK);
+  m_box_profile.pack_start(*history_card, Gtk::PACK_EXPAND_WIDGET);
 
-  m_stack.add(m_box_profile, "profile");
+  m_profile_overlay.add_overlay(m_box_profile);
+  m_stack.add(m_profile_overlay, "profile");
 
   // --- PAGE 3: INVITE ---
   m_box_invite.set_halign(Gtk::ALIGN_CENTER);
@@ -2437,22 +2526,22 @@ void ClientWindow::on_network_signal() {
     }
     case protocol::CMD_GLOBAL_STATS: {
       auto p = (protocol::Payload_GlobalStats *)data;
-      
+
       auto format_num = [](int n) {
-          std::string s = std::to_string(n);
-          int pos = (int)s.length() - 3;
-          while (pos > 0) {
-              s.insert(pos, ",");
-              pos -= 3;
-          }
-          return s;
+        std::string s = std::to_string(n);
+        int pos = (int)s.length() - 3;
+        while (pos > 0) {
+          s.insert(pos, ",");
+          pos -= 3;
+        }
+        return s;
       };
 
       // Update Lobby Label
       m_lbl_online_count.set_markup(
           "<span size='36000' weight='ultrabold' color='#22c55e'>" +
           format_num(p->online_users) + "</span>");
-          
+
       // Update Login Screen Labels
       m_lbl_stat_online.set_text(format_num(p->online_users));
       m_lbl_stat_matches.set_text(format_num(p->matches_today));
@@ -2537,6 +2626,42 @@ void ClientWindow::on_network_signal() {
 
       m_box_match_history.pack_start(*match_item, Gtk::PACK_SHRINK);
       m_box_match_history.show_all();
+      break;
+    }
+    case protocol::CMD_PLAYER_STATS: {
+      auto p = (protocol::Payload_PlayerStats *)data;
+      if (std::string(p->username) == m_my_username) {
+        m_player_elo = p->elo;
+        m_lbl_elo_value.set_markup(
+            "<span size='28000' weight='ultrabold' color='#ffffff'>" +
+            std::to_string(m_player_elo) + "</span>");
+
+        m_lbl_wins.set_markup(
+            "<span size='24000' weight='bold' color='#ffffff'>" +
+            std::to_string(p->wins) + "</span>");
+        m_lbl_losses.set_markup(
+            "<span size='24000' weight='bold' color='#ffffff'>" +
+            std::to_string(p->matches_played - p->wins) + "</span>");
+
+        double details_winrate =
+            (p->matches_played > 0)
+                ? ((double)p->wins / p->matches_played * 100.0)
+                : 0.0;
+        char buff[16];
+        snprintf(buff, sizeof(buff), "%.1f%%", details_winrate);
+        m_lbl_winrate.set_markup(
+            "<span size='24000' weight='bold' color='#ffffff'>" +
+            std::string(buff) + "</span>");
+
+        // Update status based on ELO
+        std::string status = "● Chiến binh trí thức";
+        if (m_player_elo >= 1200)
+          status = "● Cao thủ trí thức";
+        if (m_player_elo >= 1500)
+          status = "● Huyền thoại trí thức";
+        m_lbl_player_status.set_markup("<span color='#22c55e'>" + status +
+                                       "</span>");
+      }
       break;
     }
     case protocol::CMD_REPLAY_DATA: {
@@ -2640,26 +2765,28 @@ void ClientWindow::toggle_auth_mode() {
     // --- MODE: ĐĂNG KÝ ---
     m_lbl_card_title.set_text("Đăng ký tài khoản");
     m_lbl_card_subtitle.set_text("Tạo tài khoản để tham gia đấu trường");
-    
+
     m_btn_login.set_label("ĐĂNG KÝ NGAY");
     m_btn_register.set_label("Quay lại Đăng nhập");
-    m_lbl_no_account.set_markup("<span color='#cbd5e1' size='small'>Đã có tài khoản? </span>");
-    
+    m_lbl_no_account.set_markup(
+        "<span color='#cbd5e1' size='small'>Đã có tài khoản? </span>");
+
     m_entry_user.set_placeholder_text("Tên tài khoản mới");
-    
+
     // Hide Remember Me & Forgot Pass
     m_box_remember.hide();
   } else {
     // --- MODE: ĐĂNG NHẬP ---
     m_lbl_card_title.set_text("Chào mừng trở lại");
     m_lbl_card_subtitle.set_text("Đăng nhập để tiếp tục chinh phục");
-    
+
     m_btn_login.set_label("Vào đấu trường");
     m_btn_register.set_label("Đăng ký ngay");
-    m_lbl_no_account.set_markup("<span color='#cbd5e1' size='small'>Chưa có tài khoản? </span>");
-    
+    m_lbl_no_account.set_markup(
+        "<span color='#cbd5e1' size='small'>Chưa có tài khoản? </span>");
+
     m_entry_user.set_placeholder_text("Nhập email của bạn");
-    
+
     // Show Remember Me
     m_box_remember.show();
   }
@@ -2932,84 +3059,105 @@ void ClientWindow::show_replay_dialog() {
     return;
   }
 
-  // Create dialog
-  if (m_dialog_replay) {
-    delete m_dialog_replay;
+  // Guard: prevent multiple dialogs from opening
+  if (m_dialog_replay && m_dialog_replay->get_visible()) {
+    return; // Dialog already open, don't create another
   }
-  m_dialog_replay = new Gtk::Dialog("🎬 Xem lại trận đấu", *this, true);
-  m_dialog_replay->set_default_size(700, 500);
-  m_dialog_replay->get_style_context()->add_class("glass-card");
 
-  auto content = m_dialog_replay->get_content_area();
-  content->set_spacing(16);
-  content->set_margin_top(20);
-  content->set_margin_bottom(20);
-  content->set_margin_start(20);
-  content->set_margin_end(20);
+  // Lazy initialization: create dialog once and reuse
+  if (!m_dialog_replay) {
+    m_dialog_replay = new Gtk::Dialog("🎬 Xem lại trận đấu", *this, true);
+    m_dialog_replay->set_default_size(700, 500);
+    m_dialog_replay->get_style_context()->add_class("glass-card");
 
-  // Title
-  m_lbl_replay_title.set_markup(
-      "<span size='16000' weight='bold' color='#ffffff'>📝 Replay</span>");
-  content->pack_start(m_lbl_replay_title, Gtk::PACK_SHRINK);
+    auto content = m_dialog_replay->get_content_area();
+    content->set_spacing(16);
+    content->set_margin_top(20);
+    content->set_margin_bottom(20);
+    content->set_margin_start(20);
+    content->set_margin_end(20);
 
-  // Question
-  m_lbl_replay_question.set_line_wrap(true);
-  m_lbl_replay_question.set_max_width_chars(60);
-  content->pack_start(m_lbl_replay_question, Gtk::PACK_SHRINK);
-
-  // Options box
-  Gtk::Box *options_box =
-      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 8));
-  m_lbl_replay_opt_a.set_halign(Gtk::ALIGN_START);
-  m_lbl_replay_opt_b.set_halign(Gtk::ALIGN_START);
-  m_lbl_replay_opt_c.set_halign(Gtk::ALIGN_START);
-  m_lbl_replay_opt_d.set_halign(Gtk::ALIGN_START);
-  options_box->pack_start(m_lbl_replay_opt_a, Gtk::PACK_SHRINK);
-  options_box->pack_start(m_lbl_replay_opt_b, Gtk::PACK_SHRINK);
-  options_box->pack_start(m_lbl_replay_opt_c, Gtk::PACK_SHRINK);
-  options_box->pack_start(m_lbl_replay_opt_d, Gtk::PACK_SHRINK);
-  content->pack_start(*options_box, Gtk::PACK_SHRINK);
-
-  // Players answers section
-  Gtk::Label *players_title = Gtk::manage(new Gtk::Label());
-  players_title->set_markup(
-      "<span weight='bold' color='#94a3b8'>👥 Câu trả lời:</span>");
-  players_title->set_halign(Gtk::ALIGN_START);
-  players_title->set_margin_top(16);
-  content->pack_start(*players_title, Gtk::PACK_SHRINK);
-
-  m_box_replay_players.set_orientation(Gtk::ORIENTATION_VERTICAL);
-  m_box_replay_players.set_spacing(4);
-  content->pack_start(m_box_replay_players, Gtk::PACK_SHRINK);
-
-  // Navigation
-  Gtk::Box *nav_box =
-      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
-  nav_box->set_halign(Gtk::ALIGN_CENTER);
-  nav_box->set_margin_top(20);
-
-  m_btn_replay_prev.set_label("◀ Câu trước");
-  m_btn_replay_next.set_label("Câu sau ▶");
-  m_btn_replay_prev.signal_clicked().connect([this]() {
-    if (m_replay_current_question > 0) {
-      m_replay_current_question--;
-      update_replay_view();
+    // Title - check parent before packing
+    if (!m_lbl_replay_title.get_parent()) {
+      m_lbl_replay_title.set_markup(
+          "<span size='16000' weight='bold' color='#ffffff'>📝 Replay</span>");
+      content->pack_start(m_lbl_replay_title, Gtk::PACK_SHRINK);
     }
-  });
-  m_btn_replay_next.signal_clicked().connect([this]() {
-    if (m_replay_current_question < (int)m_replay_data.size() - 1) {
-      m_replay_current_question++;
-      update_replay_view();
+
+    // Question - check parent before packing
+    if (!m_lbl_replay_question.get_parent()) {
+      m_lbl_replay_question.set_line_wrap(true);
+      m_lbl_replay_question.set_max_width_chars(60);
+      content->pack_start(m_lbl_replay_question, Gtk::PACK_SHRINK);
     }
-  });
 
-  nav_box->pack_start(m_btn_replay_prev, Gtk::PACK_SHRINK);
-  nav_box->pack_start(m_lbl_replay_nav, Gtk::PACK_SHRINK);
-  nav_box->pack_start(m_btn_replay_next, Gtk::PACK_SHRINK);
-  content->pack_start(*nav_box, Gtk::PACK_SHRINK);
+    // Options box
+    Gtk::Box *options_box =
+        Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 8));
+    m_lbl_replay_opt_a.set_halign(Gtk::ALIGN_START);
+    m_lbl_replay_opt_b.set_halign(Gtk::ALIGN_START);
+    m_lbl_replay_opt_c.set_halign(Gtk::ALIGN_START);
+    m_lbl_replay_opt_d.set_halign(Gtk::ALIGN_START);
 
-  // Close button
-  m_dialog_replay->add_button("✕ Đóng", Gtk::RESPONSE_CLOSE);
+    // Check parents before packing options
+    if (!m_lbl_replay_opt_a.get_parent())
+      options_box->pack_start(m_lbl_replay_opt_a, Gtk::PACK_SHRINK);
+    if (!m_lbl_replay_opt_b.get_parent())
+      options_box->pack_start(m_lbl_replay_opt_b, Gtk::PACK_SHRINK);
+    if (!m_lbl_replay_opt_c.get_parent())
+      options_box->pack_start(m_lbl_replay_opt_c, Gtk::PACK_SHRINK);
+    if (!m_lbl_replay_opt_d.get_parent())
+      options_box->pack_start(m_lbl_replay_opt_d, Gtk::PACK_SHRINK);
+    content->pack_start(*options_box, Gtk::PACK_SHRINK);
+
+    // Players answers section
+    Gtk::Label *players_title = Gtk::manage(new Gtk::Label());
+    players_title->set_markup(
+        "<span weight='bold' color='#94a3b8'>👥 Câu trả lời:</span>");
+    players_title->set_halign(Gtk::ALIGN_START);
+    players_title->set_margin_top(16);
+    content->pack_start(*players_title, Gtk::PACK_SHRINK);
+
+    // Check parent for players box before packing
+    if (!m_box_replay_players.get_parent()) {
+      m_box_replay_players.set_orientation(Gtk::ORIENTATION_VERTICAL);
+      m_box_replay_players.set_spacing(4);
+      content->pack_start(m_box_replay_players, Gtk::PACK_SHRINK);
+    }
+
+    // Navigation
+    Gtk::Box *nav_box =
+        Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
+    nav_box->set_halign(Gtk::ALIGN_CENTER);
+    nav_box->set_margin_top(20);
+
+    m_btn_replay_prev.set_label("◀ Câu trước");
+    m_btn_replay_next.set_label("Câu sau ▶");
+    m_btn_replay_prev.signal_clicked().connect([this]() {
+      if (m_replay_current_question > 0) {
+        m_replay_current_question--;
+        update_replay_view();
+      }
+    });
+    m_btn_replay_next.signal_clicked().connect([this]() {
+      if (m_replay_current_question < (int)m_replay_data.size() - 1) {
+        m_replay_current_question++;
+        update_replay_view();
+      }
+    });
+
+    // Check parents before packing nav elements
+    if (!m_btn_replay_prev.get_parent())
+      nav_box->pack_start(m_btn_replay_prev, Gtk::PACK_SHRINK);
+    if (!m_lbl_replay_nav.get_parent())
+      nav_box->pack_start(m_lbl_replay_nav, Gtk::PACK_SHRINK);
+    if (!m_btn_replay_next.get_parent())
+      nav_box->pack_start(m_btn_replay_next, Gtk::PACK_SHRINK);
+    content->pack_start(*nav_box, Gtk::PACK_SHRINK);
+
+    // Close button
+    m_dialog_replay->add_button("✕ Đóng", Gtk::RESPONSE_CLOSE);
+  }
 
   // Show first question
   m_replay_current_question = 0;

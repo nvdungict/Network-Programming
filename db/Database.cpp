@@ -266,21 +266,32 @@ bool Database::saveReplayAction(int match_id, int question_order,
 
 std::vector<Database::MatchHistoryEntry>
 Database::getMatchHistory(const std::string &username, int limit) {
-  (void)username; // TODO: Filter by user participation
   std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<MatchHistoryEntry> result;
 
-  // Query matches where user was winner OR participated
-  // For now, query all matches and filter by winner (simplified)
+  // Query matches where user participated:
+  // 1. User was the winner
+  // 2. User surrendered (winner contains "SURRENDERED by username")
+  // 3. User answered questions (exists in replays table)
   std::string sql =
-      "SELECT id, room_id, winner_username, total_players, duration_seconds, "
-      "datetime(created_at, 'localtime') as created_at "
-      "FROM match_results ORDER BY created_at DESC LIMIT ?;";
+      "SELECT DISTINCT m.id, m.room_id, m.winner_username, m.total_players, "
+      "m.duration_seconds, datetime(m.created_at, 'localtime') as created_at "
+      "FROM match_results m "
+      "WHERE m.winner_username = ? "    // User was winner
+      "   OR m.winner_username LIKE ? " // User surrendered
+      "   OR EXISTS (SELECT 1 FROM replays r WHERE r.match_id = m.id AND "
+      "r.username = ?) " // User participated
+      "ORDER BY m.created_at DESC LIMIT ?;";
+
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return result;
 
-  sqlite3_bind_int(stmt, 1, limit);
+  sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
+  std::string surrender_pattern = "SURRENDERED by " + username;
+  sqlite3_bind_text(stmt, 2, surrender_pattern.c_str(), -1, SQLITE_STATIC);
+  sqlite3_bind_text(stmt, 3, username.c_str(), -1, SQLITE_STATIC);
+  sqlite3_bind_int(stmt, 4, limit);
 
   while (sqlite3_step(stmt) == SQLITE_ROW) {
     MatchHistoryEntry entry;
@@ -365,8 +376,9 @@ int Database::getReplayQuestionCount(int match_id) {
 }
 int Database::getMatchesCountToday() {
   std::lock_guard<std::mutex> lock(m_mutex);
-  std::string sql = "SELECT COUNT(*) FROM match_results WHERE date(created_at) = "
-                    "date('now', 'localtime');";
+  std::string sql =
+      "SELECT COUNT(*) FROM match_results WHERE date(created_at) = "
+      "date('now', 'localtime');";
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return 0;

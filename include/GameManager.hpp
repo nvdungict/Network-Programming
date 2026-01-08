@@ -21,6 +21,14 @@ struct Question {
 class GameManager {
 private:
   Room *m_room;
+  struct ReplayEntry {
+    int question_order;
+    std::string question_id;
+    std::string username;
+    std::string answer;
+    bool is_correct;
+  };
+
   std::vector<Question> m_questions_pool;
 
   // Game State
@@ -40,6 +48,8 @@ private:
   // Match tracking
   std::chrono::steady_clock::time_point m_game_start_time;
   int m_total_players = 0;
+  int m_total_questions_asked = 0;
+  std::vector<ReplayEntry> m_replay_buffer;
 
   void sendNextQuestion_UNLOCKED();
   void endGame_UNLOCKED(const std::string &reason);
