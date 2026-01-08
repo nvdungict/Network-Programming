@@ -14,25 +14,27 @@ const std::string CSS_DATA = R"(
 
 /* === BRANDING === */
 .brand-bubble {
-    background-color: rgba(124, 58, 237, 0.2);
+    background-color: rgba(251, 191, 36, 0.2);
     color: #fbbf24;
     border-radius: 20px;
-    padding: 4px 12px;
-    font-weight: bold;
-    font-size: 10px;
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    padding: 6px 14px;
+    font-weight: 800;
+    font-size: 11px;
+    border: 1px solid rgba(251, 191, 36, 0.4);
 }
 
 .brand-title {
     color: #ffffff;
     font-size: 56px;
     font-weight: 300;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .brand-title-bold {
     color: #fbbf24; /* Vibrant Gold/Yellow */
     font-size: 56px;
     font-weight: 800;
+    text-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
 }
 
 .brand-slogan {
@@ -91,6 +93,7 @@ const std::string CSS_DATA = R"(
     color: #ffffff;
     font-size: 24px;
     font-weight: bold;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .card-subtitle {
@@ -136,10 +139,17 @@ entry:focus {
 }
 
 .btn-social-glass {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    padding: 10px;
+    padding: 0;
+    min-width: 50px;
+    min-height: 50px;
+}
+
+.btn-social-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .btn-link-text {
@@ -585,9 +595,9 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
       Cairo::RadialGradient::create(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, w);
   
   // Tím sáng ở giữa/tâm lan dần ra tím tối
-  bg_pat->add_color_stop_rgb(0.0, 0.35, 0.15, 0.65);  // #5b21b6 (approx)
-  bg_pat->add_color_stop_rgb(0.6, 0.15, 0.05, 0.35);  // #2e1065 (approx)
-  bg_pat->add_color_stop_rgb(1.0, 0.08, 0.02, 0.2);   // #1e1b4b (very dark)
+  bg_pat->add_color_stop_rgb(0.0, 0.4, 0.2, 0.75);  // Brighter center
+  bg_pat->add_color_stop_rgb(0.6, 0.18, 0.06, 0.4);  // Mid
+  bg_pat->add_color_stop_rgb(1.0, 0.1, 0.03, 0.25);   // Border
   cr->set_source(bg_pat);
   cr->paint();
 
@@ -608,7 +618,7 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
   // Glow tím sáng góc trên trái
   Cairo::RefPtr<Cairo::RadialGradient> glow1 =
       Cairo::RadialGradient::create(w * 0.2, h * 0.2, 0, w * 0.2, h * 0.2, 500);
-  glow1->add_color_stop_rgba(0.0, 0.6, 0.2, 0.9, 0.2); 
+  glow1->add_color_stop_rgba(0.0, 0.6, 0.2, 0.9, 0.35); 
   glow1->add_color_stop_rgba(1.0, 0.6, 0.2, 0.9, 0.0);
   cr->set_source(glow1);
   cr->paint();
@@ -616,8 +626,8 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
   // Glow vàng/cam ở cạnh phải (nơi có Login form) để tường đồng với Button
   Cairo::RefPtr<Cairo::RadialGradient> glow2 =
       Cairo::RadialGradient::create(w, h * 0.5, 0, w, h * 0.5, 400);
-  glow2->add_color_stop_rgba(0.0, 1.0, 0.6, 0.0, 0.1); 
-  glow2->add_color_stop_rgba(1.0, 1.0, 0.6, 0.0, 0.0);
+  glow2->add_color_stop_rgba(0.0, 1.0, 0.7, 0.0, 0.25); 
+  glow2->add_color_stop_rgba(1.0, 1.0, 0.7, 0.0, 0.0);
   cr->set_source(glow2);
   cr->paint();
 
@@ -752,15 +762,16 @@ void ClientWindow::setup_ui() {
   spacer->set_size_request(-1, 20);
   m_box_login_left.pack_start(*spacer, Gtk::PACK_SHRINK);
 
-  auto add_feature = [this](const std::string &icon, const std::string &title, const std::string &desc) {
+  auto add_feature = [this](const std::string &icon_name, const std::string &title, const std::string &desc) {
       Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
-      box->set_margin_bottom(12);
+      box->set_margin_bottom(16);
       
-      Gtk::Label *lbl_icon = Gtk::manage(new Gtk::Label());
-      lbl_icon->set_markup("<span size='16000' background='#4c1d95' color='#a78bfa'> " + icon + " </span>");
-      // Note: background/color in markup might not work for all GTK versions, using unicode logic
-      // Simplified: Just emoji
-      lbl_icon->get_style_context()->add_class("feature-box");
+      Gtk::Box *icon_container = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+      icon_container->get_style_context()->add_class("feature-box");
+      
+      Gtk::Image *img_icon = Gtk::manage(new Gtk::Image());
+      img_icon->set_from_icon_name(icon_name, Gtk::ICON_SIZE_DND);
+      icon_container->pack_start(*img_icon, Gtk::PACK_SHRINK);
       
       Gtk::Box *text_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
       Gtk::Label *lbl_title = Gtk::manage(new Gtk::Label(title));
@@ -774,14 +785,14 @@ void ClientWindow::setup_ui() {
       text_box->pack_start(*lbl_title, Gtk::PACK_SHRINK);
       text_box->pack_start(*lbl_desc, Gtk::PACK_SHRINK);
       
-      box->pack_start(*lbl_icon, Gtk::PACK_SHRINK);
+      box->pack_start(*icon_container, Gtk::PACK_SHRINK);
       box->pack_start(*text_box, Gtk::PACK_SHRINK);
       m_box_login_left.pack_start(*box, Gtk::PACK_SHRINK);
   };
 
-  add_feature("⚡", "Thi đấu real-time", "Cạnh tranh trực tiếp với người chơi khác");
-  add_feature("🏆", "Hệ thống xếp hạng ELO", "Leo rank và trở thành huyền thoại");
-  add_feature("🎯", "Thử thách tri thức", "Hàng ngàn câu hỏi đa dạng");
+  add_feature("input-gaming-symbolic", "Thi đấu real-time", "Cạnh tranh trực tiếp với người chơi khác");
+  add_feature("emblem-favorite-symbolic", "Hệ thống xếp hạng ELO", "Leo rank và trở thành huyền thoại");
+  add_feature("find-location-symbolic", "Thử thách tri thức", "Hàng ngàn câu hỏi đa dạng");
 
   // Stats Row (Bottom)
   Gtk::Box *stats_space = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
@@ -808,8 +819,8 @@ void ClientWindow::setup_ui() {
       return box;
   };
   
-  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_online, "2,847", "Người chơi online"), Gtk::PACK_SHRINK);
-  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_matches, "15,382", "Trận đấu hôm nay"), Gtk::PACK_SHRINK);
+  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_online, "0", "Người chơi online"), Gtk::PACK_SHRINK);
+  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_matches, "0", "Trận đấu hôm nay"), Gtk::PACK_SHRINK);
   
   m_box_login_left.pack_start(m_box_login_stats, Gtk::PACK_SHRINK);
 
@@ -925,11 +936,11 @@ void ClientWindow::setup_ui() {
 
   auto setup_social = [](Gtk::Button &btn, Gtk::Image &img, const std::string &file) {
       try {
-          // Keep using existing image logic
-          auto pixbuf = Gdk::Pixbuf::create_from_file(file, 20, 20);
+          // Increased size for 'full' look
+          auto pixbuf = Gdk::Pixbuf::create_from_file(file, 36, 36); 
           img.set(pixbuf);
       } catch(...) {
-          img.set_from_icon_name("image-missing", Gtk::ICON_SIZE_MENU);
+          img.set_from_icon_name("image-missing", Gtk::ICON_SIZE_DND);
       }
       btn.set_image(img);
       btn.set_always_show_image(true);
@@ -1104,7 +1115,7 @@ void ClientWindow::setup_ui() {
   m_box_player_header.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_player_header.set_spacing(12);
 
-  m_lbl_player_avatar.set_markup("<span size='25000'>🏆</span>");
+  m_lbl_player_avatar.set_markup("<span size='15000' color='#fbbf24'>RANK</span>");
   m_lbl_player_avatar.get_style_context()->add_class("player-avatar");
 
   m_box_player_info.set_orientation(Gtk::ORIENTATION_VERTICAL);
@@ -1130,7 +1141,7 @@ void ClientWindow::setup_ui() {
   m_box_elo_card.set_spacing(10);
   m_box_elo_card.get_style_context()->add_class("elo-card");
 
-  m_lbl_elo_icon.set_markup("<span size='30000'>👑</span>");
+  m_lbl_elo_icon.set_markup("<span size='20000' color='#ffffff'>★</span>");
   m_lbl_elo_value.set_markup(
       "<span size='40000' weight='ultrabold' color='#ffffff'>1,000</span>");
   m_lbl_elo_change.set_markup(
@@ -1333,11 +1344,12 @@ void ClientWindow::setup_ui() {
   });
 
   // Add logout button at bottom of player card
-  m_btn_logout_lobby.set_label("🚪 Đăng xuất");
+  m_btn_logout_lobby.set_label("Đăng xuất");
   m_btn_logout_lobby.get_style_context()->add_class("btn-danger");
   m_btn_logout_lobby.set_margin_top(12);
   m_btn_logout_lobby.signal_clicked().connect([this]() {
     m_client.sendLogout();
+    m_btn_login.set_sensitive(true); // Fix: Re-enable login button for next session
     m_stack.set_visible_child("login");
     resize(900, 600);
   });
@@ -1356,7 +1368,7 @@ void ClientWindow::setup_ui() {
   m_box_profile_header.set_spacing(20);
   m_box_profile_header.set_halign(Gtk::ALIGN_CENTER);
 
-  m_lbl_profile_avatar.set_markup("<span size='60000'>🏆</span>");
+  m_lbl_profile_avatar.set_markup("<span size='60000' color='#fbbf24'>RANK</span>");
   m_lbl_profile_name.set_markup(
       "<span size='24000' weight='bold' color='#ffffff'>Loading...</span>");
   m_lbl_profile_elo.set_markup(
@@ -1395,7 +1407,7 @@ void ClientWindow::setup_ui() {
 
   // Match History
   m_lbl_history_title.set_markup(
-      "<span size='16000' weight='bold' color='#e2e8f0'>📜 Lịch sử đấu</span>");
+      "<span size='16000' weight='bold' color='#e2e8f0'>Lịch sử đấu</span>");
   m_lbl_history_title.set_halign(Gtk::ALIGN_START);
 
   m_box_match_history.set_orientation(Gtk::ORIENTATION_VERTICAL);
@@ -2425,10 +2437,25 @@ void ClientWindow::on_network_signal() {
     }
     case protocol::CMD_GLOBAL_STATS: {
       auto p = (protocol::Payload_GlobalStats *)data;
+      
+      auto format_num = [](int n) {
+          std::string s = std::to_string(n);
+          int pos = (int)s.length() - 3;
+          while (pos > 0) {
+              s.insert(pos, ",");
+              pos -= 3;
+          }
+          return s;
+      };
+
+      // Update Lobby Label
       m_lbl_online_count.set_markup(
           "<span size='36000' weight='ultrabold' color='#22c55e'>" +
-          std::to_string(p->online_users) + "</span>");
-      // Update matches count if available, for now just online
+          format_num(p->online_users) + "</span>");
+          
+      // Update Login Screen Labels
+      m_lbl_stat_online.set_text(format_num(p->online_users));
+      m_lbl_stat_matches.set_text(format_num(p->matches_today));
       break;
     }
     case protocol::CMD_KICK_SUCCESS: {
@@ -3003,7 +3030,7 @@ void ClientWindow::update_replay_view() {
 
   // Update title
   m_lbl_replay_title.set_markup(
-      "<span size='16000' weight='bold' color='#ffffff'>📝 Câu " +
+      "<span size='16000' weight='bold' color='#ffffff'>Câu " +
       std::to_string(q.question_order) + "/" +
       std::to_string(m_replay_total_questions) + "</span>");
 
@@ -3034,7 +3061,7 @@ void ClientWindow::update_replay_view() {
 
   for (auto &pa : q.player_answers) {
     Gtk::Label *player_label = Gtk::manage(new Gtk::Label());
-    std::string icon = pa.second.second ? "✅" : "❌";
+    std::string icon = pa.second.second ? "[V]" : "[X]";
     std::string color = pa.second.second ? "#22c55e" : "#ef4444";
     player_label->set_markup("<span color='" + color + "'>" + icon + " " +
                              pa.first + " → " + pa.second.first + "</span>");

@@ -63,6 +63,7 @@ enum RoomType : uint8_t {
 struct Payload_GlobalStats {
   int online_users;
   int active_rooms;
+  int matches_today;
 };
 using GlobalStatsPacket = Payload_GlobalStats;
 

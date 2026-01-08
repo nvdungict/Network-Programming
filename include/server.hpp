@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include <set>
 #include <mutex>
 #include "UserManager.hpp"
 #include "RoomManager.hpp"
@@ -19,6 +20,7 @@ private:
 
     std::map<int, std::string> m_socket_to_user;
     std::map<std::string, int> m_user_to_socket;
+    std::set<int> m_all_sockets;
     std::recursive_mutex m_session_mutex; 
 
     void handleClient(int client_socket);

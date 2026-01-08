@@ -363,3 +363,17 @@ int Database::getReplayQuestionCount(int match_id) {
   sqlite3_finalize(stmt);
   return count;
 }
+int Database::getMatchesCountToday() {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::string sql = "SELECT COUNT(*) FROM match_results WHERE date(created_at) = "
+                    "date('now', 'localtime');";
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    return 0;
+  int count = 0;
+  if (sqlite3_step(stmt) == SQLITE_ROW) {
+    count = sqlite3_column_int(stmt, 0);
+  }
+  sqlite3_finalize(stmt);
+  return count;
+}

@@ -40,6 +40,7 @@ public:
   // --- Match Result Related ---
   int saveMatchResult(int room_id, const std::string &winner, int total_players,
                       int duration_sec);
+  int getMatchesCountToday();
 
   // Match History struct for returning data
   struct MatchHistoryEntry {

@@ -332,3 +332,7 @@ void RoomManager::handleAddBot(int client_sock, int count) {
                              " bot(s) to room " +
                              std::to_string(room->getID()));
 }
+int RoomManager::getRoomCount() {
+  std::lock_guard<std::mutex> lock(m_rooms_mutex);
+  return m_rooms.size();
+}

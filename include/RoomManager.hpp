@@ -38,4 +38,5 @@ public:
   void handleAddBot(int client_sock, int count); // Add bot players to room
 
   void handleDisconnect(int client_sock);
+  int getRoomCount();
 };

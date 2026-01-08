@@ -60,6 +60,12 @@ void Server::run() {
     Logger::getInstance().info("Client connected: socket " +
                                std::to_string(client_socket));
 
+    {
+      std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
+      m_all_sockets.insert(client_socket);
+    }
+    broadcastGlobalStats();
+
     std::thread clientThread(
         [this, client_socket]() { handleClient(client_socket); });
     clientThread.detach();
@@ -241,7 +247,12 @@ void Server::handleClient(int client_socket) {
                                std::to_string(client_socket));
   }
 
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
+    m_all_sockets.erase(client_socket);
+  }
   removeSession(client_socket);
+  broadcastGlobalStats(); 
   close(client_socket);
 }
 
@@ -273,18 +284,15 @@ void Server::broadcastGlobalStats() {
   protocol::Payload_GlobalStats stats;
   {
     std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
-    stats.online_users = m_socket_to_user.size();
+    stats.online_users = m_all_sockets.size();
   }
-  // This is a bit hacky, normally RoomManager should expose room count safely
-  // Assuming RoomManager has thread-safe getRoomCount or similar, or just 0 for
-  // now if not exposed But wait, RoomManager is right there.
-  // m_room_manager.getRoomCount() needs to be implemented or accessed.
-  // For now let's just count online users first.
-  stats.active_rooms = 0; // Placeholder until RoomManager exposure
+  
+  stats.active_rooms = m_room_manager.getRoomCount(); 
+  stats.matches_today = m_db.getMatchesCountToday();
 
-  // Broadcast to all connected clients
+  // Broadcast to all connected sockets (even those not logged in)
   std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
-  for (auto const &[sock, user] : m_socket_to_user) {
+  for (int sock : m_all_sockets) {
     sendPacket(sock, protocol::CMD_GLOBAL_STATS, &stats, sizeof(stats));
   }
 }
