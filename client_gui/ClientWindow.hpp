@@ -266,4 +266,36 @@ private:
 
   std::string m_my_username;
   bool m_is_host = false;
+
+  // ==========================================
+  // Replay Viewer
+  // ==========================================
+  int m_last_match_id = -1; // Store match ID after game ends
+
+  // Replay data storage
+  struct ReplayQuestionData {
+    int question_order;
+    std::string question_text;
+    std::string opt_a, opt_b, opt_c, opt_d;
+    std::string correct_answer;
+    std::vector<std::pair<std::string, std::pair<std::string, bool>>>
+        player_answers; // {name, {answer, is_correct}}
+  };
+  std::vector<ReplayQuestionData> m_replay_data;
+  int m_replay_current_question = 0;
+  int m_replay_total_questions = 0;
+
+  // Replay viewer widgets
+  Gtk::Dialog *m_dialog_replay = nullptr;
+  Gtk::Label m_lbl_replay_title;
+  Gtk::Label m_lbl_replay_question;
+  Gtk::Label m_lbl_replay_opt_a, m_lbl_replay_opt_b, m_lbl_replay_opt_c,
+      m_lbl_replay_opt_d;
+  Gtk::Box m_box_replay_players;
+  Gtk::Button m_btn_replay_prev, m_btn_replay_next;
+  Gtk::Label m_lbl_replay_nav;
+
+  void request_replay(int match_id);
+  void show_replay_dialog();
+  void update_replay_view();
 };

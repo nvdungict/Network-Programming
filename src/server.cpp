@@ -190,6 +190,41 @@ void Server::handleClient(int client_socket) {
       }
       break;
     }
+    case protocol::CMD_GET_REPLAY: {
+      auto p = (protocol::Payload_ReplayRequest *)buffer.data();
+      int match_id = p->match_id;
+
+      auto replay = m_db.getReplayData(match_id);
+      int total_questions = m_db.getReplayQuestionCount(match_id);
+
+      for (size_t i = 0; i < replay.size(); ++i) {
+        protocol::Payload_ReplayEntry pkt;
+        std::memset(&pkt, 0, sizeof(pkt));
+        pkt.match_id = replay[i].match_id;
+        pkt.question_order = replay[i].question_order;
+        pkt.total_questions = total_questions;
+        std::strncpy(pkt.question_text, replay[i].question_text.c_str(), 255);
+        std::strncpy(pkt.opt_a, replay[i].opt_a.c_str(), 63);
+        std::strncpy(pkt.opt_b, replay[i].opt_b.c_str(), 63);
+        std::strncpy(pkt.opt_c, replay[i].opt_c.c_str(), 63);
+        std::strncpy(pkt.opt_d, replay[i].opt_d.c_str(), 63);
+        std::strncpy(pkt.correct_answer, replay[i].correct_answer.c_str(), 7);
+        std::strncpy(pkt.player_name, replay[i].player_name.c_str(), 31);
+        std::strncpy(pkt.player_answer, replay[i].player_answer.c_str(), 63);
+        pkt.is_correct = replay[i].is_correct ? 1 : 0;
+        pkt.is_last = (i == replay.size() - 1) ? 1 : 0;
+        sendPacket(client_socket, protocol::CMD_REPLAY_DATA, &pkt, sizeof(pkt));
+      }
+
+      // If no replay data, send empty packet
+      if (replay.empty()) {
+        protocol::Payload_ReplayEntry pkt;
+        std::memset(&pkt, 0, sizeof(pkt));
+        pkt.is_last = 1;
+        sendPacket(client_socket, protocol::CMD_REPLAY_DATA, &pkt, sizeof(pkt));
+      }
+      break;
+    }
     }
   }
 

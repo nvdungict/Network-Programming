@@ -15,6 +15,7 @@ Logger &Logger::getInstance() {
 }
 
 bool Logger::open(const std::string &path) {
+  (void)path; // Reserved for future use
   // Create logs directory if it doesn't exist
   mkdir("logs", 0755);
 

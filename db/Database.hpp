@@ -30,6 +30,7 @@ public:
   // ELO & Stats functions
   bool updateUserStats(const std::string &user, int elo_change, bool is_win);
   int getElo(const std::string &user);
+  bool getUserStats(const std::string &user, int &elo, int &wins, int &matches);
 
   bool blockUser(const std::string &user);
 
@@ -57,4 +58,18 @@ public:
                         const std::string &question_id,
                         const std::string &username, const std::string &answer,
                         bool is_correct);
+
+  // Replay data entry for viewing replays
+  struct ReplayEntry {
+    int match_id;
+    int question_order;
+    std::string question_text;
+    std::string opt_a, opt_b, opt_c, opt_d;
+    std::string correct_answer;
+    std::string player_name;
+    std::string player_answer;
+    bool is_correct;
+  };
+  std::vector<ReplayEntry> getReplayData(int match_id);
+  int getReplayQuestionCount(int match_id);
 };

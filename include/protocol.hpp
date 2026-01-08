@@ -45,8 +45,10 @@ enum CommandType : uint16_t {
   CMD_KICK_PLAYER = 12, // Client -> Server (Host only)
   CMD_ADD_BOT = 13,     // Client -> Server (Host only, add bot players)
   CMD_GET_HISTORY = 14, // Client -> Server (Request match history)
+  CMD_GET_REPLAY = 15,  // Client -> Server (Request replay for match_id)
   CMD_KICK_SUCCESS = 68,
-  CMD_MATCH_HISTORY = 69 // Server -> Client (Match history entry)
+  CMD_MATCH_HISTORY = 69, // Server -> Client (Match history entry)
+  CMD_REPLAY_DATA = 70    // Server -> Client (Replay entry)
 };
 
 // === Room Types ===
@@ -174,7 +176,11 @@ struct Payload_Message {
 };
 using MessagePacket = Payload_Message;
 
-using GameOverPacket = Payload_Message;
+struct Payload_GameOver {
+  char message[256];
+  int match_id;
+};
+using GameOverPacket = Payload_GameOver;
 
 // 13. Match History Entry
 struct Payload_MatchHistory {
@@ -187,6 +193,28 @@ struct Payload_MatchHistory {
   int is_last;         // 1 if this is the last entry, 0 otherwise
 };
 using MatchHistoryPacket = Payload_MatchHistory;
+
+// 14. Replay Request (Client -> Server)
+struct Payload_ReplayRequest {
+  int match_id;
+};
+
+// 15. Replay Data Entry (Server -> Client)
+struct Payload_ReplayEntry {
+  int match_id;
+  int question_order;
+  int total_questions;
+  char question_text[256];
+  char opt_a[64];
+  char opt_b[64];
+  char opt_c[64];
+  char opt_d[64];
+  char correct_answer[8];
+  char player_name[32];
+  char player_answer[64];
+  int is_correct;
+  int is_last; // 1 = last entry for this match
+};
 
 // === Functions ===
 bool sendPacket(int sock, uint16_t type, const void *data, uint16_t len);

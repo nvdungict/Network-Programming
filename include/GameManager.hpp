@@ -39,7 +39,6 @@ private:
 
   // Match tracking
   std::chrono::steady_clock::time_point m_game_start_time;
-  int m_current_match_id = -1;
   int m_total_players = 0;
 
   void sendNextQuestion_UNLOCKED();

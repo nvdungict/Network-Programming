@@ -456,6 +456,7 @@ void GameManager::endGame_UNLOCKED(const std::string &reason) {
   protocol::GameOverPacket over;
   std::memset(&over, 0, sizeof(over));
   std::strncpy(over.message, reason.c_str(), 255);
+  over.match_id = match_id;
 
   m_room->broadcast_UNLOCKED(protocol::CMD_GAME_OVER, &over, sizeof(over), -1);
   resetGame_UNLOCKED();
@@ -463,11 +464,51 @@ void GameManager::endGame_UNLOCKED(const std::string &reason) {
 
 void GameManager::handleSurrender_UNLOCKED(int sock, bool silent) {
   if (m_active_players.count(sock)) {
+    std::string username = m_player_names[sock];
+
+    // Update stats - surrender counts as a loss
+    if (sock > 0 && !username.empty()) { // Real player, not bot
+      int elo_change = 0;
+      if (m_room->isRanked()) {
+        elo_change = -20; // Penalty for surrendering in ranked
+      }
+      m_room->m_server->getUserManager().updateUserStats(username, elo_change,
+                                                         false);
+
+      // Calculate duration
+      auto now = std::chrono::steady_clock::now();
+      int duration = std::chrono::duration_cast<std::chrono::seconds>(
+                         now - m_game_start_time)
+                         .count();
+
+      // Save match result - mark as surrendered (loser = this player)
+      m_room->m_server->getDatabase().saveMatchResult(
+          m_room->m_room_id, "SURRENDERED by " + username, m_total_players,
+          duration);
+
+      // Send updated stats to client immediately
+      int new_elo, new_wins, new_matches;
+      if (m_room->m_server->getDatabase().getUserStats(username, new_elo,
+                                                       new_wins, new_matches)) {
+        protocol::Payload_LoginSuccess stats_pkt;
+        std::memset(&stats_pkt, 0, sizeof(stats_pkt));
+        stats_pkt.elo = new_elo;
+        stats_pkt.wins = new_wins;
+        stats_pkt.matches_played = new_matches;
+        std::strncpy(stats_pkt.username, username.c_str(), 31);
+        m_room->m_server->sendPacket(sock, protocol::CMD_LOGIN_SUCCESS,
+                                     &stats_pkt, sizeof(stats_pkt));
+      }
+
+      std::cout << "[SURRENDER] " << username
+                << " surrendered. ELO change: " << elo_change << std::endl;
+    }
+
     m_active_players.erase(sock);
     if (!silent) {
       protocol::MessagePacket msg;
       std::memset(&msg, 0, sizeof(msg));
-      std::string txt = m_player_names[sock] + " da dau hang.";
+      std::string txt = username + " da dau hang.";
       std::strncpy(msg.message, txt.c_str(), 255);
       m_room->broadcast_UNLOCKED(protocol::CMD_INFO, &msg, sizeof(msg), -1);
 

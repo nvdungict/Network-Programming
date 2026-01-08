@@ -144,6 +144,26 @@ int Database::getElo(const std::string &user) {
   return elo;
 }
 
+bool Database::getUserStats(const std::string &user, int &elo, int &wins,
+                            int &matches) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::string sql =
+      "SELECT elo, wins, matches_played FROM users WHERE username = ?;";
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    return false;
+  sqlite3_bind_text(stmt, 1, user.c_str(), -1, SQLITE_STATIC);
+  bool found = false;
+  if (sqlite3_step(stmt) == SQLITE_ROW) {
+    elo = sqlite3_column_int(stmt, 0);
+    wins = sqlite3_column_int(stmt, 1);
+    matches = sqlite3_column_int(stmt, 2);
+    found = true;
+  }
+  sqlite3_finalize(stmt);
+  return found;
+}
+
 bool Database::blockUser(const std::string &user) {
   std::lock_guard<std::mutex> lock(m_mutex);
   std::string sql = "UPDATE users SET status = 'blocked' WHERE username = ?;";
@@ -246,6 +266,7 @@ bool Database::saveReplayAction(int match_id, int question_order,
 
 std::vector<Database::MatchHistoryEntry>
 Database::getMatchHistory(const std::string &username, int limit) {
+  (void)username; // TODO: Filter by user participation
   std::lock_guard<std::mutex> lock(m_mutex);
   std::vector<MatchHistoryEntry> result;
 
@@ -275,4 +296,70 @@ Database::getMatchHistory(const std::string &username, int limit) {
   }
   sqlite3_finalize(stmt);
   return result;
+}
+
+std::vector<Database::ReplayEntry> Database::getReplayData(int match_id) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::vector<ReplayEntry> result;
+
+  // Join replays with questions to get full question data
+  std::string sql = "SELECT r.match_id, r.question_order, q.text, "
+                    "q.opt_a, q.opt_b, q.opt_c, q.opt_d, q.correct_ans, "
+                    "r.username, r.answer, r.is_correct "
+                    "FROM replays r "
+                    "LEFT JOIN questions q ON r.question_id = q.id "
+                    "WHERE r.match_id = ? "
+                    "ORDER BY r.question_order, r.username;";
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    return result;
+
+  sqlite3_bind_int(stmt, 1, match_id);
+
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    ReplayEntry entry;
+    entry.match_id = sqlite3_column_int(stmt, 0);
+    entry.question_order = sqlite3_column_int(stmt, 1);
+
+    const char *text = (const char *)sqlite3_column_text(stmt, 2);
+    entry.question_text = text ? text : "";
+
+    const char *a = (const char *)sqlite3_column_text(stmt, 3);
+    const char *b = (const char *)sqlite3_column_text(stmt, 4);
+    const char *c = (const char *)sqlite3_column_text(stmt, 5);
+    const char *d = (const char *)sqlite3_column_text(stmt, 6);
+    const char *correct = (const char *)sqlite3_column_text(stmt, 7);
+    entry.opt_a = a ? a : "";
+    entry.opt_b = b ? b : "";
+    entry.opt_c = c ? c : "";
+    entry.opt_d = d ? d : "";
+    entry.correct_answer = correct ? correct : "";
+
+    const char *player = (const char *)sqlite3_column_text(stmt, 8);
+    const char *ans = (const char *)sqlite3_column_text(stmt, 9);
+    entry.player_name = player ? player : "";
+    entry.player_answer = ans ? ans : "";
+    entry.is_correct = sqlite3_column_int(stmt, 10) == 1;
+
+    result.push_back(entry);
+  }
+  sqlite3_finalize(stmt);
+  return result;
+}
+
+int Database::getReplayQuestionCount(int match_id) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::string sql =
+      "SELECT COUNT(DISTINCT question_order) FROM replays WHERE match_id = ?;";
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_int(stmt, 1, match_id);
+  int count = 0;
+  if (sqlite3_step(stmt) == SQLITE_ROW) {
+    count = sqlite3_column_int(stmt, 0);
+  }
+  sqlite3_finalize(stmt);
+  return count;
 }

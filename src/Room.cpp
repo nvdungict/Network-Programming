@@ -33,7 +33,12 @@ void Room::removePlayer(int player_sock) {
   if (!m_players.count(player_sock))
     return;
 
-  // 1. Xóa khỏi GameManager trước
+  // Nếu đang chơi mà thoát -> Báo đầu hàng (BEFORE removing player data)
+  if (m_state == "IN_GAME") {
+    m_game_manager.handleSurrender_UNLOCKED(player_sock, true);
+  }
+
+  // 1. Xóa khỏi GameManager
   m_game_manager.removePlayer_UNLOCKED(player_sock);
 
   // 2. Xóa khỏi Room
@@ -46,11 +51,6 @@ void Room::removePlayer(int player_sock) {
   }
   if (player_sock == m_host_socket) {
     m_host_socket = m_players.begin()->first; // Người tiếp theo làm chủ
-  }
-
-  // Nếu đang chơi mà thoát -> Báo đầu hàng
-  if (m_state == "IN_GAME") {
-    m_game_manager.handleSurrender_UNLOCKED(player_sock, true);
   }
 
   sendRoomUpdate_UNLOCKED();

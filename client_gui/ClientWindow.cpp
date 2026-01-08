@@ -678,9 +678,9 @@ ClientWindow::ClientWindow(const std::string &ip, int port)
       m_box_game_players(Gtk::ORIENTATION_VERTICAL),
       m_box_score_card(Gtk::ORIENTATION_VERTICAL) {
   set_title("Đấu Trường Tri Thức");
-  set_default_size(900, 600); // Trở lại size landscape cũ cho Login
+  set_default_size(900, 600); // Fixed landscape size for all pages
   set_position(Gtk::WIN_POS_CENTER);
-  maximize(); // Start full screen
+  // Don't maximize - keep consistent 900x600 size
 
   load_css();
 
@@ -1964,7 +1964,7 @@ void ClientWindow::on_network_signal() {
 
       std::cout << "[DEBUG-CLIENT] Switching to LOBBY..." << std::endl;
       m_stack.set_visible_child("lobby");
-      resize(400, 700);
+      resize(900, 600); // Keep consistent with all pages
       break;
     }
     case protocol::CMD_LOGIN_FAILURE:
@@ -2135,7 +2135,8 @@ void ClientWindow::on_network_signal() {
       break;
     }
     case protocol::CMD_GAME_OVER: {
-      auto p = (protocol::Payload_Message *)data;
+      auto p = (protocol::GameOverPacket *)data;
+      m_last_match_id = p->match_id;
       log_msg("GAME OVER: " + std::string(p->message));
 
       // Stop timer
@@ -2353,8 +2354,67 @@ void ClientWindow::on_network_signal() {
       match_item->pack_start(*result_icon, Gtk::PACK_SHRINK);
       match_item->pack_start(*info_box, Gtk::PACK_EXPAND_WIDGET);
 
+      // Add replay button
+      Gtk::Button *btn_replay = Gtk::manage(new Gtk::Button("🎬 Xem lại"));
+      btn_replay->get_style_context()->add_class("btn-secondary");
+      btn_replay->set_valign(Gtk::ALIGN_CENTER);
+      int match_id = p->match_id;
+      btn_replay->signal_clicked().connect(
+          [this, match_id]() { request_replay(match_id); });
+      match_item->pack_end(*btn_replay, Gtk::PACK_SHRINK);
+
       m_box_match_history.pack_start(*match_item, Gtk::PACK_SHRINK);
       m_box_match_history.show_all();
+      break;
+    }
+    case protocol::CMD_REPLAY_DATA: {
+      auto p = (protocol::Payload_ReplayEntry *)data;
+
+      // Store total questions count
+      m_replay_total_questions = p->total_questions;
+
+      // Check if this is an empty replay
+      if (p->question_order == 0 && p->is_last &&
+          strlen(p->question_text) == 0) {
+        // No replay data available
+        show_replay_dialog();
+        break;
+      }
+
+      // Find or create question entry
+      int q_order = p->question_order;
+      ReplayQuestionData *q_data = nullptr;
+
+      for (auto &q : m_replay_data) {
+        if (q.question_order == q_order) {
+          q_data = &q;
+          break;
+        }
+      }
+
+      if (!q_data) {
+        // Create new question entry
+        ReplayQuestionData new_q;
+        new_q.question_order = q_order;
+        new_q.question_text = p->question_text;
+        new_q.opt_a = p->opt_a;
+        new_q.opt_b = p->opt_b;
+        new_q.opt_c = p->opt_c;
+        new_q.opt_d = p->opt_d;
+        new_q.correct_answer = p->correct_answer;
+        m_replay_data.push_back(new_q);
+        q_data = &m_replay_data.back();
+      }
+
+      // Add player answer
+      q_data->player_answers.push_back(
+          {std::string(p->player_name),
+           {std::string(p->player_answer), p->is_correct == 1}});
+
+      // If this is the last entry, show the dialog
+      if (p->is_last) {
+        show_replay_dialog();
+      }
       break;
     }
     case protocol::CMD_ROOM_UPDATE: {
@@ -2606,6 +2666,17 @@ void ClientWindow::buildGameResultScreen() {
   Gtk::Box *buttons =
       Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
   buttons->set_halign(Gtk::ALIGN_CENTER);
+
+  // Replay Button
+  Gtk::Button *btn_replay = Gtk::manage(new Gtk::Button("🎬 Xem lại trận đấu"));
+  btn_replay->get_style_context()->add_class("btn-secondary");
+  btn_replay->set_sensitive(m_last_match_id > 0);
+  btn_replay->signal_clicked().connect([this]() {
+    if (m_last_match_id > 0) {
+      request_replay(m_last_match_id);
+    }
+  });
+  buttons->pack_start(*btn_replay, Gtk::PACK_SHRINK);
   buttons->set_margin_top(24);
 
   Gtk::Button *btn_play_again = Gtk::manage(new Gtk::Button("🔁 Chơi lại"));
@@ -2655,4 +2726,174 @@ void ClientWindow::buildGameResultScreen() {
   buttons->pack_start(*btn_play_again, Gtk::PACK_SHRINK);
   buttons->pack_start(*btn_home, Gtk::PACK_SHRINK);
   m_box_game_result.pack_end(*buttons, Gtk::PACK_SHRINK);
+}
+
+// ==========================================
+// Replay Viewer Functions
+// ==========================================
+
+void ClientWindow::request_replay(int match_id) {
+  // Clear previous replay data
+  m_replay_data.clear();
+  m_replay_current_question = 0;
+
+  // Send request to server
+  protocol::Payload_ReplayRequest req;
+  req.match_id = match_id;
+  m_client.sendData(protocol::CMD_GET_REPLAY, req);
+}
+
+void ClientWindow::show_replay_dialog() {
+  if (m_replay_data.empty()) {
+    // Show error message
+    Gtk::MessageDialog dialog(*this, "Không có dữ liệu replay", false,
+                              Gtk::MESSAGE_INFO);
+    dialog.run();
+    return;
+  }
+
+  // Create dialog
+  if (m_dialog_replay) {
+    delete m_dialog_replay;
+  }
+  m_dialog_replay = new Gtk::Dialog("🎬 Xem lại trận đấu", *this, true);
+  m_dialog_replay->set_default_size(700, 500);
+  m_dialog_replay->get_style_context()->add_class("glass-card");
+
+  auto content = m_dialog_replay->get_content_area();
+  content->set_spacing(16);
+  content->set_margin_top(20);
+  content->set_margin_bottom(20);
+  content->set_margin_start(20);
+  content->set_margin_end(20);
+
+  // Title
+  m_lbl_replay_title.set_markup(
+      "<span size='16000' weight='bold' color='#ffffff'>📝 Replay</span>");
+  content->pack_start(m_lbl_replay_title, Gtk::PACK_SHRINK);
+
+  // Question
+  m_lbl_replay_question.set_line_wrap(true);
+  m_lbl_replay_question.set_max_width_chars(60);
+  content->pack_start(m_lbl_replay_question, Gtk::PACK_SHRINK);
+
+  // Options box
+  Gtk::Box *options_box =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 8));
+  m_lbl_replay_opt_a.set_halign(Gtk::ALIGN_START);
+  m_lbl_replay_opt_b.set_halign(Gtk::ALIGN_START);
+  m_lbl_replay_opt_c.set_halign(Gtk::ALIGN_START);
+  m_lbl_replay_opt_d.set_halign(Gtk::ALIGN_START);
+  options_box->pack_start(m_lbl_replay_opt_a, Gtk::PACK_SHRINK);
+  options_box->pack_start(m_lbl_replay_opt_b, Gtk::PACK_SHRINK);
+  options_box->pack_start(m_lbl_replay_opt_c, Gtk::PACK_SHRINK);
+  options_box->pack_start(m_lbl_replay_opt_d, Gtk::PACK_SHRINK);
+  content->pack_start(*options_box, Gtk::PACK_SHRINK);
+
+  // Players answers section
+  Gtk::Label *players_title = Gtk::manage(new Gtk::Label());
+  players_title->set_markup(
+      "<span weight='bold' color='#94a3b8'>👥 Câu trả lời:</span>");
+  players_title->set_halign(Gtk::ALIGN_START);
+  players_title->set_margin_top(16);
+  content->pack_start(*players_title, Gtk::PACK_SHRINK);
+
+  m_box_replay_players.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_box_replay_players.set_spacing(4);
+  content->pack_start(m_box_replay_players, Gtk::PACK_SHRINK);
+
+  // Navigation
+  Gtk::Box *nav_box =
+      Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
+  nav_box->set_halign(Gtk::ALIGN_CENTER);
+  nav_box->set_margin_top(20);
+
+  m_btn_replay_prev.set_label("◀ Câu trước");
+  m_btn_replay_next.set_label("Câu sau ▶");
+  m_btn_replay_prev.signal_clicked().connect([this]() {
+    if (m_replay_current_question > 0) {
+      m_replay_current_question--;
+      update_replay_view();
+    }
+  });
+  m_btn_replay_next.signal_clicked().connect([this]() {
+    if (m_replay_current_question < (int)m_replay_data.size() - 1) {
+      m_replay_current_question++;
+      update_replay_view();
+    }
+  });
+
+  nav_box->pack_start(m_btn_replay_prev, Gtk::PACK_SHRINK);
+  nav_box->pack_start(m_lbl_replay_nav, Gtk::PACK_SHRINK);
+  nav_box->pack_start(m_btn_replay_next, Gtk::PACK_SHRINK);
+  content->pack_start(*nav_box, Gtk::PACK_SHRINK);
+
+  // Close button
+  m_dialog_replay->add_button("✕ Đóng", Gtk::RESPONSE_CLOSE);
+
+  // Show first question
+  m_replay_current_question = 0;
+  update_replay_view();
+
+  m_dialog_replay->show_all();
+  m_dialog_replay->run();
+  m_dialog_replay->hide();
+}
+
+void ClientWindow::update_replay_view() {
+  if (m_replay_current_question < 0 ||
+      m_replay_current_question >= (int)m_replay_data.size()) {
+    return;
+  }
+
+  auto &q = m_replay_data[m_replay_current_question];
+
+  // Update title
+  m_lbl_replay_title.set_markup(
+      "<span size='16000' weight='bold' color='#ffffff'>📝 Câu " +
+      std::to_string(q.question_order) + "/" +
+      std::to_string(m_replay_total_questions) + "</span>");
+
+  // Update question
+  m_lbl_replay_question.set_markup("<span size='12000' color='#ffffff'>" +
+                                   q.question_text + "</span>");
+
+  // Update options with highlighting for correct answer
+  std::string correct = q.correct_answer;
+  auto format_opt = [&correct](const std::string &opt,
+                               const std::string &text) {
+    if (opt == correct) {
+      return "<span color='#22c55e' weight='bold'>✓ " + opt + ". " + text +
+             "</span>";
+    }
+    return "<span color='#94a3b8'>" + opt + ". " + text + "</span>";
+  };
+
+  m_lbl_replay_opt_a.set_markup(format_opt("A", q.opt_a));
+  m_lbl_replay_opt_b.set_markup(format_opt("B", q.opt_b));
+  m_lbl_replay_opt_c.set_markup(format_opt("C", q.opt_c));
+  m_lbl_replay_opt_d.set_markup(format_opt("D", q.opt_d));
+
+  // Update players answers
+  for (auto child : m_box_replay_players.get_children()) {
+    m_box_replay_players.remove(*child);
+  }
+
+  for (auto &pa : q.player_answers) {
+    Gtk::Label *player_label = Gtk::manage(new Gtk::Label());
+    std::string icon = pa.second.second ? "✅" : "❌";
+    std::string color = pa.second.second ? "#22c55e" : "#ef4444";
+    player_label->set_markup("<span color='" + color + "'>" + icon + " " +
+                             pa.first + " → " + pa.second.first + "</span>");
+    player_label->set_halign(Gtk::ALIGN_START);
+    m_box_replay_players.pack_start(*player_label, Gtk::PACK_SHRINK);
+  }
+  m_box_replay_players.show_all();
+
+  // Update navigation
+  m_lbl_replay_nav.set_text(std::to_string(m_replay_current_question + 1) +
+                            "/" + std::to_string(m_replay_data.size()));
+  m_btn_replay_prev.set_sensitive(m_replay_current_question > 0);
+  m_btn_replay_next.set_sensitive(m_replay_current_question <
+                                  (int)m_replay_data.size() - 1);
 }
