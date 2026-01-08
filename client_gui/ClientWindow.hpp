@@ -98,12 +98,29 @@ private:
   Gtk::Box m_box_player_stats; // Wins/Losses/Rate
   Gtk::Label m_lbl_wins, m_lbl_losses, m_lbl_winrate;
   Gtk::Label m_lbl_wins_label, m_lbl_losses_label, m_lbl_winrate_label;
-  Gtk::Button m_btn_logout_icon; // Logout button (top right)
+  Gtk::Button m_btn_profile;      // Arrow button (navigate to profile)
+  Gtk::Button m_btn_logout_lobby; // Logout button in lobby
+
+  // Profile Page
+  Gtk::Box m_box_profile;
+  Gtk::Box m_box_profile_header;
+  Gtk::Label m_lbl_profile_avatar;
+  Gtk::Label m_lbl_profile_name;
+  Gtk::Label m_lbl_profile_elo;
+  Gtk::Box m_box_profile_stats;
+  Gtk::Label m_lbl_profile_wins, m_lbl_profile_losses, m_lbl_profile_winrate;
+  Gtk::Box m_box_match_history;
+  Gtk::ScrolledWindow m_scroll_history;
+  Gtk::Label m_lbl_history_title;
+  Gtk::Button m_btn_back_to_lobby;
 
   // Create Room Card
   Gtk::Box m_box_create_card;
   Gtk::Label m_lbl_create_title;
   Gtk::Entry m_entry_room_name;
+  Gtk::Box m_box_room_type;
+  Gtk::RadioButton m_radio_friendly;
+  Gtk::RadioButton m_radio_ranked;
   Gtk::Button m_btn_create;
 
   // Join Room Card
@@ -125,6 +142,10 @@ private:
   // Player ELO value storage
   int m_player_elo = 1000;
 
+  // Waiting room player tracking
+  std::map<std::string, int> m_waiting_players; // name -> elo
+  std::string m_room_host_username;
+
   // ==========================================
   // 3. Màn hình Invite (Giữ nguyên)
   // ==========================================
@@ -140,11 +161,13 @@ private:
   Gtk::Box m_box_game;
   Gtk::Box m_box_game_waiting; // 2-column waiting room layout
   Gtk::Box m_box_game_playing; // Game screen when playing
+  Gtk::Box m_box_game_result;  // Game result screen
 
   // Left panel - Room controls
   Gtk::Box m_box_waiting_left;
   Gtk::Label m_lbl_room_code_title;
   Gtk::Label m_lbl_room_code;
+  Gtk::Label m_lbl_room_type; // New: Friendly vs Ranked
   Gtk::Button m_btn_copy_code;
   Gtk::Button m_btn_start;
   Gtk::Label m_lbl_invite_title;
@@ -163,6 +186,14 @@ private:
   Gtk::Label m_lbl_setting_questions;
   Gtk::Label m_lbl_setting_time;
   Gtk::Label m_lbl_setting_difficulty;
+
+  // Bot selector widgets
+  Gtk::Box m_box_bot_selector;
+  Gtk::Label m_lbl_bot_count;
+  Gtk::SpinButton m_spin_bot_count;
+  Glib::RefPtr<Gtk::Adjustment> m_adj_bot_count;
+  Gtk::Button m_btn_add_bots;
+
   Gtk::Button m_btn_leave;
 
   // ==========================================
@@ -207,7 +238,7 @@ private:
   // NEW: UI for Text/Estimation Rounds
   Gtk::Entry m_entry_answer;
   Gtk::Button m_btn_submit_answer;
-  
+
   // NEW: Ranking Board
   Gtk::Label m_lbl_ranking;
   std::map<std::string, int> m_scoreboard;
@@ -230,8 +261,9 @@ private:
   void add_player_to_list(const std::string &name, const std::string &emoji,
                           bool is_owner, bool is_ready);
   void add_game_player(const std::string &name, int score,
-                       bool answered_correctly);
-  
+                       bool answered_correctly, int rank = 1);
+  void buildGameResultScreen();
+
   std::string m_my_username;
   bool m_is_host = false;
 };

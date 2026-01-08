@@ -68,8 +68,8 @@ int Database::checkLogin(const std::string &user, const std::string &pass,
                          int &out_elo, int &out_wins, int &out_matches) {
   std::lock_guard<std::mutex> lock(m_mutex);
   sqlite3_stmt *stmt;
-  std::string sql =
-      "SELECT password, status, elo, wins, matches_played FROM users WHERE username = ?;";
+  std::string sql = "SELECT password, status, elo, wins, matches_played FROM "
+                    "users WHERE username = ?;";
 
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return 1;
@@ -111,15 +111,17 @@ bool Database::createUser(const std::string &user, const std::string &pass) {
   return success;
 }
 
-bool Database::updateUserStats(const std::string &user, int elo_change, bool is_win) {
+bool Database::updateUserStats(const std::string &user, int elo_change,
+                               bool is_win) {
   std::lock_guard<std::mutex> lock(m_mutex);
-  std::string sql = "UPDATE users SET elo = elo + ?, matches_played = matches_played + 1, wins = wins + ? WHERE username = ?;";
+  std::string sql = "UPDATE users SET elo = elo + ?, matches_played = "
+                    "matches_played + 1, wins = wins + ? WHERE username = ?;";
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return false;
 
-  sqlite3_bind_int(stmt, 1, elo_change); // elo change
-  sqlite3_bind_int(stmt, 2, is_win ? 1 : 0); // win increment
+  sqlite3_bind_int(stmt, 1, elo_change);                       // elo change
+  sqlite3_bind_int(stmt, 2, is_win ? 1 : 0);                   // win increment
   sqlite3_bind_text(stmt, 3, user.c_str(), -1, SQLITE_STATIC); // username
 
   bool ok = (sqlite3_step(stmt) == SQLITE_DONE);
@@ -159,7 +161,8 @@ std::vector<Question> Database::getRandomQuestions(int round_id, int count) {
   std::vector<Question> result;
 
   // Lấy random câu hỏi theo round_id
-  std::string sql = "SELECT * FROM questions WHERE round_id = ? ORDER BY RANDOM() LIMIT ?;";
+  std::string sql =
+      "SELECT * FROM questions WHERE round_id = ? ORDER BY RANDOM() LIMIT ?;";
   sqlite3_stmt *stmt;
   if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
     return result;
@@ -171,18 +174,22 @@ std::vector<Question> Database::getRandomQuestions(int round_id, int count) {
     Question q;
     q.id = (const char *)sqlite3_column_text(stmt, 0);
     q.text = (const char *)sqlite3_column_text(stmt, 1);
-    
+
     // Check for nulls on options (Round 2/3 have null options)
-    const char* a = (const char *)sqlite3_column_text(stmt, 2);
-    const char* b = (const char *)sqlite3_column_text(stmt, 3);
-    const char* c = (const char *)sqlite3_column_text(stmt, 4);
-    const char* d = (const char *)sqlite3_column_text(stmt, 5);
-    
-    if (a) q.options["A"] = a;
-    if (b) q.options["B"] = b;
-    if (c) q.options["C"] = c;
-    if (d) q.options["D"] = d;
-    
+    const char *a = (const char *)sqlite3_column_text(stmt, 2);
+    const char *b = (const char *)sqlite3_column_text(stmt, 3);
+    const char *c = (const char *)sqlite3_column_text(stmt, 4);
+    const char *d = (const char *)sqlite3_column_text(stmt, 5);
+
+    if (a)
+      q.options["A"] = a;
+    if (b)
+      q.options["B"] = b;
+    if (c)
+      q.options["C"] = c;
+    if (d)
+      q.options["D"] = d;
+
     q.correct_answer = (const char *)sqlite3_column_text(stmt, 6);
     q.round_id = sqlite3_column_int(stmt, 7);
     result.push_back(q);
@@ -235,4 +242,37 @@ bool Database::saveReplayAction(int match_id, int question_order,
   bool ok = (sqlite3_step(stmt) == SQLITE_DONE);
   sqlite3_finalize(stmt);
   return ok;
+}
+
+std::vector<Database::MatchHistoryEntry>
+Database::getMatchHistory(const std::string &username, int limit) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  std::vector<MatchHistoryEntry> result;
+
+  // Query matches where user was winner OR participated
+  // For now, query all matches and filter by winner (simplified)
+  std::string sql =
+      "SELECT id, room_id, winner_username, total_players, duration_seconds, "
+      "datetime(created_at, 'localtime') as created_at "
+      "FROM match_results ORDER BY created_at DESC LIMIT ?;";
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, 0) != SQLITE_OK)
+    return result;
+
+  sqlite3_bind_int(stmt, 1, limit);
+
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    MatchHistoryEntry entry;
+    entry.match_id = sqlite3_column_int(stmt, 0);
+    entry.room_id = sqlite3_column_int(stmt, 1);
+    const char *winner = (const char *)sqlite3_column_text(stmt, 2);
+    entry.winner = winner ? winner : "";
+    entry.total_players = sqlite3_column_int(stmt, 3);
+    entry.duration_seconds = sqlite3_column_int(stmt, 4);
+    const char *created = (const char *)sqlite3_column_text(stmt, 5);
+    entry.created_at = created ? created : "";
+    result.push_back(entry);
+  }
+  sqlite3_finalize(stmt);
+  return result;
 }

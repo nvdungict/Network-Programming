@@ -20,8 +20,8 @@ public:
 
   // --- User Related ---
   // Trả về: 0=Login OK, 1=User not found, 2=Wrong Pass, 3=Blocked
-  int checkLogin(const std::string &user, const std::string &pass,
-                 int &out_elo, int &out_wins, int &out_matches);
+  int checkLogin(const std::string &user, const std::string &pass, int &out_elo,
+                 int &out_wins, int &out_matches);
 
   // Trả về: true=Thành công, false=Trùng user
   bool createUser(const std::string &user, const std::string &pass);
@@ -39,6 +39,18 @@ public:
   // --- Match Result Related ---
   int saveMatchResult(int room_id, const std::string &winner, int total_players,
                       int duration_sec);
+
+  // Match History struct for returning data
+  struct MatchHistoryEntry {
+    int match_id;
+    int room_id;
+    std::string winner;
+    int total_players;
+    int duration_seconds;
+    std::string created_at;
+  };
+  std::vector<MatchHistoryEntry> getMatchHistory(const std::string &username,
+                                                 int limit = 10);
 
   // --- Replay Related ---
   bool saveReplayAction(int match_id, int question_order,

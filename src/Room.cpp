@@ -5,9 +5,10 @@
 
 Room::Room(int id, const std::string &name, int host_socket,
            const std::string &host_username, Server *server,
-           const std::vector<Question> &q)
+           const std::vector<Question> &q, bool is_ranked)
     : m_room_id(id), m_room_name(name), m_host_socket(host_socket),
-      m_state("LOBBY"), m_server(server), m_game_manager(this, q) {
+      m_state("LOBBY"), m_is_ranked(is_ranked), m_server(server),
+      m_game_manager(this, q) {
   // Thêm host vào danh sách ngay khi tạo
   addPlayer(host_socket, host_username);
 }
@@ -89,7 +90,9 @@ void Room::handleSurrender(int client_sock) {
 void Room::broadcast_UNLOCKED(uint16_t type, const void *data, uint16_t len,
                               int exclude_socket) {
   for (auto const &[sock, username] : m_players) {
-    if (sock != exclude_socket) {
+    if (sock > 0 &&
+        sock !=
+            exclude_socket) { // Skip bots (negative IDs) and excluded socket
       m_server->sendPacket(sock, type, data, len);
     }
   }
@@ -111,8 +114,12 @@ void Room::sendRoomUpdate_UNLOCKED() {
   std::strncpy(header.host_username, getHostName_UNLOCKED().c_str(), 31);
   std::strncpy(header.state, m_state.c_str(), 15);
   header.player_count = m_players.size();
+  header.is_ranked = m_is_ranked ? 1 : 0;
+  header.host_elo = m_server->getDatabase().getElo(getHostName_UNLOCKED());
 
   for (auto const &[sock, name] : m_players) {
+    if (sock <= 0)
+      continue; // Skip bots (negative IDs)
     m_server->sendPacket(sock, protocol::CMD_ROOM_UPDATE, &header,
                          sizeof(header));
     // Gửi list player chi tiết với ELO từ database
@@ -120,7 +127,8 @@ void Room::sendRoomUpdate_UNLOCKED() {
       protocol::Payload_PlayerInfo pinfo;
       std::memset(&pinfo, 0, sizeof(pinfo));
       std::strncpy(pinfo.username, p_name.c_str(), 31);
-      pinfo.elo = m_server->getDatabase().getElo(p_name);
+      pinfo.elo = (p_sock > 0) ? m_server->getDatabase().getElo(p_name)
+                               : 0; // Bots have 0 ELO
       m_server->sendPacket(sock, protocol::CMD_PLAYER_INFO, &pinfo,
                            sizeof(pinfo));
     }
@@ -168,23 +176,69 @@ void Room::updatePlayersElo(
   (void)winner; // Suppress unused parameter warning
   for (const auto &[username, rank] : rankings) {
     int elo_change = 0;
-    switch (rank) {
-    case 1:
-      elo_change = 25;
-      break;
-    case 2:
-      elo_change = 10;
-      break;
-    case 3:
-      elo_change = 0;
-      break;
-    case 4:
-      elo_change = -10;
-      break;
-    default:
-      elo_change = -20;
-      break; // rank 5+
+
+    // ELO chỉ thay đổi cho ranked games
+    if (m_is_ranked) {
+      switch (rank) {
+      case 1:
+        elo_change = 25;
+        break;
+      case 2:
+        elo_change = 10;
+        break;
+      case 3:
+        elo_change = 0;
+        break;
+      case 4:
+        elo_change = -10;
+        break;
+      default:
+        elo_change = -20;
+        break; // rank 5+
+      }
     }
-    m_server->getUserManager().updateUserStats(username, elo_change, username == winner);
+    // Luôn cập nhật wins/matches_played cho tất cả game types
+    m_server->getUserManager().updateUserStats(username, elo_change,
+                                               username == winner);
   }
 }
+
+// === BOT SUPPORT ===
+void Room::addBot(int count) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  for (int i = 0; i < count; ++i) {
+    int bot_id = m_next_bot_id--; // Use negative IDs for bots
+    std::string bot_name =
+        "Bot " + std::to_string(-bot_id); // Bot 1, Bot 2, etc.
+
+    m_bots.insert(bot_id);
+    m_players[bot_id] = bot_name;
+    m_game_manager.addPlayer_UNLOCKED(bot_id, bot_name);
+
+    std::cout << "[BOT] Added " << bot_name << " (ID: " << bot_id
+              << ") to room " << m_room_id << std::endl;
+  }
+
+  sendRoomUpdate_UNLOCKED();
+
+  // Send CMD_PLAYER_INFO for all bots to all players
+  for (int bot_id : m_bots) {
+    std::string bot_name = m_players[bot_id];
+    protocol::Payload_PlayerInfo pkt;
+    std::memset(&pkt, 0, sizeof(pkt));
+    std::strncpy(pkt.username, bot_name.c_str(), 31);
+    pkt.score = 0;
+    pkt.elo = 1000; // Default bot ELO
+
+    // Broadcast to all real players
+    for (const auto &[sock, name] : m_players) {
+      if (sock > 0) { // Real players have positive socket IDs
+        m_server->sendPacket(sock, protocol::CMD_PLAYER_INFO, &pkt,
+                             sizeof(pkt));
+      }
+    }
+  }
+}
+
+bool Room::isBot(int sock) const { return m_bots.count(sock) > 0; }

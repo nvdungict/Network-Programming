@@ -1,0 +1,7 @@
+[2026-01-08 08:57:56] [INFO] === Server Started ===
+[2026-01-08 08:57:56] [INFO] Server starting on port 5500
+[2026-01-08 08:57:56] [INFO] Database opened successfully
+[2026-01-08 08:57:58] [INFO] Client connected: socket 7
+[2026-01-08 08:58:01] [INFO] [AUTH] User 'dung' logged in. ELO: 1260
+[2026-01-08 08:58:05] [INFO] [ROOM] 'dung' created room '' (ID: 100)
+[2026-01-08 08:58:08] [INFO] [ROOM] Room 100 closed (empty)

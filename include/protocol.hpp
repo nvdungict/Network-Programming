@@ -43,7 +43,16 @@ enum CommandType : uint16_t {
   CMD_GLOBAL_STATS = 66,
   CMD_PLAYER_STATS = 67,
   CMD_KICK_PLAYER = 12, // Client -> Server (Host only)
-  CMD_KICK_SUCCESS = 68
+  CMD_ADD_BOT = 13,     // Client -> Server (Host only, add bot players)
+  CMD_GET_HISTORY = 14, // Client -> Server (Request match history)
+  CMD_KICK_SUCCESS = 68,
+  CMD_MATCH_HISTORY = 69 // Server -> Client (Match history entry)
+};
+
+// === Room Types ===
+enum RoomType : uint8_t {
+  ROOM_FRIENDLY = 0, // No ELO changes
+  ROOM_RANKED = 1    // ELO changes, requires similar ELO to join
 };
 
 // ... (Existing Headers)
@@ -100,6 +109,7 @@ using LoginResultPacket = Payload_LoginSuccess;
 struct Payload_RoomReq {
   int room_id;
   char room_name[64];
+  uint8_t is_ranked; // 0 = friendly, 1 = ranked
 };
 using RoomReqPacket = Payload_RoomReq;
 
@@ -110,6 +120,8 @@ struct Payload_RoomInfo {
   char host_username[32];
   char state[16];
   int player_count;
+  uint8_t is_ranked; // 0 = friendly, 1 = ranked
+  int host_elo;      // Host's ELO (for ranked room join check)
 };
 using RoomUpdateHeader = Payload_RoomInfo; // Alias cho Server dùng
 
@@ -138,11 +150,7 @@ struct Payload_Question {
 };
 using QuestionPacket = Payload_Question;
 
-enum QuestionType : uint8_t {
-  QT_MCQ = 0,
-  QT_TEXT = 1,
-  QT_ESTIMATION = 2
-};
+enum QuestionType : uint8_t { QT_MCQ = 0, QT_TEXT = 1, QT_ESTIMATION = 2 };
 
 // 8. Answer
 struct Payload_Answer {
@@ -167,6 +175,18 @@ struct Payload_Message {
 using MessagePacket = Payload_Message;
 
 using GameOverPacket = Payload_Message;
+
+// 13. Match History Entry
+struct Payload_MatchHistory {
+  int match_id;
+  int room_id;
+  char winner[32];
+  int total_players;
+  int duration_seconds;
+  char created_at[32]; // Formatted date string
+  int is_last;         // 1 if this is the last entry, 0 otherwise
+};
+using MatchHistoryPacket = Payload_MatchHistory;
 
 // === Functions ===
 bool sendPacket(int sock, uint16_t type, const void *data, uint16_t len);

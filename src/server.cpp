@@ -81,7 +81,8 @@ void Server::handleClient(int client_socket) {
         break;
     }
 
-    std::cout << "[DEBUG] Recv Packet Type: " << type << " Len: " << len << " from Sock: " << client_socket << std::endl;
+    std::cout << "[DEBUG] Recv Packet Type: " << type << " Len: " << len
+              << " from Sock: " << client_socket << std::endl;
 
     switch (type) {
     case protocol::CMD_LOGIN: {
@@ -145,6 +146,50 @@ void Server::handleClient(int client_socket) {
       if (is_logged_in)
         handleKickPlayer(client_socket, (protocol::KickPacket *)buffer.data());
       break;
+    case protocol::CMD_ADD_BOT: {
+      if (is_logged_in) {
+        int count = 1;
+        if (len >= sizeof(int)) {
+          count = *(int *)buffer.data();
+          if (count < 1)
+            count = 1;
+          if (count > 5)
+            count = 5;
+        }
+        m_room_manager.handleAddBot(client_socket, count);
+      }
+      break;
+    }
+    case protocol::CMD_GET_HISTORY: {
+      if (is_logged_in) {
+        std::string username = getUserForSocket(client_socket);
+        auto history = m_db.getMatchHistory(username, 10);
+
+        for (size_t i = 0; i < history.size(); ++i) {
+          protocol::Payload_MatchHistory pkt;
+          std::memset(&pkt, 0, sizeof(pkt));
+          pkt.match_id = history[i].match_id;
+          pkt.room_id = history[i].room_id;
+          std::strncpy(pkt.winner, history[i].winner.c_str(), 31);
+          pkt.total_players = history[i].total_players;
+          pkt.duration_seconds = history[i].duration_seconds;
+          std::strncpy(pkt.created_at, history[i].created_at.c_str(), 31);
+          pkt.is_last = (i == history.size() - 1) ? 1 : 0;
+          sendPacket(client_socket, protocol::CMD_MATCH_HISTORY, &pkt,
+                     sizeof(pkt));
+        }
+
+        // If no history, send empty packet with is_last = 1
+        if (history.empty()) {
+          protocol::Payload_MatchHistory pkt;
+          std::memset(&pkt, 0, sizeof(pkt));
+          pkt.is_last = 1;
+          sendPacket(client_socket, protocol::CMD_MATCH_HISTORY, &pkt,
+                     sizeof(pkt));
+        }
+      }
+      break;
+    }
     }
   }
 
@@ -192,25 +237,26 @@ void Server::registerSession(int client_sock, const std::string &username) {
 void Server::broadcastGlobalStats() {
   protocol::Payload_GlobalStats stats;
   {
-      std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
-      stats.online_users = m_socket_to_user.size();
+    std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
+    stats.online_users = m_socket_to_user.size();
   }
   // This is a bit hacky, normally RoomManager should expose room count safely
-  // Assuming RoomManager has thread-safe getRoomCount or similar, or just 0 for now if not exposed
-  // But wait, RoomManager is right there.
+  // Assuming RoomManager has thread-safe getRoomCount or similar, or just 0 for
+  // now if not exposed But wait, RoomManager is right there.
   // m_room_manager.getRoomCount() needs to be implemented or accessed.
   // For now let's just count online users first.
   stats.active_rooms = 0; // Placeholder until RoomManager exposure
 
   // Broadcast to all connected clients
   std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
-  for (auto const& [sock, user] : m_socket_to_user) {
-      sendPacket(sock, protocol::CMD_GLOBAL_STATS, &stats, sizeof(stats));
+  for (auto const &[sock, user] : m_socket_to_user) {
+    sendPacket(sock, protocol::CMD_GLOBAL_STATS, &stats, sizeof(stats));
   }
 }
 
-void Server::handleKickPlayer(int client_sock, const protocol::KickPacket *pkt) {
-    m_room_manager.handleKickPlayer(client_sock, pkt);
+void Server::handleKickPlayer(int client_sock,
+                              const protocol::KickPacket *pkt) {
+  m_room_manager.handleKickPlayer(client_sock, pkt);
 }
 
 void Server::removeSession(int client_sock) {
