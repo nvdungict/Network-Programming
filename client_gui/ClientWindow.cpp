@@ -7,534 +7,540 @@
 // --- CSS STYLE (Đã chỉnh sửa: Glassmorphism & Sáng hơn) ---
 // --- CSS STYLE (Đã sửa lỗi selection-background-color) ---
 const std::string CSS_DATA = R"(
-    /* Ô nhập liệu */
-    entry {
-        background-color: rgba(255, 255, 255, 0.15);
-        color: #ffffff;
-        caret-color: #00f3ff;
-        border: 1px solid rgba(0, 243, 255, 0.5);
-        border-radius: 12px;
-        padding: 12px 16px;
-        min-height: 55px;
-        font-family: 'Verdana';
-        font-size: 18px;
-    }
-    
-    /* SỬA LỖI: Định nghĩa màu bôi đen text (Selection) tách riêng ra */
-    entry selection {
-        background-color: #00f3ff;
-        color: #000000;
-    }
+* {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    outline: none;
+}
 
-    entry:focus {
-        background-color: rgba(255, 255, 255, 0.25);
-        border: 2px solid #00f3ff;
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
-    }
+/* === BRANDING === */
+.brand-bubble {
+    background-color: rgba(124, 58, 237, 0.2);
+    color: #fbbf24;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-weight: bold;
+    font-size: 10px;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
 
-    /* Nút chính */
-    button.btn-gold {
-        background-image: linear-gradient(to right, #FFD700, #FFA500);
-        color: #0b0f19;
-        font-weight: 900;
-        font-size: 20px;
-        border-radius: 30px;
-        padding: 10px 20px;
-        border: 1px solid #ffffff;
-        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-    }
-    button.btn-gold:hover {
-        background-image: linear-gradient(to right, #ffe066, #ffb732);
-    }
-    button.btn-gold:active {
-        background-image: linear-gradient(to right, #b8860b, #daa520);
-    }
+.brand-title {
+    color: #ffffff;
+    font-size: 56px;
+    font-weight: 300;
+}
 
-    /* Link text */
-    button.btn-link {
-        background: transparent;
-        color: #00f3ff;
-        border: none;
-        box-shadow: none;
-        text-decoration: underline;
-        font-weight: bold;
-    }
-    
-    /* Social Buttons */
-    button.btn-social {
-        background-color: rgba(255,255,255,0.15);
-        border-radius: 50%;
-        min-width: 45px;
-        min-height: 45px;
-        padding: 0px;
-        border: 1px solid rgba(255,255,255,0.3);
-    }
-    button.btn-social:hover {
-        background-color: rgba(255,255,255,0.3);
-        border: 1px solid #00f3ff;
-    }
+.brand-title-bold {
+    color: #fbbf24; /* Vibrant Gold/Yellow */
+    font-size: 56px;
+    font-weight: 800;
+}
 
-    /* === POST-LOGIN BUTTONS === */
-    button.btn-create {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: #ffffff;
-        font-weight: 700;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-    button.btn-create:hover {
-        background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.6);
-    }
+.brand-slogan {
+    color: #cbd5e1;
+    font-size: 16px;
+}
 
-    button.btn-join {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-        color: #ffffff;
-        font-weight: 700;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-    }
-    button.btn-join:hover {
-        background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
-        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
-    }
+/* === FEATURES === */
+.feature-box {
+    background: rgba(124, 58, 237, 0.3);
+    color: #a78bfa;
+    border-radius: 12px;
+    padding: 10px;
+}
 
-    button.btn-start {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: #1e293b;
-        font-weight: 800;
-        font-size: 18px;
-        padding: 12px 24px;
-        box-shadow: 0 4px 14px rgba(251, 191, 36, 0.5);
-    }
-    button.btn-start:hover {
-        background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
-        box-shadow: 0 6px 20px rgba(251, 191, 36, 0.7);
-    }
+.feature-title {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 15px;
+}
 
-    button.btn-leave {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: #ffffff;
-        font-weight: 700;
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    }
-    button.btn-leave:hover {
-        background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.6);
-    }
+.feature-desc {
+    color: #94a3b8;
+    font-size: 12px;
+}
 
-    /* Answer Buttons - High Contrast */
-    button.answer-btn {
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        color: #ffffff;
-        border: 2px solid #38bdf8;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: 700;
-        min-height: 65px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-    button.answer-btn:hover {
-        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
-        color: #0f172a;
-        border: 2px solid #38bdf8;
-        box-shadow: 0 6px 15px rgba(56, 189, 248, 0.5);
-    }
+/* === STATS === */
+.stat-card-glass {
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 24px;
+}
 
-    /* Text View for Game Log */
-    textview {
-        background-color: rgba(15, 23, 42, 0.8);
-        color: #e2e8f0;
-        font-family: 'Monospace';
-        font-size: 16px;
-        border-radius: 8px;
-        border: 1px solid rgba(56, 189, 248, 0.3);
-    }
-    textview text {
-        background-color: transparent;
-        color: #e2e8f0;
-    }
+.stat-value {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 800;
+}
 
-    /* === LOBBY REDESIGN STYLES === */
-    
-    /* Glassmorphism Card */
-    .card-glass {
-        background-color: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 20px;
-        padding: 20px;
-    }
-    
-    /* Orange Badge */
-    .badge-arena {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: #ffffff;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-weight: 700;
-        font-size: 12px;
-    }
-    
-    /* Title Styles */
-    .title-main {
-        color: #ffffff;
-        font-size: 48px;
-        font-weight: 800;
-    }
-    .title-accent {
-        color: #22d3ee;
-        font-size: 48px;
-        font-weight: 800;
-    }
-    .slogan {
-        color: rgba(148, 163, 184, 0.8);
-        font-size: 16px;
-    }
-    
-    /* Stat Box */
-    .stat-box {
-        background-color: rgba(30, 41, 59, 0.7);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 12px;
-        padding: 15px 20px;
-    }
-    .stat-count {
-        color: #ffffff;
-        font-size: 28px;
-        font-weight: 700;
-    }
-    .stat-label {
-        color: rgba(148, 163, 184, 0.7);
-        font-size: 12px;
-    }
-    
-    /* Player Card */
-    .player-card {
-        background-color: rgba(30, 41, 59, 0.9);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 20px;
-        padding: 20px;
-    }
-    .player-name {
-        color: #ffffff;
-        font-size: 18px;
-        font-weight: 700;
-    }
-    .player-status {
-        color: rgba(148, 163, 184, 0.7);
-        font-size: 13px;
-    }
-    .player-avatar {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        border-radius: 12px;
-        padding: 10px;
-        font-size: 24px;
-    }
-    
-    /* ELO Card */
-    .elo-card {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        border-radius: 12px;
-        padding: 12px 20px;
-    }
-    .elo-value {
-        color: #ffffff;
-        font-size: 32px;
-        font-weight: 800;
-    }
-    .elo-change {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 14px;
-    }
-    .elo-label {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 11px;
-    }
-    
-    /* Stats Row */
-    .stats-value {
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: 700;
-    }
-    .stats-label {
-        color: rgba(148, 163, 184, 0.6);
-        font-size: 11px;
-    }
-    
-    /* Room Cards */
-    .room-card {
-        background-color: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        border-radius: 16px;
-        padding: 18px;
-    }
-    .room-title {
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 600;
-    }
-    
-    /* Timer Label */
-    .timer-label {
-        background-color: #ef4444;
-        color: #ffffff;
-        font-weight: 800;
-        font-size: 16px;
-        padding: 8px 16px;
-        border-radius: 10px;
-    }
+.stat-label {
+    color: #94a3b8;
+    font-size: 12px;
+}
 
-    /* Orange Button */
-    button.btn-orange {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: #ffffff;
-        font-weight: 700;
-        font-size: 14px;
-        border-radius: 10px;
-        border: none;
-        min-height: 45px;
-    }
-    button.btn-orange:hover {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    }
-    
-    /* Ghost Button */
-    button.btn-ghost {
-        background-color: rgba(148, 163, 184, 0.1);
-        border: 1px solid rgba(148, 163, 184, 0.3);
-        color: #94a3b8;
-        border-radius: 10px;
-        min-height: 45px;
-    }
-    button.btn-ghost:hover {
-        background-color: rgba(148, 163, 184, 0.2);
-        color: #ffffff;
-    }
-    
-    /* Footer */
-    .footer-text {
-        color: rgba(148, 163, 184, 0.5);
-        font-size: 11px;
-    }
-    .status-dot {
-        color: #22c55e;
-        font-size: 10px;
-    }
-    
-    /* === WAITING ROOM STYLES === */
-    
-    /* Room Code Card */
-    .room-code-card {
-        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-        border-radius: 16px;
-        padding: 20px;
-    }
-    .room-code-text {
-        color: #ffffff;
-        font-size: 28px;
-        font-weight: 800;
-        letter-spacing: 2px;
-    }
-    
-    /* Start Game Button */
-    button.btn-start-game {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: #ffffff;
-        font-weight: 700;
-        font-size: 16px;
-        border-radius: 12px;
-        min-height: 50px;
-        border: none;
-    }
-    button.btn-start-game:hover {
-        background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-    }
-    
-    /* Player List Item */
-    .player-item {
-        background-color: rgba(241, 245, 249, 1);
-        border-radius: 12px;
-        padding: 12px 16px;
-        margin-bottom: 8px;
-    }
-    .player-avatar-emoji {
-        font-size: 28px;
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        border-radius: 50%;
-        padding: 8px;
-    }
-    
-    /* Status Badges */
-    .badge-owner {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: #ffffff;
-        font-size: 10px;
-        font-weight: 700;
-        border-radius: 6px;
-        padding: 4px 10px;
-    }
-    .badge-ready {
-        background-color: #d1fae5;
-        color: #10b981;
-        font-size: 11px;
-        font-weight: 600;
-        border-radius: 6px;
-        padding: 4px 10px;
-    }
-    
-    /* Invite Card */
-    .invite-card {
-        background-color: rgba(248, 250, 252, 1);
-        border: 2px dashed rgba(148, 163, 184, 0.3);
-        border-radius: 12px;
-        padding: 16px;
-    }
-    
-    /* Send Invite Button */
-    button.btn-send-invite {
-        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-        color: #ffffff;
-        font-weight: 600;
-        border-radius: 10px;
-        min-height: 40px;
-        border: none;
-    }
-    
-    /* Settings Display */
-    .setting-item {
-        background-color: rgba(241, 245, 249, 1);
-        border-radius: 10px;
-        padding: 10px 14px;
-    }
-    
-    /* === GAME PLAYING SCREEN STYLES === */
-    
-    /* Game Header */
-    .game-header {
-        background-color: #ffffff;
-        border-bottom: 1px solid rgba(226, 232, 240, 1);
-        padding: 16px 24px;
-    }
-    .game-room-label {
-        color: #7c3aed;
-        font-weight: 600;
-        font-size: 12px;
-    }
-    .question-counter {
-        background-color: rgba(243, 232, 255, 1);
-        color: #7c3aed;
-        font-weight: 700;
-        font-size: 13px;
-        padding: 6px 14px;
-        border-radius: 8px;
-    }
-    
-    /* Question Card */
-    .question-card {
-        background-color: #ffffff;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-    .question-badge {
-        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-        color: #ffffff;
-        font-weight: 800;
-        font-size: 14px;
-        padding: 8px 14px;
-        border-radius: 10px;
-    }
-    .question-text {
-        color: #1e293b;
-        font-weight: 600;
-        font-size: 15px;
-    }
-    
-    /* Answer Buttons */
-    button.answer-option {
-        background-color: #ffffff;
-        border: 2px solid rgba(139, 92, 246, 0.3);
-        color: #1e293b;
-        font-weight: 600;
-        font-size: 14px;
-        border-radius: 12px;
-        min-height: 60px;
-        padding: 12px 20px;
-    }
-    button.answer-option:hover {
-        background-color: rgba(243, 232, 255, 0.5);
-        border-color: #8b5cf6;
-    }
-    
-    /* Player Score Item */
-    .player-score-item {
-        background-color: #ffffff;
-        border-radius: 10px;
-        padding: 10px 14px;
-        margin-bottom: 6px;
-    }
-    .player-score-name {
-        color: #475569;
-        font-weight: 600;
-        font-size: 11px;
-    }
-    .player-score-value {
-        color: #1e293b;
-        font-weight: 700;
-        font-size: 12px;
-    }
-    .status-correct {
-        color: #10b981;
-        font-size: 14px;
-    }
-    .status-wrong {
-        color: #ef4444;
-        font-size: 14px;
-    }
-    
-    /* Entry on light background */
-    .entry-light {
-        background-color: #ffffff;
-        color: #1e293b;
-        border: 2px solid rgba(99, 102, 241, 0.3);
-        caret-color: #6366f1;
-    }
-    .entry-light:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
-    }
-    /* Score Card */
-    .score-gradient-card {
-        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-        border-radius: 16px;
-        padding: 20px;
-    }
-    .score-card-label {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 10px;
-        font-weight: 500;
-    }
-    .score-card-value {
-        color: #ffffff;
-        font-size: 36px;
-        font-weight: 800;
-    }
-    .score-card-subtext {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 12px;
-        font-weight: 600;
-    }
-    
-    /* Progress Bar */
-    progressbar {
-        background-color: rgba(226, 232, 240, 0.5);
-        border-radius: 10px;
-        min-height: 8px;
-    }
-    progressbar progress {
-        background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
-        border-radius: 10px;
-    }
- )";
+/* === LOGIN CARD === */
+.login-card-glass {
+    background: rgba(30, 10, 80, 0.75); 
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card-subtitle {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* === INPUTS === */
+.input-label {
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+entry {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    padding: 12px;
+    caret-color: #fbbf24;
+}
+
+entry:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+}
+
+/* === BUTTONS === */
+.btn-login-action {
+    background: linear-gradient(to right, #fbbf24, #f59e0b);
+    color: white;
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    padding: 14px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.btn-login-action:hover {
+    background: linear-gradient(to right, #fcd34d, #fbbf24);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+}
+
+.btn-social-glass {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.btn-link-text {
+    color: #38bdf8;
+    font-size: 13px;
+    background: none;
+    border: none;
+}
+
+.btn-register-link {
+    color: #38bdf8;
+    font-weight: bold;
+    font-size: 13px;
+    background: none;
+    border: none;
+}
+
+/* === GAME / LOBBY STYLES === */
+
+/* Orange Badge */
+.badge-arena {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+/* Title Styles */
+.title-main {
+    color: #ffffff;
+    font-size: 48px;
+    font-weight: 800;
+}
+.title-accent {
+    color: #22d3ee;
+    font-size: 48px;
+    font-weight: 800;
+}
+.slogan {
+    color: rgba(148, 163, 184, 0.8);
+    font-size: 16px;
+}
+
+/* Stat Box */
+.stat-box {
+    background-color: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 15px 20px;
+}
+.stat-count {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+}
+/* .stat-label is already defined above, using the one from STATS section */
+
+/* Player Card */
+.player-card {
+    background-color: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+}
+.player-name {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+.player-status {
+    color: rgba(148, 163, 184, 0.7);
+    font-size: 13px;
+}
+.player-avatar {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 24px;
+}
+
+/* ELO Card */
+.elo-card {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border-radius: 12px;
+    padding: 12px 20px;
+}
+.elo-value {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 800;
+}
+.elo-change {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+.elo-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+}
+
+/* Stats Row */
+.stats-value {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+}
+.stats-label {
+    color: rgba(148, 163, 184, 0.6);
+    font-size: 11px;
+}
+
+/* Room Cards */
+.room-card {
+    background-color: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 16px;
+    padding: 18px;
+}
+.room-title {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Timer Label */
+.timer-label {
+    background-color: #ef4444;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 10px;
+}
+
+/* Orange Button */
+button.btn-orange {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 10px;
+    border: none;
+    min-height: 45px;
+}
+button.btn-orange:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+/* Ghost Button */
+button.btn-ghost {
+    background-color: rgba(148, 163, 184, 0.1);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: #94a3b8;
+    border-radius: 10px;
+    min-height: 45px;
+}
+button.btn-ghost:hover {
+    background-color: rgba(148, 163, 184, 0.2);
+    color: #ffffff;
+}
+
+/* Footer */
+.footer-text {
+    color: rgba(148, 163, 184, 0.5);
+    font-size: 11px;
+}
+.status-dot {
+    color: #22c55e;
+    font-size: 10px;
+}
+
+/* === WAITING ROOM STYLES === */
+
+/* Room Code Card */
+.room-code-card {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    border-radius: 16px;
+    padding: 20px;
+}
+.room-code-text {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+/* Start Game Button */
+button.btn-start-game {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 12px;
+    min-height: 50px;
+    border: none;
+}
+button.btn-start-game:hover {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+}
+
+/* Player List Item */
+.player-item {
+    background-color: rgba(241, 245, 249, 1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+.player-avatar-emoji {
+    font-size: 28px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 50%;
+    padding: 8px;
+}
+
+/* Status Badges */
+.badge-owner {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 4px 10px;
+}
+.badge-ready {
+    background-color: #d1fae5;
+    color: #10b981;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 10px;
+}
+
+/* Invite Card */
+.invite-card {
+    background-color: rgba(248, 250, 252, 1);
+    border: 2px dashed rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+/* Send Invite Button */
+button.btn-send-invite {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 10px;
+    min-height: 40px;
+    border: none;
+}
+
+/* Settings Display */
+.setting-item {
+    background-color: rgba(241, 245, 249, 1);
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+/* === GAME PLAYING SCREEN STYLES === */
+
+/* Game Header */
+.game-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(226, 232, 240, 1);
+    padding: 16px 24px;
+}
+.game-room-label {
+    color: #7c3aed;
+    font-weight: 600;
+    font-size: 12px;
+}
+.question-counter {
+    background-color: rgba(243, 232, 255, 1);
+    color: #7c3aed;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 8px;
+}
+
+/* Question Card */
+.question-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.question-badge {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 10px;
+}
+.question-text {
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* Answer Buttons */
+button.answer-option {
+    background-color: #ffffff;
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 12px;
+    min-height: 60px;
+    padding: 12px 20px;
+}
+button.answer-option:hover {
+    background-color: rgba(243, 232, 255, 0.5);
+    border-color: #8b5cf6;
+}
+
+/* Player Score Item */
+.player-score-item {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+}
+.player-score-name {
+    color: #475569;
+    font-weight: 600;
+    font-size: 11px;
+}
+.player-score-value {
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 12px;
+}
+.status-correct {
+    color: #10b981;
+    font-size: 14px;
+}
+.status-wrong {
+    color: #ef4444;
+    font-size: 14px;
+}
+
+/* Entry on light background */
+.entry-light {
+    background-color: #ffffff;
+    color: #1e293b;
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    caret-color: #6366f1;
+}
+.entry-light:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+/* Score Card */
+.score-gradient-card {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border-radius: 16px;
+    padding: 20px;
+}
+.score-card-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 10px;
+    font-weight: 500;
+}
+.score-card-value {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 800;
+}
+.score-card-subtext {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Progress Bar */
+progressbar {
+    background-color: rgba(226, 232, 240, 0.2);
+    border-radius: 10px;
+    min-height: 8px;
+}
+progressbar progress {
+    background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
+    border-radius: 10px;
+}
+
+/* LEAVE LEGACY STYLES BELOW IF NEEDED */
+.btn-gold {
+  background: linear-gradient(to bottom, #f59e0b, #d97706);
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.btn-social {
+  border-radius: 50%;
+  padding: 10px;
+  background: white;
+}
+)";
 
 // === [QUAN TRỌNG] IMPLEMENT HÀM VẼ STATUS CIRCLE ===
 // Thiếu hàm này sẽ gây lỗi "vtable for StatusCircle"
@@ -574,83 +580,46 @@ bool ClientWindow::on_draw_login_bg(const Cairo::RefPtr<Cairo::Context> &cr) {
   const int w = allocation.get_width();
   const int h = allocation.get_height();
 
-  // 1. Nền Gradient
-  Cairo::RefPtr<Cairo::LinearGradient> bg_pat =
-      Cairo::LinearGradient::create(0, 0, 0, h);
-  bg_pat->add_color_stop_rgb(0.0, 0.05, 0.08, 0.2);
-  bg_pat->add_color_stop_rgb(1.0, 0.1, 0.05, 0.2);
+  // 1. Nền Gradient Tím Đậm hướng về Tím Sáng (Vibrant Theme)
+  Cairo::RefPtr<Cairo::RadialGradient> bg_pat =
+      Cairo::RadialGradient::create(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, w);
+  
+  // Tím sáng ở giữa/tâm lan dần ra tím tối
+  bg_pat->add_color_stop_rgb(0.0, 0.35, 0.15, 0.65);  // #5b21b6 (approx)
+  bg_pat->add_color_stop_rgb(0.6, 0.15, 0.05, 0.35);  // #2e1065 (approx)
+  bg_pat->add_color_stop_rgb(1.0, 0.08, 0.02, 0.2);   // #1e1b4b (very dark)
   cr->set_source(bg_pat);
   cr->paint();
 
-  // 2. Họa tiết
-  cr->set_source_rgba(0.0, 0.95, 1.0, 0.05);
-  cr->set_line_width(1.0);
-  cr->arc(w * 0.2, h * 0.2, 50, 0, 2 * M_PI);
-  cr->stroke();
-  cr->arc(w * 0.8, h * 0.8, 80, 0, 2 * M_PI);
-  cr->stroke();
-
-  // 3. Logo
-  double cx = w / 2.0;
-  double cy = h * 0.18;
-
-  cr->save();
-  cr->set_line_width(3.0);
-  cr->set_source_rgb(1.0, 0.84, 0.0); // Gold
-  cr->move_to(cx - 40, cy - 40);
-  cr->line_to(cx + 40, cy - 40);
-  cr->line_to(cx + 40, cy);
-  cr->curve_to(cx + 40, cy + 50, cx, cy + 60, cx, cy + 70);
-  cr->curve_to(cx, cy + 60, cx - 40, cy + 50, cx - 40, cy);
-  cr->close_path();
-  cr->stroke();
-
-  cr->set_source_rgb(1.0, 1.0, 1.0); // White
-  cr->move_to(cx - 20, cy + 10);
-  cr->line_to(cx, cy + 20);
-  cr->line_to(cx + 20, cy + 10);
-  cr->stroke();
-  cr->restore();
-
-  // 4. Text Title
-  Pango::FontDescription font;
-  font.set_family("Sans");
-  font.set_weight(Pango::WEIGHT_BOLD);
-  font.set_size(22 * Pango::SCALE);
-
-  auto layout = create_pango_layout("ĐẤU TRƯỜNG\nTRI THỨC");
-  layout->set_font_description(font);
-  layout->set_alignment(Pango::ALIGN_CENTER);
-
-  int text_w, text_h;
-  layout->get_pixel_size(text_w, text_h);
-
-  cr->move_to(cx - text_w / 2 + 2, cy + 80 + 2);
-  cr->set_source_rgba(0.0, 0.0, 0.0, 0.5);
-  layout->show_in_cairo_context(cr);
-
-  cr->move_to(cx - text_w / 2, cy + 80);
-  cr->set_source_rgb(1.0, 1.0, 1.0);
-  layout->show_in_cairo_context(cr);
-
-  // 5. Thêm lại hiệu ứng chấm sáng (Particles) cho trang Login
-  const double particles[][4] = {
-      {0.1, 0.1, 3.0, 0.6},   {0.3, 0.2, 4.0, 0.4},  {0.8, 0.15, 2.5, 0.5},
-      {0.15, 0.85, 3.5, 0.4}, {0.85, 0.9, 4.5, 0.3}, {0.5, 0.5, 2.0, 0.2},
-      {0.2, 0.5, 3.0, 0.5},   {0.7, 0.7, 5.0, 0.3},  {0.4, 0.9, 2.0, 0.4}};
-  for (const auto &p : particles) {
-    double px = p[0] * w;
-    double py = p[1] * h;
-    double r = p[2];
-    double op = p[3];
-    Cairo::RefPtr<Cairo::RadialGradient> glow =
-        Cairo::RadialGradient::create(px, py, 0, px, py, r * 10);
-    glow->add_color_stop_rgba(0.0, 1.0, 1.0, 1.0, op);
-    glow->add_color_stop_rgba(1.0, 1.0, 1.0, 1.0, 0.0);
-    cr->set_source(glow);
-    cr->arc(px, py, r * 10, 0, 2 * M_PI);
-    cr->fill();
+  // 2. Họa tiết Grid Mờ cực nhẹ
+  cr->set_source_rgba(1.0, 1.0, 1.0, 0.03); 
+  cr->set_line_width(0.5);
+  for (int x = 0; x < w; x += 60) {
+      cr->move_to(x, 0);
+      cr->line_to(x, h);
   }
+  for (int y = 0; y < h; y += 60) {
+      cr->move_to(0, y);
+      cr->line_to(w, y);
+  }
+  cr->stroke();
+
+  // 3. Hiệu ứng Glow Sáng (Vibrant Spots)
+  // Glow tím sáng góc trên trái
+  Cairo::RefPtr<Cairo::RadialGradient> glow1 =
+      Cairo::RadialGradient::create(w * 0.2, h * 0.2, 0, w * 0.2, h * 0.2, 500);
+  glow1->add_color_stop_rgba(0.0, 0.6, 0.2, 0.9, 0.2); 
+  glow1->add_color_stop_rgba(1.0, 0.6, 0.2, 0.9, 0.0);
+  cr->set_source(glow1);
+  cr->paint();
+
+  // Glow vàng/cam ở cạnh phải (nơi có Login form) để tường đồng với Button
+  Cairo::RefPtr<Cairo::RadialGradient> glow2 =
+      Cairo::RadialGradient::create(w, h * 0.5, 0, w, h * 0.5, 400);
+  glow2->add_color_stop_rgba(0.0, 1.0, 0.6, 0.0, 0.1); 
+  glow2->add_color_stop_rgba(1.0, 1.0, 0.6, 0.0, 0.0);
+  cr->set_source(glow2);
+  cr->paint();
 
   return true;
 }
@@ -727,118 +696,294 @@ void ClientWindow::setup_ui() {
   add(m_stack);
   m_stack.set_transition_type(Gtk::STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT);
 
-  // --- PAGE 1: LOGIN (NEW UI) ---
+  // ===============================================
+  // 1. LOGIN SCREEN (REDESIGNED)
+  // ===============================================
+  
+  // A. Background Layer
   m_login_bg_area.signal_draw().connect(
       sigc::mem_fun(*this, &ClientWindow::on_draw_login_bg));
+  m_login_overlay.add(m_login_bg_area);
 
-  auto setup_social_btn = [](Gtk::Button &btn, Gtk::Image &img_widget,
-                             const std::string &filename) {
-    try {
-      // 1. Load ảnh từ file và resize về 24x24 pixel
-      auto pixbuf = Gdk::Pixbuf::create_from_file(filename, 24, 24);
-      img_widget.set(pixbuf);
-    } catch (...) {
-      // 2. Nếu không có file ảnh, dùng icon mặc định hệ thống (để không bị lỗi
-      // crash)
-      std::cerr << "Warning: Could not load image " << filename << std::endl;
-      img_widget.set_from_icon_name("image-missing", Gtk::ICON_SIZE_MENU);
-    }
+  // B. Content Layer (Split Layout)
+  m_box_login_split.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+  m_box_login_split.set_margin_top(40);
+  m_box_login_split.set_margin_bottom(40);
+  m_box_login_split.set_margin_start(60);
+  m_box_login_split.set_margin_end(60);
+  m_box_login_split.get_style_context()->add_class("login-split");
 
-    btn.set_image(img_widget);       // Gắn ảnh vào nút
-    btn.set_always_show_image(true); // Bắt buộc hiện ảnh
-    btn.set_label("");               // Xóa nhãn text (quan trọng!)
-    btn.get_style_context()->add_class("btn-social"); // Giữ style tròn cũ
+  // --- LEFT PANEL: Branding & Info ---
+  m_box_login_left.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_box_login_left.set_valign(Gtk::ALIGN_CENTER);
+  m_box_login_left.set_spacing(24);
+  m_box_login_left.set_halign(Gtk::ALIGN_START);
+
+  // Branding Bubble
+  Gtk::Box *bubble_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL));
+  m_lbl_brand_bubble.set_text("QUIZ ARENA");
+  m_lbl_brand_bubble.get_style_context()->add_class("brand-bubble");
+  m_lbl_brand_bubble.set_halign(Gtk::ALIGN_START);
+  bubble_box->pack_start(m_lbl_brand_bubble, Gtk::PACK_SHRINK);
+  m_box_login_left.pack_start(*bubble_box, Gtk::PACK_SHRINK);
+
+  // Main Title
+  Gtk::Box *title_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+  m_lbl_brand_title.set_markup("<span font_weight='300'>Đấu Trường</span>");
+  m_lbl_brand_title.get_style_context()->add_class("brand-title");
+  m_lbl_brand_title.set_halign(Gtk::ALIGN_START);
+  
+  m_lbl_brand_title_2.set_markup("<span font_weight='800'>Tri Thức</span>");
+  m_lbl_brand_title_2.get_style_context()->add_class("brand-title-bold");
+  m_lbl_brand_title_2.set_halign(Gtk::ALIGN_START);
+  
+  title_box->pack_start(m_lbl_brand_title, Gtk::PACK_SHRINK);
+  title_box->pack_start(m_lbl_brand_title_2, Gtk::PACK_SHRINK);
+  m_box_login_left.pack_start(*title_box, Gtk::PACK_SHRINK);
+
+  // Slogan
+  m_lbl_brand_slogan.set_text("Nơi những tâm trí vĩ đại giao tranh");
+  m_lbl_brand_slogan.get_style_context()->add_class("brand-slogan");
+  m_lbl_brand_slogan.set_halign(Gtk::ALIGN_START);
+  m_box_login_left.pack_start(m_lbl_brand_slogan, Gtk::PACK_SHRINK);
+
+  // Feature List (Spacer)
+  Gtk::Box *spacer = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+  spacer->set_size_request(-1, 20);
+  m_box_login_left.pack_start(*spacer, Gtk::PACK_SHRINK);
+
+  auto add_feature = [this](const std::string &icon, const std::string &title, const std::string &desc) {
+      Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 16));
+      box->set_margin_bottom(12);
+      
+      Gtk::Label *lbl_icon = Gtk::manage(new Gtk::Label());
+      lbl_icon->set_markup("<span size='16000' background='#4c1d95' color='#a78bfa'> " + icon + " </span>");
+      // Note: background/color in markup might not work for all GTK versions, using unicode logic
+      // Simplified: Just emoji
+      lbl_icon->get_style_context()->add_class("feature-box");
+      
+      Gtk::Box *text_box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
+      Gtk::Label *lbl_title = Gtk::manage(new Gtk::Label(title));
+      lbl_title->get_style_context()->add_class("feature-title");
+      lbl_title->set_halign(Gtk::ALIGN_START);
+      
+      Gtk::Label *lbl_desc = Gtk::manage(new Gtk::Label(desc));
+      lbl_desc->get_style_context()->add_class("feature-desc");
+      lbl_desc->set_halign(Gtk::ALIGN_START);
+      
+      text_box->pack_start(*lbl_title, Gtk::PACK_SHRINK);
+      text_box->pack_start(*lbl_desc, Gtk::PACK_SHRINK);
+      
+      box->pack_start(*lbl_icon, Gtk::PACK_SHRINK);
+      box->pack_start(*text_box, Gtk::PACK_SHRINK);
+      m_box_login_left.pack_start(*box, Gtk::PACK_SHRINK);
   };
 
-  m_box_login_form.set_halign(Gtk::ALIGN_CENTER);
-  m_box_login_form.set_valign(Gtk::ALIGN_START);
-  m_box_login_form.set_spacing(15);
-  m_box_login_form.set_margin_top(290);
-  m_box_login_form.set_size_request(300, -1);
+  add_feature("⚡", "Thi đấu real-time", "Cạnh tranh trực tiếp với người chơi khác");
+  add_feature("🏆", "Hệ thống xếp hạng ELO", "Leo rank và trở thành huyền thoại");
+  add_feature("🎯", "Thử thách tri thức", "Hàng ngàn câu hỏi đa dạng");
 
-  m_entry_user.set_placeholder_text("Tên đăng nhập / Email");
-  m_entry_user.set_icon_from_icon_name("user-available-symbolic",
-                                       Gtk::ENTRY_ICON_PRIMARY);
+  // Stats Row (Bottom)
+  Gtk::Box *stats_space = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+  stats_space->set_size_request(-1, 30);
+  m_box_login_left.pack_start(*stats_space, Gtk::PACK_SHRINK);
 
-  m_entry_pass.set_placeholder_text("Mật khẩu");
+  m_box_login_stats.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+  m_box_login_stats.set_spacing(20);
+
+  auto add_stat_box = [](Gtk::Label &lbl_val, const std::string &val, const std::string &label) {
+      Gtk::Box *box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
+      box->get_style_context()->add_class("stat-card-glass");
+      
+      lbl_val.set_text(val);
+      lbl_val.get_style_context()->add_class("stat-value");
+      lbl_val.set_halign(Gtk::ALIGN_START);
+      
+      Gtk::Label *lbl_text = Gtk::manage(new Gtk::Label(label));
+      lbl_text->get_style_context()->add_class("stat-label");
+      lbl_text->set_halign(Gtk::ALIGN_START);
+      
+      box->pack_start(lbl_val, Gtk::PACK_SHRINK);
+      box->pack_start(*lbl_text, Gtk::PACK_SHRINK);
+      return box;
+  };
+  
+  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_online, "2,847", "Người chơi online"), Gtk::PACK_SHRINK);
+  m_box_login_stats.pack_start(*add_stat_box(m_lbl_stat_matches, "15,382", "Trận đấu hôm nay"), Gtk::PACK_SHRINK);
+  
+  m_box_login_left.pack_start(m_box_login_stats, Gtk::PACK_SHRINK);
+
+
+  // --- RIGHT PANEL: Login Card ---
+  m_box_login_right.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_box_login_right.set_valign(Gtk::ALIGN_CENTER);
+  m_box_login_right.set_halign(Gtk::ALIGN_END); // Push to right
+  
+  m_frame_login_card.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_frame_login_card.get_style_context()->add_class("login-card-glass");
+  m_frame_login_card.set_size_request(400, -1);
+  m_frame_login_card.set_spacing(20);
+
+  // Card Header
+  m_box_card_header.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_box_card_header.set_valign(Gtk::ALIGN_CENTER);
+  m_box_card_header.set_spacing(10);
+  
+  // Icon
+  try {
+      // Use existing assets but resize? Or just use a emoji/label if image not perfect
+      // Drawing a shield icon with Cairo might be better but for now let's use a Label with Shield Emoji
+      // or try to load a 'shield.png' if it existed.
+      // Let's use a big Emoji for the logo icon at top of card
+       m_img_logo_icon.set_from_icon_name("security-high-symbolic", Gtk::ICON_SIZE_DIALOG); 
+       // Or better: manual button style
+  } catch(...) {}
+  
+  Gtk::Button *btn_icon = Gtk::manage(new Gtk::Button());
+  btn_icon->set_image_from_icon_name("security-high-symbolic", Gtk::ICON_SIZE_DND);
+  btn_icon->get_style_context()->add_class("btn-gold"); // Reuse gold style for the icon background
+  btn_icon->set_sensitive(false); // Just visual
+  btn_icon->set_halign(Gtk::ALIGN_CENTER);
+  btn_icon->set_size_request(60, 60);
+  
+  m_lbl_card_title.set_text("Chào mừng trở lại");
+  m_lbl_card_title.get_style_context()->add_class("card-title");
+  m_lbl_card_title.set_halign(Gtk::ALIGN_CENTER);
+
+  m_lbl_card_subtitle.set_text("Đăng nhập để tiếp tục chinh phục");
+  m_lbl_card_subtitle.get_style_context()->add_class("card-subtitle");
+  m_lbl_card_subtitle.set_halign(Gtk::ALIGN_CENTER);
+
+  m_box_card_header.pack_start(*btn_icon, Gtk::PACK_SHRINK);
+  m_box_card_header.pack_start(m_lbl_card_title, Gtk::PACK_SHRINK);
+  m_box_card_header.pack_start(m_lbl_card_subtitle, Gtk::PACK_SHRINK);
+  m_frame_login_card.pack_start(m_box_card_header, Gtk::PACK_SHRINK);
+
+  // Login Form form
+  m_box_login_form.set_orientation(Gtk::ORIENTATION_VERTICAL);
+  m_box_login_form.set_spacing(16);
+
+  // User input
+  Gtk::Box *box_user = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 6));
+  m_lbl_input_user.set_text("Email hoặc tên đăng nhập");
+  m_lbl_input_user.get_style_context()->add_class("input-label");
+  m_lbl_input_user.set_halign(Gtk::ALIGN_START);
+  m_entry_user.set_placeholder_text("Nhập email của bạn");
+  m_entry_user.set_icon_from_icon_name("mail-read-symbolic", Gtk::ENTRY_ICON_PRIMARY);
+  box_user->pack_start(m_lbl_input_user, Gtk::PACK_SHRINK);
+  box_user->pack_start(m_entry_user, Gtk::PACK_SHRINK);
+
+  // Pass input
+  Gtk::Box *box_pass = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 6));
+  m_lbl_input_pass.set_text("Mật khẩu");
+  m_lbl_input_pass.get_style_context()->add_class("input-label");
+  m_lbl_input_pass.set_halign(Gtk::ALIGN_START);
+  m_entry_pass.set_placeholder_text("Nhập mật khẩu");
   m_entry_pass.set_visibility(false);
-  m_entry_pass.set_icon_from_icon_name("channel-secure-symbolic",
-                                       Gtk::ENTRY_ICON_PRIMARY);
+  m_entry_pass.set_icon_from_icon_name("dialog-password-symbolic", Gtk::ENTRY_ICON_PRIMARY);
+  box_pass->pack_start(m_lbl_input_pass, Gtk::PACK_SHRINK);
+  box_pass->pack_start(m_entry_pass, Gtk::PACK_SHRINK);
 
-  m_btn_login.set_label("VÀO ĐẤU TRƯỜNG");
-  m_btn_login.get_style_context()->add_class("btn-gold");
-  m_btn_login.set_size_request(-1, 50);
+  m_box_login_form.pack_start(*box_user, Gtk::PACK_SHRINK);
+  m_box_login_form.pack_start(*box_pass, Gtk::PACK_SHRINK);
 
+  // Remember & Forgot Pass row
+  m_box_remember.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+  m_check_remember.set_label("Ghi nhớ đăng nhập");
   m_btn_forgot_pass.set_label("Quên mật khẩu?");
-  m_btn_forgot_pass.get_style_context()->add_class("btn-link");
+  m_btn_forgot_pass.get_style_context()->add_class("btn-link-text"); // New style
+  m_btn_forgot_pass.set_halign(Gtk::ALIGN_END);
+  
+  m_box_remember.pack_start(m_check_remember, Gtk::PACK_SHRINK);
+  m_box_remember.pack_end(m_btn_forgot_pass, Gtk::PACK_SHRINK);
+  m_box_login_form.pack_start(m_box_remember, Gtk::PACK_SHRINK);
 
-  m_lbl_social_text.set_markup(
-      "<span color='#aaaaaa' size='small'>--- Hoặc tham chiến bằng ---</span>");
+  // Login Button
+  m_btn_login.set_label("Vào đấu trường");
+  m_btn_login.get_style_context()->add_class("btn-login-action"); // New style
+  m_box_login_form.pack_start(m_btn_login, Gtk::PACK_SHRINK);
+
+  // Error Label
+  m_lbl_login_msg.set_halign(Gtk::ALIGN_CENTER);
+  m_box_login_form.pack_start(m_lbl_login_msg, Gtk::PACK_SHRINK);
+
+  m_frame_login_card.pack_start(m_box_login_form, Gtk::PACK_SHRINK);
+
+  // Divider
+  m_box_divider.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+  // Just use a centered label with lines logic or simple label
+  m_lbl_divider_text.set_markup("<span size='small' color='#64748b'>Hoặc đăng nhập bằng</span>");
+  m_lbl_divider_text.set_halign(Gtk::ALIGN_CENTER);
+  m_lbl_divider_text.set_margin_top(12);
+  m_lbl_divider_text.set_margin_bottom(12);
+  m_frame_login_card.pack_start(m_lbl_divider_text, Gtk::PACK_SHRINK);
+
+  // Social Buttons
+  m_box_social.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
   m_box_social.set_halign(Gtk::ALIGN_CENTER);
-  m_box_social.set_spacing(15);
+  m_box_social.set_spacing(16);
 
-  // m_btn_social_google.set_label("G");
-  // m_btn_social_google.get_style_context()->add_class("btn-social");
-  // m_btn_social_fb.set_label("F");
-  // m_btn_social_fb.get_style_context()->add_class("btn-social");
-  // m_btn_social_apple.set_label("A");
-  // m_btn_social_apple.get_style_context()->add_class("btn-social");
+  auto setup_social = [](Gtk::Button &btn, Gtk::Image &img, const std::string &file) {
+      try {
+          // Keep using existing image logic
+          auto pixbuf = Gdk::Pixbuf::create_from_file(file, 20, 20);
+          img.set(pixbuf);
+      } catch(...) {
+          img.set_from_icon_name("image-missing", Gtk::ICON_SIZE_MENU);
+      }
+      btn.set_image(img);
+      btn.set_always_show_image(true);
+      btn.get_style_context()->add_class("btn-social-glass");
+  };
 
-  setup_social_btn(m_btn_social_google, m_img_google, "google.png");
-  setup_social_btn(m_btn_social_fb, m_img_fb, "fb.png");
-  setup_social_btn(m_btn_social_apple, m_img_apple, "apple.png");
+  setup_social(m_btn_social_google, m_img_google, "google.png");
+  setup_social(m_btn_social_fb, m_img_fb, "fb.png");
+  setup_social(m_btn_social_apple, m_img_apple, "apple.png");
 
   m_box_social.pack_start(m_btn_social_google, Gtk::PACK_SHRINK);
   m_box_social.pack_start(m_btn_social_fb, Gtk::PACK_SHRINK);
   m_box_social.pack_start(m_btn_social_apple, Gtk::PACK_SHRINK);
+  m_frame_login_card.pack_start(m_box_social, Gtk::PACK_SHRINK);
 
-  m_btn_register.set_label("Chưa có tài khoản? Đăng ký ngay");
-  m_btn_register.get_style_context()->add_class("btn-link");
+  // Footer Link (Register)
+  m_box_card_footer.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+  m_box_card_footer.set_halign(Gtk::ALIGN_CENTER);
+  m_box_card_footer.set_margin_top(20);
+  
+  m_lbl_no_account.set_markup("<span color='#cbd5e1' size='small'>Chưa có tài khoản? </span>");
+  m_btn_register.set_label("Đăng ký ngay");
+  m_btn_register.get_style_context()->add_class("btn-register-link");
+  
+  m_box_card_footer.pack_start(m_lbl_no_account, Gtk::PACK_SHRINK);
+  m_box_card_footer.pack_start(m_btn_register, Gtk::PACK_SHRINK);
+  m_frame_login_card.pack_start(m_box_card_footer, Gtk::PACK_SHRINK);
 
-  m_box_login_form.pack_start(m_entry_user, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_entry_pass, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_btn_login, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_btn_forgot_pass, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_lbl_social_text, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_box_social, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_btn_register, Gtk::PACK_SHRINK);
-  m_box_login_form.pack_start(m_lbl_login_msg, Gtk::PACK_SHRINK);
+  m_box_login_right.pack_start(m_frame_login_card, Gtk::PACK_SHRINK);
 
-  m_status_circle.set_halign(Gtk::ALIGN_END);
-  m_status_circle.set_valign(Gtk::ALIGN_START);
-  m_status_circle.set_margin_right(10);
-  m_status_circle.set_margin_top(10);
+  // --- ASSEMBLE SPLIT ---
+  m_box_login_split.pack_start(m_box_login_left, Gtk::PACK_EXPAND_WIDGET);
+  m_box_login_split.pack_start(m_box_login_right, Gtk::PACK_EXPAND_WIDGET);
+  
+  m_login_overlay.add_overlay(m_box_login_split);
+  m_login_overlay.show_all(); // Ensure new widgets are visible
 
-  m_login_overlay.add(m_login_bg_area);
-  m_login_overlay.add_overlay(m_box_login_form);
-  m_login_overlay.add_overlay(m_status_circle);
-
+  // --- BUTTON ACTIONS ---
   m_btn_login.signal_clicked().connect([this]() {
-    std::string u = m_entry_user.get_text();
-    std::string p = m_entry_pass.get_text();
-
-    std::cout << "[DEBUG] Login clicked. User: " << u << ", Pass: " << p
-              << std::endl;
-
-    if (!m_client.isConnected()) {
-      std::cout << "[DEBUG] Client NOT connected!" << std::endl;
-      m_lbl_login_msg.set_text("Mất kết nối tới máy chủ!");
-      return;
-    }
-
-    if (u.empty() || p.empty()) {
+    if (m_entry_user.get_text().empty() || m_entry_pass.get_text().empty()) {
       m_lbl_login_msg.set_text("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
+    m_btn_login.set_sensitive(false);
+
     if (m_is_register_mode) {
       // Đang ở chế độ Đăng ký -> Gửi lệnh Register
       std::cout << "[DEBUG] Sending Register..." << std::endl;
-      m_client.sendRegister(u, p);
+      m_client.sendRegister(m_entry_user.get_text(), m_entry_pass.get_text());
     } else {
       // Đang ở chế độ Đăng nhập -> Gửi lệnh Login
       std::cout << "[DEBUG] Sending Login..." << std::endl;
-      m_client.sendLogin(u, p);
+      m_client.sendLogin(m_entry_user.get_text(), m_entry_pass.get_text());
     }
   });
   m_btn_register.signal_clicked().connect([this]() { toggle_auth_mode(); });
@@ -2461,27 +2606,35 @@ void ClientWindow::on_network_signal() {
 void ClientWindow::toggle_auth_mode() {
   m_is_register_mode = !m_is_register_mode; // Đảo ngược trạng thái
 
-  // Xóa thông báo lỗi cũ cho đỡ rối
+  // Xóa thông báo lỗi cũ
   m_lbl_login_msg.set_text("");
 
   if (m_is_register_mode) {
-    // --- CHUYỂN SANG GIAO DIỆN ĐĂNG KÝ ---
-    m_btn_login.set_label("ĐĂNG KÝ TÀI KHOẢN");
-    m_btn_register.set_label("Đã có tài khoản? Quay lại Đăng nhập");
+    // --- MODE: ĐĂNG KÝ ---
+    m_lbl_card_title.set_text("Đăng ký tài khoản");
+    m_lbl_card_subtitle.set_text("Tạo tài khoản để tham gia đấu trường");
+    
+    m_btn_login.set_label("ĐĂNG KÝ NGAY");
+    m_btn_register.set_label("Quay lại Đăng nhập");
+    m_lbl_no_account.set_markup("<span color='#cbd5e1' size='small'>Đã có tài khoản? </span>");
+    
     m_entry_user.set_placeholder_text("Tên tài khoản mới");
-    // Ẩn các nút Social và Quên mật khẩu cho gọn (nếu muốn)
-    m_box_social.hide();
-    m_lbl_social_text.hide();
-    m_btn_forgot_pass.hide();
+    
+    // Hide Remember Me & Forgot Pass
+    m_box_remember.hide();
   } else {
-    // --- QUAY VỀ GIAO DIỆN ĐĂNG NHẬP ---
-    m_btn_login.set_label("VÀO ĐẤU TRƯỜNG");
-    m_btn_register.set_label("Chưa có tài khoản? Đăng ký ngay");
-    m_entry_user.set_placeholder_text("Tên đăng nhập / Email");
-    // Hiện lại các nút khác
-    m_box_social.show();
-    m_lbl_social_text.show();
-    m_btn_forgot_pass.show();
+    // --- MODE: ĐĂNG NHẬP ---
+    m_lbl_card_title.set_text("Chào mừng trở lại");
+    m_lbl_card_subtitle.set_text("Đăng nhập để tiếp tục chinh phục");
+    
+    m_btn_login.set_label("Vào đấu trường");
+    m_btn_register.set_label("Đăng ký ngay");
+    m_lbl_no_account.set_markup("<span color='#cbd5e1' size='small'>Chưa có tài khoản? </span>");
+    
+    m_entry_user.set_placeholder_text("Nhập email của bạn");
+    
+    // Show Remember Me
+    m_box_remember.show();
   }
 }
 

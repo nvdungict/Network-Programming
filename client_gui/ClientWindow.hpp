@@ -37,27 +37,67 @@ private:
   Gtk::Stack m_stack;
 
   // ==========================================
-  // 1. Màn hình Login (Đã nâng cấp UI/UX)
+  // 1. Màn hình Login (REDESIGNED - Split Layout)
   // ==========================================
   Gtk::Overlay m_login_overlay;     // Container chính (Layering)
-  Gtk::DrawingArea m_login_bg_area; // Layer dưới: Vẽ nền Gradient & Logo
-  Gtk::Box m_box_login_form;        // Layer trên: Chứa các ô nhập liệu (Form)
+  Gtk::DrawingArea m_login_bg_area; // Layer dưới: Vẽ nền Gradient
+
+  // Container chia đôi màn hình (Trái: Branding, Phải: Form)
+  Gtk::Box m_box_login_split;
+  
+  // --- PANEL TRÁI (Branding & Intro) ---
+  Gtk::Box m_box_login_left;
+  Gtk::Label m_lbl_brand_bubble;    // "QUIZ ARENA"
+  Gtk::Label m_lbl_brand_title;     // "Đấu Trường"
+  Gtk::Label m_lbl_brand_title_2;   // "Tri Thức"
+  Gtk::Label m_lbl_brand_slogan;    // "Nơi những tâm trí vĩ đại giao tranh"
+  
+  // List feature (Icon + Text)
+  Gtk::Box m_box_features;
+  
+  // Stats row (Bottom Left)
+  Gtk::Box m_box_login_stats;
+  Gtk::Label m_lbl_stat_online;
+  Gtk::Label m_lbl_stat_matches;
+
+  // --- PANEL PHẢI (Form Card) ---
+  Gtk::Box m_box_login_right;
+  Gtk::Box m_frame_login_card;      // Card kính (Glassmorphism)
+  
+  Gtk::Box m_box_card_header;       // Icon + Title ("Chao mung tro lai")
+  Gtk::Image m_img_logo_icon;       // Icon khiên vàng
+  Gtk::Label m_lbl_card_title;      // "Chào mừng trở lại"
+  Gtk::Label m_lbl_card_subtitle;   // "Đăng nhập để tiếp tục..."
+
+  Gtk::Box m_box_login_form;        // Chứa các ô nhập liệu
 
   // Các widget nhập liệu
+  Gtk::Label m_lbl_input_user, m_lbl_input_pass; // Label trên ô input
   Gtk::Entry m_entry_user, m_entry_pass;
   Gtk::Label m_lbl_login_msg;
   StatusCircle m_status_circle;
 
   // Các nút bấm chính & phụ
-  Gtk::Button m_btn_login;
-  Gtk::Button m_btn_register;    // Nút text link
-  Gtk::Button m_btn_forgot_pass; // Nút text link (Mới)
+  Gtk::Box m_box_remember;          // Checkbox ghi nhớ
+  Gtk::CheckButton m_check_remember;
+  Gtk::Button m_btn_forgot_pass;    // Link text
 
-  // Phần Social Login (Mới)
-  Gtk::Label m_lbl_social_text;
+  Gtk::Button m_btn_login;          // Nút to màu cam
+  
+  // Divider "Hoặc đăng nhập bằng"
+  Gtk::Box m_box_divider;
+  Gtk::Separator m_sep_left, m_sep_right;
+  Gtk::Label m_lbl_divider_text;
+
+  // Phần Social Login
   Gtk::Box m_box_social;
   Gtk::Button m_btn_social_google, m_btn_social_fb, m_btn_social_apple;
   Gtk::Image m_img_google, m_img_fb, m_img_apple;
+
+  // Footer: Register Link
+  Gtk::Box m_box_card_footer;
+  Gtk::Label m_lbl_no_account;
+  Gtk::Button m_btn_register;    // Nút text link
 
   // Biến cũ (Giữ lại để tương thích constructor, nhưng không dùng hiển thị
   // chính)
