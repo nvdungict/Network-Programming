@@ -77,4 +77,5 @@ public:
   void removePlayer_UNLOCKED(int player_sock);
 
   int getScore(int sock);
+  bool isPlayerActive(int sock);
 };

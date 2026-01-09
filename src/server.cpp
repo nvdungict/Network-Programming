@@ -159,8 +159,8 @@ void Server::handleClient(int client_socket) {
           count = *(int *)buffer.data();
           if (count < 1)
             count = 1;
-          if (count > 5)
-            count = 5;
+          if (count > 500)
+            count = 500;
         }
         m_room_manager.handleAddBot(client_socket, count);
       }
@@ -214,7 +214,7 @@ void Server::handleClient(int client_socket) {
         std::strncpy(pkt.opt_b, replay[i].opt_b.c_str(), 63);
         std::strncpy(pkt.opt_c, replay[i].opt_c.c_str(), 63);
         std::strncpy(pkt.opt_d, replay[i].opt_d.c_str(), 63);
-        std::strncpy(pkt.correct_answer, replay[i].correct_answer.c_str(), 7);
+        std::strncpy(pkt.correct_answer, replay[i].correct_answer.c_str(), 63);
         std::strncpy(pkt.player_name, replay[i].player_name.c_str(), 31);
         std::strncpy(pkt.player_answer, replay[i].player_answer.c_str(), 63);
         pkt.is_correct = replay[i].is_correct ? 1 : 0;
@@ -228,6 +228,36 @@ void Server::handleClient(int client_socket) {
         std::memset(&pkt, 0, sizeof(pkt));
         pkt.is_last = 1;
         sendPacket(client_socket, protocol::CMD_REPLAY_DATA, &pkt, sizeof(pkt));
+      }
+      break;
+    }
+    case protocol::CMD_GET_ONLINE_USERS: {
+      if (is_logged_in) {
+        std::lock_guard<std::recursive_mutex> lock(m_session_mutex);
+
+        // Collect usernames
+        std::vector<std::string> online_users;
+        for (const auto &pair : m_user_to_socket) {
+          online_users.push_back(pair.first);
+        }
+
+        // Send packets
+        if (online_users.empty()) {
+          protocol::Payload_OnlineUserEntry pkt;
+          std::memset(&pkt, 0, sizeof(pkt));
+          pkt.is_last = 1;
+          sendPacket(client_socket, protocol::CMD_ONLINE_USERS_LIST, &pkt,
+                     sizeof(pkt));
+        } else {
+          for (size_t i = 0; i < online_users.size(); ++i) {
+            protocol::Payload_OnlineUserEntry pkt;
+            std::memset(&pkt, 0, sizeof(pkt));
+            std::strncpy(pkt.username, online_users[i].c_str(), 31);
+            pkt.is_last = (i == online_users.size() - 1) ? 1 : 0;
+            sendPacket(client_socket, protocol::CMD_ONLINE_USERS_LIST, &pkt,
+                       sizeof(pkt));
+          }
+        }
       }
       break;
     }

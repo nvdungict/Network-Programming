@@ -44,17 +44,6 @@ void GameManager::resetGame_UNLOCKED() {
 }
 
 void GameManager::startGame_UNLOCKED() {
-  m_room->setState_UNLOCKED("IN_GAME");
-
-  // Reset dữ liệu
-  for (auto &[s, sc] : m_scores)
-    sc = 0;
-  m_player_answers.clear();
-  m_active_players.clear();
-  m_replay_buffer.clear();
-  m_total_questions_asked = 0;
-  m_game_start_time = std::chrono::steady_clock::now();
-
   // Nạp tất cả người chơi vào danh sách active
   for (auto const &[s, n] : m_player_names) {
     m_active_players.insert(s);
@@ -65,6 +54,10 @@ void GameManager::startGame_UNLOCKED() {
     std::cerr << "[GameManager] FATAL: No active players found!" << std::endl;
     return;
   }
+
+  // Set state AFTER populating active players so Room::sendRoomUpdate works
+  // correctly
+  m_room->setState_UNLOCKED("IN_GAME");
 
   // Ghi nhận thời gian bắt đầu và số người chơi
   m_game_start_time = std::chrono::steady_clock::now();
@@ -185,6 +178,10 @@ void GameManager::handleSubmitAnswer_UNLOCKED(
     return;
 
   std::string ans(pkt->answer);
+  if (ans.empty()) {
+    ans = "TIMEOUT"; // Mark as answered but wrong/timeout
+  }
+
   if (m_current_round == 1) {
     if (!ans.empty())
       ans = ans.substr(0, 1);
@@ -313,9 +310,9 @@ void GameManager::eliminatePlayers_UNLOCKED() {
 
   int keep_count = ranking.size();
   if (m_current_round == 1)
-    keep_count = 3; // Keep Top 3
+    keep_count = 5; // Keep Top 5
   else if (m_current_round == 2)
-    keep_count = 2; // Keep Top 2
+    keep_count = 3; // Keep Top 3
 
   std::vector<int> eliminated;
   if (ranking.size() > (size_t)keep_count) {
@@ -337,6 +334,14 @@ void GameManager::eliminatePlayers_UNLOCKED() {
     std::strcpy(announce.message, txt.c_str());
     m_room->broadcast_UNLOCKED(protocol::CMD_INFO, &announce, sizeof(announce),
                                s);
+
+    // NEW: Broadcast status update (eliminated)
+    protocol::Payload_PlayerInfo info;
+    std::memset(&info, 0, sizeof(info));
+    std::strncpy(info.username, m_player_names[s].c_str(), 31);
+    info.score = (int)m_scores[s];
+    info.is_eliminated = 1;
+    m_room->broadcast_UNLOCKED(protocol::CMD_PLAYER_INFO, &info, sizeof(info));
   }
 }
 
@@ -352,6 +357,13 @@ void GameManager::transitionRound_UNLOCKED() {
   // Check if we finished Round 3
   if (m_current_round >= 3) {
     endGame_UNLOCKED("Final Round Complete!");
+    return;
+  }
+
+  // ELIMINATE PLAYERS BEFORE STARTING NEXT ROUND
+  eliminatePlayers_UNLOCKED();
+  if (m_active_players.empty()) {
+    endGame_UNLOCKED("All players eliminated!");
     return;
   }
 
@@ -569,4 +581,7 @@ void GameManager::processBotAnswers_UNLOCKED() {
     std::cout << "[BOT] " << m_player_names[s] << " answered: " << bot_answer
               << std::endl;
   }
+}
+bool GameManager::isPlayerActive(int sock) {
+  return m_active_players.count(sock) > 0;
 }

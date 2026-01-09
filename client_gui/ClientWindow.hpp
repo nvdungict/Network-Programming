@@ -215,6 +215,7 @@ private:
   Gtk::Label m_lbl_invite_title;
   Gtk::Entry m_entry_invite_target;
   Gtk::Button m_btn_send_invite;
+  Gtk::Button m_btn_online_users; // MỚI: Button xem online users
   Gtk::Label m_lbl_player_count;
   Gtk::Label m_lbl_q_count;
 
@@ -284,6 +285,7 @@ private:
   // NEW: Ranking Board
   Gtk::Label m_lbl_ranking;
   std::map<std::string, int> m_scoreboard;
+  std::set<std::string> m_eliminated_players; // Track eliminated players
 
   // --- CÁC HÀM HELPER ---
   void setup_ui();
@@ -292,6 +294,7 @@ private:
   bool on_timer_tick(); // Timer countdown handler
 
   bool m_is_register_mode = false;
+  bool m_has_answered = false; // MỚI: Flag đã trả lời câu hỏi hiện tại
   void toggle_auth_mode();
 
   // --- HÀM UI MỚI ---
@@ -304,7 +307,8 @@ private:
   void add_player_to_list(const std::string &name, const std::string &emoji,
                           bool is_owner, bool is_ready);
   void add_game_player(const std::string &name, int score,
-                       bool answered_correctly, int rank = 1);
+                       bool answered_correctly, int rank,
+                       bool is_eliminated = false);
   void buildGameResultScreen();
 
   std::string m_my_username;
@@ -340,10 +344,15 @@ private:
   Gtk::Label m_lbl_replay_opt_a, m_lbl_replay_opt_b, m_lbl_replay_opt_c,
       m_lbl_replay_opt_d, m_lbl_replay_correct_ans;
   Gtk::Box m_box_replay_players;
+  Gtk::ScrolledWindow m_scroll_replay_players;
   Gtk::Button m_btn_replay_prev, m_btn_replay_next;
   Gtk::Label m_lbl_replay_nav;
 
   void request_replay(int match_id);
   void show_replay_dialog();
   void update_replay_view();
+
+  // Online Users List
+  std::vector<std::string> m_online_users_buffer;
+  void show_online_users_dialog();
 };

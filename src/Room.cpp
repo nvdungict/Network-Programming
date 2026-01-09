@@ -129,6 +129,14 @@ void Room::sendRoomUpdate_UNLOCKED() {
       std::strncpy(pinfo.username, p_name.c_str(), 31);
       pinfo.elo = (p_sock > 0) ? m_server->getDatabase().getElo(p_name)
                                : 0; // Bots have 0 ELO
+
+      // Check elimination status (only valid IN_GAME)
+      if (m_state == "IN_GAME") {
+        pinfo.is_eliminated = m_game_manager.isPlayerActive(p_sock) ? 0 : 1;
+      } else {
+        pinfo.is_eliminated = 0;
+      }
+
       m_server->sendPacket(sock, protocol::CMD_PLAYER_INFO, &pinfo,
                            sizeof(pinfo));
     }

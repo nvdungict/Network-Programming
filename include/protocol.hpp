@@ -47,8 +47,10 @@ enum CommandType : uint16_t {
   CMD_GET_HISTORY = 14, // Client -> Server (Request match history)
   CMD_GET_REPLAY = 15,  // Client -> Server (Request replay for match_id)
   CMD_KICK_SUCCESS = 68,
-  CMD_MATCH_HISTORY = 69, // Server -> Client (Match history entry)
-  CMD_REPLAY_DATA = 70    // Server -> Client (Replay entry)
+  CMD_MATCH_HISTORY = 69,    // Server -> Client (Match history entry)
+  CMD_REPLAY_DATA = 70,      // Server -> Client (Replay entry)
+  CMD_GET_ONLINE_USERS = 16, // Client -> Server
+  CMD_ONLINE_USERS_LIST = 71 // Server -> Client
 };
 
 // === Room Types ===
@@ -133,6 +135,7 @@ struct Payload_PlayerInfo {
   char username[32];
   int elo;
   int score;
+  uint8_t is_eliminated; // 0 = active, 1 = eliminated
 };
 using PlayerInfoPacket = Payload_PlayerInfo; // Alias cho Server dùng
 
@@ -215,6 +218,17 @@ struct Payload_ReplayEntry {
   char player_answer[64];
   int is_correct;
   int is_last; // 1 = last entry for this match
+};
+
+// 16. Online Users Request (Client -> Server)
+struct Payload_GetOnlineUsers {
+  int dummy; // Dummy payload
+};
+
+// 17. Online Users Entry (Server -> Client)
+struct Payload_OnlineUserEntry {
+  char username[32];
+  int is_last; // 1 = last entry
 };
 
 // === Functions ===
